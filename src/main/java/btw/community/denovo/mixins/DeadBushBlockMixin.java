@@ -21,7 +21,6 @@ public abstract class DeadBushBlockMixin extends BlockDeadBush {
 
     public DeadBushBlockMixin(int blockID) {
         super(blockID);
-        setUnlocalizedName("DNBlock_dead_bush_3");
     }
 
     private float getBaseGrowthChance() {
@@ -42,7 +41,10 @@ public abstract class DeadBushBlockMixin extends BlockDeadBush {
 
     @Inject(method = "canGrowOnBlock", at = @At(value = "HEAD"), cancellable = true)
     public void canGrowOnBlock(World world, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
-        if (world.getBlockId(x, y, z) == Block.grass.blockID) {
+
+        Block block = Block.blocksList[world.getBlockId(x,y,z)];
+
+        if (block != null && (block.canSaplingsGrowOnBlock(world, x,y,z) || block.blockID == Block.bedrock.blockID)) {
             cir.setReturnValue(true);
         }
     }
@@ -102,7 +104,6 @@ public abstract class DeadBushBlockMixin extends BlockDeadBush {
         world.setBlockMetadataWithNotify(x, y, z, getGrowthLevel(level));
     }
 
-
     protected boolean isFullyGrown(int iMetadata)
     {
         return getGrowthLevel(iMetadata) == 3;
@@ -122,7 +123,7 @@ public abstract class DeadBushBlockMixin extends BlockDeadBush {
     {
         if ( player.getCurrentEquippedItem() != null ) return false;
 
-        if (world.getBlockMetadata(x,y,z) < 3)
+        if (isFullyGrown(world.getBlockMetadata(x,y,z)))
         {
             //reduce Growth Level
             if (world.rand.nextFloat() <= getReduceGrowthChance()){
@@ -138,7 +139,16 @@ public abstract class DeadBushBlockMixin extends BlockDeadBush {
         return false;
     }
 
+    @Override
+    public int getDamageValue(World par1World, int par2, int par3, int par4) {
+        return super.getDamageValue(par1World, par2, par3, par4);
+    }
 
+    @Override
+    public int damageDropped(int meta)
+    {
+        return meta;
+    }
 
     @Override
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side) {

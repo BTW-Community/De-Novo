@@ -17,6 +17,10 @@ public class DirtPileItem extends PlaceAsBlockItem
         setCreativeTab( CreativeTabs.tabMaterials );
     }
 
+    protected float getPlacingChance(){
+        return 0.25F;
+    }
+
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int facing, float clickX, float clickY, float clickZ )
     {
@@ -24,7 +28,7 @@ public class DirtPileItem extends PlaceAsBlockItem
             return false;
         }
 
-        if (world.rand.nextFloat() < 0.25) {
+        if (world.rand.nextFloat() <= getPlacingChance()) {
             return super.onItemUse(  stack, player, world, x, y, z, facing, clickX, clickY, clickZ );
         }
         else {
