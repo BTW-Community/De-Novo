@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "De Novo",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "description": "Make early game BTW more survivable, without killing all challenge",
   "authors": [
     "Zhil",
     "Sockthing"
@@ -14,7 +14,7 @@
     "sources": "https://github.com/BTW-Community/De-Novo"
   },
 
-  "license": "CC0-1.0",
+  "license": "MIT",
   "icon": "assets/modid/icon.png",
 
   "environment": "*",
