@@ -1,16 +1,17 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "denovoaddon",
   "version": "${version}",
 
-  "name": "Example Mod",
+  "name": "De Novo",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": [
-    "Me!"
+    "Zhil",
+    "Sockthing"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://github.com/BTW-Community/De-Novo",
+    "sources": "https://github.com/BTW-Community/De-Novo"
   },
 
   "license": "CC0-1.0",
@@ -18,15 +19,9 @@
 
   "environment": "*",
   "entrypoints": {
-    "init": [
-      "net.fabricmc.example.ExampleMod"
-    ],
-    "preLaunch": [
-      "net.fabricmc.example.ExamplePreLaunchInitializer"
-    ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "denovoaddon.mixins.json"
   ],
 
   "depends": {

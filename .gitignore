@@ -20,3 +20,7 @@ src/btw/**
 .idea/dictionaries
 .idea/libraries
 .idea/jarRepositories.xml
+/run
+.idea/uiDesigner.xml
+/reobfuscated
+/release
