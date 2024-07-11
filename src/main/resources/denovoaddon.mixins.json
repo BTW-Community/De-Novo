@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "btw.community.denovo.mixins",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "DeadBushBlockMixin",
+    "SaplingBlockMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
