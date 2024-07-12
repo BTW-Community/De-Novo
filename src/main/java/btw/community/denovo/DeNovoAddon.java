@@ -11,7 +11,7 @@ import net.minecraft.server.MinecraftServer;
 import java.util.Map;
 
 public class DeNovoAddon extends BTWAddon {
-    public static final DeNovoAddon instance = new DeNovoAddon();
+    public static DeNovoAddon instance;
 
     private Map<String, String> propertyValues;
 
@@ -19,7 +19,8 @@ public class DeNovoAddon extends BTWAddon {
     public static boolean allowGoldenDungOnHCS = false;
 
     private DeNovoAddon() {
-        super("De Novo", "0.1.0", "DN");
+        super("@NAME@", "@VERSION@", "@PREFIX@");
+        DeNovoAddon.instance = this;
     }
 
     @Override
