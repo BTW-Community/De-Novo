@@ -11,7 +11,7 @@ import net.minecraft.server.MinecraftServer;
 import java.util.Map;
 
 public class DeNovoAddon extends BTWAddon {
-    private static DeNovoAddon instance;
+    public static final DeNovoAddon instance = new DeNovoAddon();
 
     private Map<String, String> propertyValues;
 
@@ -39,6 +39,12 @@ public class DeNovoAddon extends BTWAddon {
     private void registerConfigProperties() {
         //Gameplay config
         this.registerProperty("AllowGoldenDungOnHCS", "False", "Set the following to true to allow players to get a piece of golden dung on every HCS");
+
+        //Block IDs
+        this.registerProperty("DNSieveID", "3900", "***Block IDs***\n\n");
+
+        //Item IDs
+        this.registerProperty("DNMeshID", "23000", "***Item IDs***\n\n");
     }
 
     @Override
@@ -46,12 +52,19 @@ public class DeNovoAddon extends BTWAddon {
         this.propertyValues = propertyValues;
 
         allowGoldenDungOnHCS = Boolean.parseBoolean(this.propertyValues.get("AllowGoldenDungOnHCS"));
-
     }
 
-    public static DeNovoAddon getInstance() {
-        if (instance == null)
-            instance = new DeNovoAddon();
-        return instance;
+    public int parseID(String name) {
+        try {
+            return Integer.parseInt(this.propertyValues.get(name));
+        }
+        catch (NumberFormatException e) {
+            if (this.propertyValues.get(name) == null) {
+                throw new IllegalArgumentException("Unable to find property " + name + " in addon " + this.addonName);
+            }
+            else {
+                throw new IllegalArgumentException("Invalid id value for property " + name + " in addon " + this.addonName + ". Check for stray whitespace");
+            }
+        }
     }
 }
