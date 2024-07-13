@@ -2,7 +2,6 @@ package btw.community.denovo.mixins;
 
 import btw.block.BTWBlocks;
 import btw.block.blocks.DeadBushBlock;
-import btw.item.BTWItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -17,7 +16,8 @@ import java.util.Random;
 @Mixin(DeadBushBlock.class)
 public abstract class DeadBushBlockMixin extends BlockDeadBush {
 
-    @Shadow protected abstract boolean canGrowOnBlock(World world, int i, int j, int k);
+    @Shadow
+    protected abstract boolean canGrowOnBlock(World world, int i, int j, int k);
 
     public DeadBushBlockMixin(int blockID) {
         super(blockID);
@@ -42,17 +42,16 @@ public abstract class DeadBushBlockMixin extends BlockDeadBush {
     @Inject(method = "canGrowOnBlock", at = @At(value = "HEAD"), cancellable = true)
     public void canGrowOnBlock(World world, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
 
-        Block block = Block.blocksList[world.getBlockId(x,y,z)];
+        Block block = Block.blocksList[world.getBlockId(x, y, z)];
 
-        if (block != null && (block.canSaplingsGrowOnBlock(world, x,y,z) || block.blockID == Block.bedrock.blockID)) {
+        if (block != null && (block.canSaplingsGrowOnBlock(world, x, y, z) || block.blockID == Block.bedrock.blockID)) {
             cir.setReturnValue(true);
         }
     }
 
     @Override
     public void randomUpdateTick(World world, int x, int y, int z, Random rand) {
-        if ( world.provider.dimensionId != 1 && !isFullyGrown(world.getBlockMetadata(x,y,z)) )
-        {
+        if (world.provider.dimensionId != 1 && !isFullyGrown(world.getBlockMetadata(x, y, z))) {
             attemptToGrow(world, x, y, z, rand);
         }
     }
@@ -74,61 +73,55 @@ public abstract class DeadBushBlockMixin extends BlockDeadBush {
     protected boolean canGrowAtCurrentLightLevel(World world, int x, int y, int z) {
         if (this.requiresNaturalLight()) {
             return world.getBlockNaturalLightValue(x, y, z) >= getLightLevelForGrowth() ||
-                    world.getBlockId( x, y + 1, z ) == BTWBlocks.lightBlockOn.blockID ||
-                    world.getBlockId( x, y + 2, z ) == BTWBlocks.lightBlockOn.blockID;
-        }
-        else {
+                    world.getBlockId(x, y + 1, z) == BTWBlocks.lightBlockOn.blockID ||
+                    world.getBlockId(x, y + 2, z) == BTWBlocks.lightBlockOn.blockID;
+        } else {
             return world.getBlockLightValue(x, y, z) >= getLightLevelForGrowth();
         }
     }
 
-    protected int getGrowthLevel(int meta)
-    {
-       switch (meta)
-       {
-           case 0:
-               return 3;
-           case 1:
-               return 2;
-           case 2:
-               return 1;
-           case 3:
-               return 0;
-       }
+    protected int getGrowthLevel(int meta) {
+        switch (meta) {
+            case 0:
+                return 3;
+            case 1:
+                return 2;
+            case 2:
+                return 1;
+            case 3:
+                return 0;
+        }
 
-       return -1;
+        return -1;
     }
 
-    protected void setGrowthLevel(World world, int x, int y, int z, int level)
-    {
+    protected void setGrowthLevel(World world, int x, int y, int z, int level) {
         world.setBlockMetadataWithNotify(x, y, z, getGrowthLevel(level));
     }
 
-    protected boolean isFullyGrown(int iMetadata)
-    {
+    protected boolean isFullyGrown(int iMetadata) {
         return getGrowthLevel(iMetadata) == 3;
     }
 
     private void incrementGrowthLevel(World world, int x, int y, int z) {
-        int oldMeta = world.getBlockMetadata(x,y,z);
-        world.setBlockMetadataWithNotify(x,y,z, oldMeta - 1);
+        int oldMeta = world.getBlockMetadata(x, y, z);
+        world.setBlockMetadataWithNotify(x, y, z, oldMeta - 1);
     }
+
     private void reduceGrowthLevel(World world, int x, int y, int z) {
-        int oldMeta = world.getBlockMetadata(x,y,z);
-        world.setBlockMetadataWithNotify(x,y,z, oldMeta + 1);
+        int oldMeta = world.getBlockMetadata(x, y, z);
+        world.setBlockMetadataWithNotify(x, y, z, oldMeta + 1);
     }
 
     @Override
-    public boolean onBlockActivated( World world, int x, int y, int z, EntityPlayer player, int iFacing, float fXClick, float fYClick, float fZClick )
-    {
-        if ( player.getCurrentEquippedItem() != null ) return false;
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int iFacing, float fXClick, float fYClick, float fZClick) {
+        if (player.getCurrentEquippedItem() != null) return false;
 
-        if (isFullyGrown(world.getBlockMetadata(x,y,z)))
-        {
+        if (isFullyGrown(world.getBlockMetadata(x, y, z))) {
             //reduce Growth Level
-            if (world.rand.nextFloat() <= getReduceGrowthChance()){
+            if (world.rand.nextFloat() <= getReduceGrowthChance()) {
                 //set to the smallest growth stage
-                setGrowthLevel(world, x,y,z, 0);
+                setGrowthLevel(world, x, y, z, 0);
 
                 //drop stick
                 dropItemsIndividually(world, x, y, z, Item.stick.itemID, 1, 0, 1);
@@ -145,14 +138,13 @@ public abstract class DeadBushBlockMixin extends BlockDeadBush {
     }
 
     @Override
-    public int damageDropped(int meta)
-    {
+    public int damageDropped(int meta) {
         return meta;
     }
 
     @Override
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side) {
-        return dead_bush_stages[blockAccess.getBlockMetadata(x,y,z)];
+        return dead_bush_stages[blockAccess.getBlockMetadata(x, y, z)];
     }
 
     @Override
@@ -160,7 +152,7 @@ public abstract class DeadBushBlockMixin extends BlockDeadBush {
         return dead_bush_stages[meta];
     }
 
-    private Icon[] dead_bush_stages = new Icon[4];
+    private final Icon[] dead_bush_stages = new Icon[4];
 
     @Override
     @Environment(EnvType.CLIENT)

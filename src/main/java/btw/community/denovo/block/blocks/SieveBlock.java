@@ -5,13 +5,15 @@ import btw.block.util.Flammability;
 import btw.client.render.util.RenderUtils;
 import btw.community.denovo.block.models.SieveModel;
 import btw.community.denovo.tileentity.SieveTileEntity;
+import btw.community.denovo.utils.SieveUtils;
+import btw.crafting.manager.HopperFilteringCraftingManager;
+import btw.crafting.recipe.types.HopperFilterRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 
 public class SieveBlock extends BlockContainer {
     private static final SieveModel model = new SieveModel();
-    private Icon planks;
 
     public SieveBlock(int id) {
         super(id, BTWBlocks.plankMaterial);
@@ -38,33 +40,46 @@ public class SieveBlock extends BlockContainer {
     @Override
     public boolean onBlockActivated(World world, int xCoord, int yCoord, int zCoord, EntityPlayer player, int facing, float xClick, float yClick, float zClick) {
         SieveTileEntity sieve = (SieveTileEntity) world.getBlockTileEntity(xCoord, yCoord, zCoord);
+        HopperFilteringCraftingManager crafting = HopperFilteringCraftingManager.instance;
 
         ItemStack heldStack = player.getHeldItem();
         ItemStack filterStack = sieve.getFilterStack();
         ItemStack contentsStack = sieve.getContentsStack();
         byte progressCounter = sieve.getProgressCounter();
 
-        if (filterStack == null && heldStack != null) {
-            // Add new filter
-            if (!world.isRemote) {
+        if (!world.isRemote) {
+            if (filterStack == null && heldStack != null && SieveUtils.isValidHopperFilter(heldStack)) {
+                // Add new filter
                 filterStack = heldStack.copy();
                 filterStack.stackSize = 1;
                 sieve.setFilterStack(filterStack);
                 heldStack.stackSize--;
-            }
-        } else if (contentsStack != null && progressCounter > 0) {
-            // Keep sieving
-        } else if (contentsStack != null && progressCounter == 0) {
-            // Done sieving, transform contents
-            //TODO: implement
-        } else if (filterStack != null && heldStack == null) {
-            if (!world.isRemote) {
-                player.addStackToCurrentHeldStackIfEmpty(filterStack);
-                sieve.setFilterStack(null);
-            }
-        }
+            } else if (contentsStack != null) {
+                if (progressCounter > 0) {
+                    // Keep sieving
+                    progressCounter -= 1;
+                    sieve.progress(progressCounter);
+                }
+            } else if (filterStack != null) {
+                if (heldStack == null && player.isSneaking()) {
+                    // Pull filter out
+                    player.addStackToCurrentHeldStackIfEmpty(filterStack);
+                    sieve.setFilterStack(null);
+                } else if (heldStack != null) {
+                    // Fill the sieve
+                    HopperFilterRecipe recipe = crafting.getRecipe(heldStack, filterStack);
+                    if (recipe != null) {
+                        contentsStack = heldStack.copy();
+                        contentsStack.stackSize = 1;
+                        heldStack.stackSize--;
 
-        world.markBlockForUpdate(xCoord, yCoord, zCoord);
+                        sieve.fill(contentsStack);
+                    }
+                }
+            }
+
+            world.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
 
         return true;
     }
@@ -74,9 +89,25 @@ public class SieveBlock extends BlockContainer {
         return new SieveTileEntity();
     }
 
-    // Rendering
+    //----------- Client Side Functionality -----------//
+
+    @Environment(EnvType.CLIENT)
+    private Icon filterIcon;
+
+    @Environment(EnvType.CLIENT)
+    private Icon contentsIcon;
 
     @Override
+    @Environment(EnvType.CLIENT)
+    public void registerIcons(IconRegister register) {
+        this.blockIcon = register.registerIcon("wood");
+
+        filterIcon = register.registerIcon("DNBlock_mesh");
+        contentsIcon = register.registerIcon("gravel");
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
     public boolean renderBlock(RenderBlocks renderer, int i, int j, int k) {
         IBlockAccess blockAccess = renderer.blockAccess;
         SieveTileEntity tileEntity = (SieveTileEntity) blockAccess.getBlockTileEntity(i, j, k);
@@ -94,20 +125,17 @@ public class SieveBlock extends BlockContainer {
             }
         }
 
+        byte progressCounter = tileEntity.getProgressCounter();
+
+        if (progressCounter > 0) {
+            double base = 1F - (4F / 16F);
+            double offset = progressCounter / 16F / (SieveTileEntity.MAX_PROGRESS - 1);
+            renderer.setRenderBounds(2F / 16F, base, 2F / 16F, 1F - (2F / 16F), base + (offset * 6), 1F - (2F / 16F));
+
+            RenderUtils.renderStandardBlockWithTexture(renderer, this, i, j, k, contentsIcon);
+        }
+
         return SieveBlock.model.renderAsBlock(renderer, this, i, j, k);
-    }
-
-    //----------- Client Side Functionality -----------//
-
-    @Environment(EnvType.CLIENT)
-    private Icon filterIcon;
-
-    @Override
-    @Environment(EnvType.CLIENT)
-    public void registerIcons(IconRegister register) {
-        this.blockIcon = this.planks = register.registerIcon("wood");
-
-        filterIcon = register.registerIcon("DNBlock_mesh");
     }
 
     @Override

@@ -1,9 +1,14 @@
 package btw.community.denovo.tileentity;
 
 import btw.block.tileentity.TileEntityDataPacketHandler;
+import btw.crafting.manager.HopperFilteringCraftingManager;
+import btw.crafting.recipe.types.HopperFilterRecipe;
+import btw.item.util.ItemUtils;
 import net.minecraft.src.*;
 
 public class SieveTileEntity extends TileEntity implements TileEntityDataPacketHandler {
+    public static final byte MAX_PROGRESS = 8;
+
     private ItemStack filterStack;
     private ItemStack contentsStack;
     private byte progressCounter;
@@ -25,13 +30,13 @@ public class SieveTileEntity extends TileEntity implements TileEntityDataPacketH
         if (contentsTag != null) {
             contentsStack = ItemStack.loadItemStackFromNBT(contentsTag);
         }
+
+        if (contentsStack == null) progressCounter = 0;
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-
-        tag.setByte("progress", progressCounter);
 
         if (filterStack != null) {
             NBTTagCompound filterTag = new NBTTagCompound();
@@ -40,6 +45,8 @@ public class SieveTileEntity extends TileEntity implements TileEntityDataPacketH
         }
 
         if (contentsStack != null) {
+            tag.setByte("progress", progressCounter);
+
             NBTTagCompound contentsTag = new NBTTagCompound();
             contentsStack.writeToNBT(contentsTag);
             tag.setCompoundTag("contents", contentsTag);
@@ -60,61 +67,39 @@ public class SieveTileEntity extends TileEntity implements TileEntityDataPacketH
         worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
     }
 
-    public void setContentsStack(ItemStack contents) {
+    public void fill(ItemStack contents) {
         this.contentsStack = contents;
+        this.progressCounter = MAX_PROGRESS;
+        onInventoryChanged();
+    }
+
+    public void progress(byte progressCounter) {
+        this.progressCounter = progressCounter;
+
+        if (progressCounter <= 0 && contentsStack != null) {
+            HopperFilterRecipe recipe = HopperFilteringCraftingManager.instance.getRecipe(contentsStack, filterStack);
+            ItemUtils.ejectStackAroundBlock(worldObj, xCoord, yCoord, zCoord, recipe.getHopperOutput().copy());
+            ItemUtils.ejectStackAroundBlock(worldObj, xCoord, yCoord, zCoord, recipe.getFilteredOutput().copy());
+            contentsStack = null;
+        }
+
+        onInventoryChanged();
+    }
+
+    public void setFilterStack(ItemStack filterStack) {
+        this.filterStack = filterStack;
+        onInventoryChanged();
     }
 
     public ItemStack getContentsStack() {
         return contentsStack;
     }
 
-    public void setFilterStack(ItemStack filterStack) {
-        this.filterStack = filterStack;
-    }
-
     public ItemStack getFilterStack() {
         return filterStack;
-    }
-
-    public void setProgressCounter(byte progressCounter) {
-        this.progressCounter = progressCounter;
     }
 
     public byte getProgressCounter() {
         return progressCounter;
     }
-
-    /*public void ejectContents(int iFacing)
-    {
-        if ( iFacing < 2 )
-        {
-            // always eject towards the sides
-
-            iFacing = worldObj.rand.nextInt( 4 ) + 2;
-        }
-
-        if (legacyInventory != null )
-        {
-            for (int iTempSlot = 0; iTempSlot < legacyInventory.length; iTempSlot++ )
-            {
-                if (legacyInventory[iTempSlot] != null && legacyInventory[iTempSlot].stackSize > 0 )
-                {
-                    ItemUtils.ejectStackFromBlockTowardsFacing(worldObj, xCoord, yCoord, zCoord, legacyInventory[iTempSlot], iFacing);
-
-                    legacyInventory[iTempSlot] = null;
-                }
-            }
-
-            legacyInventory = null;
-        }
-
-        if (stackMilling != null )
-        {
-            ItemUtils.ejectStackFromBlockTowardsFacing(worldObj, xCoord, yCoord, zCoord, stackMilling, iFacing);
-
-            stackMilling = null;
-
-            onInventoryChanged();
-        }
-    }*/
 }
