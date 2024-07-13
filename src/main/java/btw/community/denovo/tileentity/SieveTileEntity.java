@@ -1,6 +1,9 @@
 package btw.community.denovo.tileentity;
 
 import btw.block.tileentity.TileEntityDataPacketHandler;
+import btw.community.denovo.recipes.LootEntry;
+import btw.community.denovo.recipes.SiftingCraftingManager;
+import btw.community.denovo.recipes.SiftingRecipe;
 import btw.crafting.manager.HopperFilteringCraftingManager;
 import btw.crafting.recipe.types.HopperFilterRecipe;
 import btw.item.util.ItemUtils;
@@ -76,14 +79,33 @@ public class SieveTileEntity extends TileEntity implements TileEntityDataPacketH
     public void progress(byte progressCounter) {
         this.progressCounter = progressCounter;
 
-        if (progressCounter <= 0 && contentsStack != null) {
-            HopperFilterRecipe recipe = HopperFilteringCraftingManager.instance.getRecipe(contentsStack, filterStack);
-            ItemUtils.ejectStackAroundBlock(worldObj, xCoord, yCoord, zCoord, recipe.getHopperOutput().copy());
-            ItemUtils.ejectStackAroundBlock(worldObj, xCoord, yCoord, zCoord, recipe.getFilteredOutput().copy());
-            contentsStack = null;
+        if (progressCounter <= 0 && contentsStack != null && filterStack != null) {
+            HopperFilterRecipe hopperRecipe = HopperFilteringCraftingManager.instance.getRecipe(contentsStack, filterStack);
+            if (hopperRecipe != null) processHopperRecipe(hopperRecipe);
+        }
+
+        if (progressCounter <= 0 && contentsStack != null && filterStack != null) {
+            SiftingRecipe siftingRecipe = SiftingCraftingManager.getRecipe(contentsStack, filterStack);
+            if (siftingRecipe != null) processSiftingRecipe(siftingRecipe);
         }
 
         onInventoryChanged();
+    }
+
+    public void processHopperRecipe(HopperFilterRecipe recipe) {
+        ItemUtils.ejectStackAroundBlock(worldObj, xCoord, yCoord, zCoord, recipe.getHopperOutput().copy());
+        ItemUtils.ejectStackAroundBlock(worldObj, xCoord, yCoord, zCoord, recipe.getFilteredOutput().copy());
+        contentsStack = null;
+    }
+
+    public void processSiftingRecipe(SiftingRecipe recipe) {
+        for (LootEntry entry : recipe.getLootTable()) {
+            double roll = worldObj.rand.nextDouble();
+            if (roll < entry.getChance()) {
+                ItemUtils.ejectStackAroundBlock(worldObj, xCoord, yCoord, zCoord, entry.getResult().copy());
+            }
+        }
+        contentsStack = null;
     }
 
     public void setFilterStack(ItemStack filterStack) {

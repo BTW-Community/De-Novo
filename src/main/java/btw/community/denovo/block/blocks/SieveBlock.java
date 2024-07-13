@@ -4,6 +4,8 @@ import btw.block.BTWBlocks;
 import btw.block.util.Flammability;
 import btw.client.render.util.RenderUtils;
 import btw.community.denovo.block.models.SieveModel;
+import btw.community.denovo.recipes.SiftingCraftingManager;
+import btw.community.denovo.recipes.SiftingRecipe;
 import btw.community.denovo.tileentity.SieveTileEntity;
 import btw.community.denovo.utils.SieveUtils;
 import btw.crafting.manager.HopperFilteringCraftingManager;
@@ -69,6 +71,15 @@ public class SieveBlock extends BlockContainer {
                     // Fill the sieve
                     HopperFilterRecipe recipe = crafting.getRecipe(heldStack, filterStack);
                     if (recipe != null) {
+                        contentsStack = heldStack.copy();
+                        contentsStack.stackSize = 1;
+                        heldStack.stackSize--;
+
+                        sieve.fill(contentsStack);
+                    }
+
+                    SiftingRecipe siftingRecipe = SiftingCraftingManager.getRecipe(heldStack, filterStack);
+                    if (siftingRecipe != null) {
                         contentsStack = heldStack.copy();
                         contentsStack.stackSize = 1;
                         heldStack.stackSize--;
