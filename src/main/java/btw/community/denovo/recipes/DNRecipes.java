@@ -27,5 +27,14 @@ public class DNRecipes {
                 new ItemStack(BTWBlocks.looseDirt),
                 new ItemStack(DNItems.mesh)
         );
+
+        SiftingCraftingManager.addSiftingRecipe(
+                new LootEntry[]{
+                        new LootEntry(0.5D, 8, new ItemStack(BTWItems.stone)),
+                        new LootEntry(0.5D, 8, new ItemStack(BTWItems.gravelPile))
+                },
+                new ItemStack(BTWBlocks.looseCobblestone),
+                new ItemStack(DNItems.mesh)
+        );
     }
 }

@@ -57,6 +57,11 @@ public class SieveUtils {
         }
 
         {
+            Icon icon = BTWBlocks.looseCobblestone.blockIcon;
+            if (id == BTWBlocks.looseCobblestone.blockID) return icon;
+        }
+
+        {
             Icon icon = BTWBlocks.aestheticEarth.getIcon(0, 7);
             if (id == BTWBlocks.aestheticEarth.blockID && metadata == 7) return icon;
             if (id == BTWItems.dung.itemID) return icon;
