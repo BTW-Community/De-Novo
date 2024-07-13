@@ -139,6 +139,8 @@ public class SieveBlock extends BlockContainer {
         byte progressCounter = tileEntity.getProgressCounter();
 
         if (progressCounter > 0) {
+            Icon contentsIcon = SieveUtils.getBulkIcon(tileEntity.getContentsStack());
+
             double base = 1F - (4F / 16F);
             double offset = progressCounter / 16F / (SieveTileEntity.MAX_PROGRESS - 1);
             renderer.setRenderBounds(2F / 16F, base, 2F / 16F, 1F - (2F / 16F), base + (offset * 6), 1F - (2F / 16F));
