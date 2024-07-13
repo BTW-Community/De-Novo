@@ -4,5 +4,8 @@ tile.deadbush.small.name=Small Dead Bush
 tile.deadbush.medium.name=Medium Dead Bush
 tile.deadbush.mature.name=Dead Bush
 tile.DNSieve.name=Sieve
+
 #Items
 item.DNItem_mesh.name=Mesh
+item.DNItem_maggots.name=Maggots
+item.DNItem_maggots_cooked.name=Cooked Maggots

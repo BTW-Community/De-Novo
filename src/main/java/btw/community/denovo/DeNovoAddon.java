@@ -41,10 +41,12 @@ public class DeNovoAddon extends BTWAddon {
         this.registerProperty("AllowGoldenDungOnHCS", "False", "Set the following to true to allow players to get a piece of golden dung on every HCS");
 
         //Block IDs
-        this.registerProperty("DNSieveID", "3900", "***Block IDs***\n\n");
+        this.registerProperty("DNBlockSieveID", "3900", "***Block IDs***\n\n");
 
         //Item IDs
-        this.registerProperty("DNMeshID", "23000", "***Item IDs***\n\n");
+        this.registerProperty("DNItemMeshID", "23000", "***Item IDs***\n\n");
+        this.registerProperty("DNItemRawMaggotsID", "23001");
+        this.registerProperty("DNItemCookedMaggotsID", "23002");
     }
 
     @Override
