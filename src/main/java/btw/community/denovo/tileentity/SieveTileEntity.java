@@ -100,9 +100,11 @@ public class SieveTileEntity extends TileEntity implements TileEntityDataPacketH
 
     public void processSiftingRecipe(SiftingRecipe recipe) {
         for (LootEntry entry : recipe.getLootTable()) {
-            double roll = worldObj.rand.nextDouble();
-            if (roll < entry.getChance()) {
-                ItemUtils.ejectStackAroundBlock(worldObj, xCoord, yCoord, zCoord, entry.getResult().copy());
+            for (int i = 0; i < entry.getAmount(); i++) {
+                double roll = worldObj.rand.nextDouble();
+                if (roll < entry.getChance()) {
+                    ItemUtils.ejectStackAroundBlock(worldObj, xCoord, yCoord, zCoord, entry.getResult().copy());
+                }
             }
         }
         contentsStack = null;
