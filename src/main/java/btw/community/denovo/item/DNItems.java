@@ -3,6 +3,8 @@ package btw.community.denovo.item;
 import btw.community.denovo.DeNovoAddon;
 import btw.community.denovo.item.items.DirtPileItem;
 import btw.community.denovo.item.items.MeshItem;
+import btw.community.denovo.item.items.RawMaggotsItem;
+import btw.community.denovo.item.items.WaterBowlItem;
 import btw.item.BTWItems;
 import btw.item.items.FoodItem;
 import btw.item.items.PlaceAsBlockItem;
@@ -14,6 +16,7 @@ public class DNItems {
     public static Item mesh;
     public static Item rawMaggots;
     public static Item cookedMaggots;
+    public static Item waterBowl;
 
     //TODO: progressive maggots to string item?
 
@@ -27,12 +30,14 @@ public class DNItems {
         BTWItems.goldenDung = new PlaceAsBlockItem(BTWItems.goldenDung.itemID - 256, Block.deadBush.blockID).setUnlocalizedName("fcItemDungGolden");
         BTWItems.dirtPile = new DirtPileItem(BTWItems.dirtPile.itemID - 256, Block.deadBush.blockID);
 
-        mesh = new MeshItem(DeNovoAddon.instance.parseID("DNItemMeshID"));
+        mesh = new MeshItem(DeNovoAddon.instance.parseID("DNItemMeshID") - 256);
 
-        rawMaggots = new FoodItem(DeNovoAddon.instance.parseID("DNItemRawMaggotsID"), RAW_MAGGOTS_HUNGER_HEALED, RAW_MAGGOTS_SATURATION_MOD, false, "DNItem_maggots")
+        rawMaggots = new RawMaggotsItem(DeNovoAddon.instance.parseID("DNItemRawMaggotsID") - 256, RAW_MAGGOTS_HUNGER_HEALED, RAW_MAGGOTS_SATURATION_MOD, false, "DNItem_maggots")
                 .setCreativeTab(CreativeTabs.tabMisc);
 
-        cookedMaggots = new FoodItem(DeNovoAddon.instance.parseID("DNItemCookedMaggotsID"), COOKED_MAGGOTS_HUNGER_HEALED, COOKED_MAGGOTS_SATURATION_MOD, false, "DNItem_maggots_cooked")
+        cookedMaggots = new FoodItem(DeNovoAddon.instance.parseID("DNItemCookedMaggotsID") - 256, COOKED_MAGGOTS_HUNGER_HEALED, COOKED_MAGGOTS_SATURATION_MOD, false, "DNItem_maggots_cooked")
                 .setCreativeTab(CreativeTabs.tabMisc);
+
+        waterBowl = new WaterBowlItem(DeNovoAddon.instance.parseID("DNItemWaterBowlID")- 256);
     }
 }
