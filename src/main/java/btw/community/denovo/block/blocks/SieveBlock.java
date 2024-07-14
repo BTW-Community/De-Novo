@@ -12,6 +12,8 @@ import btw.community.denovo.tileentity.SieveTileEntity;
 import btw.community.denovo.utils.SieveUtils;
 import btw.crafting.manager.HopperFilteringCraftingManager;
 import btw.crafting.recipe.types.HopperFilterRecipe;
+import btw.inventory.util.InventoryUtils;
+import btw.item.BTWItems;
 import btw.item.util.ItemUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -27,7 +29,7 @@ public class SieveBlock extends BlockContainer {
     public SieveBlock(int id) {
         super(id, BTWBlocks.plankMaterial);
 
-        setHardness(2F);
+        setHardness(0.5F);
 
         setAxesEffectiveOn(true);
 
@@ -89,8 +91,12 @@ public class SieveBlock extends BlockContainer {
                     ArrayList<ItemStack> output = new ArrayList<ItemStack>();
 
                     if (hopperFilterRecipe != null) {
-                        output.add(hopperFilterRecipe.getHopperOutput().copy());
-                        output.add(hopperFilterRecipe.getFilteredOutput().copy());
+                        if (hopperFilterRecipe.getHopperOutput() != null) {
+                            output.add(hopperFilterRecipe.getHopperOutput().copy());
+                        }
+                        if (hopperFilterRecipe.getFilteredOutput() != null) {
+                            output.add(hopperFilterRecipe.getFilteredOutput().copy());
+                        }
                     }
 
                     if (siftingRecipe != null) {
@@ -167,10 +173,25 @@ public class SieveBlock extends BlockContainer {
         return false;
     }
 
+    @Override
+    public void breakBlock(World world, int xCoord, int yCoord, int zCoord, int blockID, int meta)
+    {
+        SieveTileEntity tileEntity = (SieveTileEntity) world.getBlockTileEntity(xCoord, yCoord, zCoord);
+
+        ItemUtils.ejectStackAroundBlock(world, xCoord, yCoord, zCoord, tileEntity.getContents());
+        ItemUtils.ejectStackAroundBlock(world, xCoord, yCoord, zCoord, tileEntity.getFilter());
+
+        tileEntity.setContents(null);
+        tileEntity.setFilter(null);
+
+        super.breakBlock( world, xCoord, yCoord, zCoord, blockID, meta );
+    }
+
     //----------- Class Specific Methods -----------//
 
     public void breakSieve(World world, int i, int j, int k) {
-        dropComponentItemsOnBadBreak(world, i, j, k, world.getBlockMetadata(i, j, k), 1F);
+        dropItemsIndividually(world, i, j, k, Item.stick.itemID, 2, 0, 1F);
+        dropItemsIndividually(world, i, j, k, BTWItems.sawDust.itemID, 2, 0, 1F);
 
         world.playAuxSFX(BTWEffectManager.MECHANICAL_DEVICE_EXPLODE_EFFECT_ID, i, j, k, 0);
 
