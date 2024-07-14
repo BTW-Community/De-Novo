@@ -6,6 +6,7 @@ import btw.community.denovo.item.DNItems;
 import btw.crafting.recipe.RecipeManager;
 import btw.item.BTWItems;
 import net.minecraft.src.Block;
+import net.minecraft.src.CraftingManager;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 
@@ -25,6 +26,7 @@ public class DNRecipes {
     }
 
     private static void addSieveRecipes() {
+        // Dirt sifting
         SiftingCraftingManager.addSiftingRecipe(
                 new LootEntry[]{
                         new LootEntry(1.0D / 2, 1, new ItemStack(BTWItems.stone)),
@@ -45,12 +47,30 @@ public class DNRecipes {
                 new ItemStack(DNItems.mesh)
         );
 
+        // Cobble sifting
         SiftingCraftingManager.addSiftingRecipe(
                 new LootEntry[]{
                         new LootEntry(1.0D / 2, 8, new ItemStack(BTWItems.stone)),
                         new LootEntry(1.0D / 2, 8, new ItemStack(BTWItems.gravelPile))
                 },
                 new ItemStack(BTWBlocks.looseCobblestone),
+                new ItemStack(DNItems.mesh)
+        );
+
+        // Gravel sifting
+        SiftingCraftingManager.addSiftingRecipe(
+                new LootEntry[]{
+                        new LootEntry(1.0D / 8, 1, new ItemStack(Item.flint))
+                },
+                new ItemStack(BTWItems.gravelPile),
+                new ItemStack(DNItems.mesh)
+        );
+
+        SiftingCraftingManager.addSiftingRecipe(
+                new LootEntry[]{
+                        new LootEntry(1.0D, 1, new ItemStack(Item.flint))
+                },
+                new ItemStack(Block.gravel),
                 new ItemStack(DNItems.mesh)
         );
 
@@ -63,6 +83,7 @@ public class DNRecipes {
                 new ItemStack(BTWBlocks.wickerPane)
         );
 
+        // Dung sifting
         SiftingCraftingManager.addSiftingRecipe(
                 new LootEntry[]{
                         new LootEntry(1.0D / 3, 1, new ItemStack(Item.pumpkinSeeds)),
