@@ -10,18 +10,20 @@ import btw.item.util.ItemUtils;
 import net.minecraft.src.*;
 
 public class SieveTileEntity extends TileEntity implements TileEntityDataPacketHandler {
-    public static final byte MAX_PROGRESS = 8;
+    public static final int MAX_PROGRESS = 8;
 
     private ItemStack filterStack;
     private ItemStack contentsStack;
-    private byte progressCounter;
+    private int progressCounter;
+
+    //------------- TileEntity ------------//
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
 
         if (tag.hasKey("progress")) {
-            progressCounter = tag.getByte("progress");
+            progressCounter = tag.getInteger("progress");
         }
 
         NBTTagCompound filterTag = tag.getCompoundTag("filter");
@@ -48,7 +50,7 @@ public class SieveTileEntity extends TileEntity implements TileEntityDataPacketH
         }
 
         if (contentsStack != null) {
-            tag.setByte("progress", progressCounter);
+            tag.setInteger("progress", progressCounter);
 
             NBTTagCompound contentsTag = new NBTTagCompound();
             contentsStack.writeToNBT(contentsTag);
@@ -64,10 +66,18 @@ public class SieveTileEntity extends TileEntity implements TileEntityDataPacketH
         return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
     }
 
+    //------------- TileEntityDataPacketHandler ------------//
+
     @Override
     public void readNBTFromPacket(NBTTagCompound tag) {
         this.readFromNBT(tag);
         worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+    }
+
+    //------------- Class Specific Methods ------------//
+
+    public float getProgress() {
+        return ((float) progressCounter) / MAX_PROGRESS;
     }
 
     public void fill(ItemStack contents) {
@@ -76,7 +86,7 @@ public class SieveTileEntity extends TileEntity implements TileEntityDataPacketH
         onInventoryChanged();
     }
 
-    public void progress(byte progressCounter) {
+    public void progress(int progressCounter) {
         this.progressCounter = progressCounter;
 
         if (progressCounter <= 0 && contentsStack != null && filterStack != null) {
@@ -123,7 +133,7 @@ public class SieveTileEntity extends TileEntity implements TileEntityDataPacketH
         return filterStack;
     }
 
-    public byte getProgressCounter() {
+    public int getProgressCounter() {
         return progressCounter;
     }
 }

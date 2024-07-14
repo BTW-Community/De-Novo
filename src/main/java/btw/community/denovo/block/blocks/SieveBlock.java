@@ -47,7 +47,7 @@ public class SieveBlock extends BlockContainer {
         ItemStack heldStack = player.getHeldItem();
         ItemStack filterStack = sieve.getFilterStack();
         ItemStack contentsStack = sieve.getContentsStack();
-        byte progressCounter = sieve.getProgressCounter();
+        int progressCounter = sieve.getProgressCounter();
 
         if (!world.isRemote) {
             if (filterStack == null && heldStack != null && SieveUtils.isValidHopperFilter(heldStack)) {
@@ -100,13 +100,15 @@ public class SieveBlock extends BlockContainer {
         return new SieveTileEntity();
     }
 
+    @Override
+    public boolean isOpaqueCube() {
+        return false;
+    }
+
     //----------- Client Side Functionality -----------//
 
     @Environment(EnvType.CLIENT)
     private Icon filterIcon;
-
-    @Environment(EnvType.CLIENT)
-    private Icon contentsIcon;
 
     @Override
     @Environment(EnvType.CLIENT)
@@ -114,7 +116,6 @@ public class SieveBlock extends BlockContainer {
         this.blockIcon = register.registerIcon("wood");
 
         filterIcon = register.registerIcon("DNBlock_mesh");
-        contentsIcon = register.registerIcon("gravel");
     }
 
     @Override
@@ -130,20 +131,36 @@ public class SieveBlock extends BlockContainer {
             Icon filterIcon = filterStack.getItem().getHopperFilterIcon();
 
             if (filterIcon != null) {
-                renderer.setRenderBounds(2F / 16F, 1F - (5F / 16F), 2F / 16F, 1F - (2F / 16F), 1F - (4F / 16F), 1F - (2F / 16F));
+                renderer.setRenderBounds(
+                        2 / 16D,
+                        1 - (5 / 16D),
+                        2 / 16D,
+
+                        1 - (2 / 16D),
+                        1 - (4 / 16D),
+                        1 - (2 / 16D)
+                );
 
                 RenderUtils.renderStandardBlockWithTexture(renderer, this, i, j, k, filterIcon);
             }
         }
 
-        byte progressCounter = tileEntity.getProgressCounter();
+        float progress = tileEntity.getProgress();
 
-        if (progressCounter > 0) {
+        if (progress > 0) {
             Icon contentsIcon = SieveUtils.getBulkIcon(tileEntity.getContentsStack());
 
-            double base = 1F - (4F / 16F);
-            double offset = progressCounter / 16F / (SieveTileEntity.MAX_PROGRESS - 1);
-            renderer.setRenderBounds(2F / 16F, base, 2F / 16F, 1F - (2F / 16F), base + (offset * 6), 1F - (2F / 16F));
+            double base = 1 - (4 / 16D);
+            double offset = (progress * 6) / 16D;
+            renderer.setRenderBounds(
+                    2 / 16D,
+                    base,
+                    2 / 16D,
+
+                    1 - (2 / 16D),
+                    base + offset,
+                    1 - (2 / 16D)
+            );
 
             RenderUtils.renderStandardBlockWithTexture(renderer, this, i, j, k, contentsIcon);
         }
@@ -158,21 +175,13 @@ public class SieveBlock extends BlockContainer {
     }
 
     @Override
-    public boolean renderAsNormalBlock() {
-        return false;
-    }
-
-    @Override
+    @Environment(EnvType.CLIENT)
     public boolean shouldSideBeRendered(IBlockAccess blockAccess, int iNeighborI, int iNeighborJ, int iNeighborK, int iSide) {
         return true;
     }
 
     @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-
-    @Override
+    @Environment(EnvType.CLIENT)
     public void renderBlockAsItem(RenderBlocks renderBlocks, int iItemDamage, float fBrightness) {
         SieveBlock.model.renderAsItemBlock(renderBlocks, this, iItemDamage);
     }
