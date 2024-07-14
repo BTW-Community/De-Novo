@@ -77,6 +77,8 @@ public class SieveBlock extends BlockContainer {
             if (!world.isRemote) {
                 if (tileEntity.getProgressCounter() > 0) {
                     tileEntity.decrementProgress();
+
+                    world.playSoundAtEntity(player, "step.grass", 1F, 1F);
                 }
 
                 if (tileEntity.getProgressCounter() <= 0) {
