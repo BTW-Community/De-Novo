@@ -2,25 +2,34 @@ package btw.community.denovo.block.blocks;
 
 import btw.block.BTWBlocks;
 import btw.block.util.Flammability;
+import btw.client.fx.BTWEffectManager;
 import btw.client.render.util.RenderUtils;
 import btw.community.denovo.block.models.SieveModel;
+import btw.community.denovo.recipes.LootEntry;
 import btw.community.denovo.recipes.SiftingCraftingManager;
 import btw.community.denovo.recipes.SiftingRecipe;
 import btw.community.denovo.tileentity.SieveTileEntity;
 import btw.community.denovo.utils.SieveUtils;
 import btw.crafting.manager.HopperFilteringCraftingManager;
 import btw.crafting.recipe.types.HopperFilterRecipe;
+import btw.inventory.util.InventoryUtils;
+import btw.item.BTWItems;
+import btw.item.util.ItemUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 
+import java.util.ArrayList;
+
 public class SieveBlock extends BlockContainer {
+    private static final int MAX_PROGRESS = 8;
+
     private static final SieveModel model = new SieveModel();
 
     public SieveBlock(int id) {
         super(id, BTWBlocks.plankMaterial);
 
-        setHardness(2F);
+        setHardness(0.5F);
 
         setAxesEffectiveOn(true);
 
@@ -41,58 +50,119 @@ public class SieveBlock extends BlockContainer {
 
     @Override
     public boolean onBlockActivated(World world, int xCoord, int yCoord, int zCoord, EntityPlayer player, int facing, float xClick, float yClick, float zClick) {
-        SieveTileEntity sieve = (SieveTileEntity) world.getBlockTileEntity(xCoord, yCoord, zCoord);
-        HopperFilteringCraftingManager crafting = HopperFilteringCraftingManager.instance;
+        SieveTileEntity tileEntity = (SieveTileEntity) world.getBlockTileEntity(xCoord, yCoord, zCoord);
 
-        ItemStack heldStack = player.getHeldItem();
-        ItemStack filterStack = sieve.getFilterStack();
-        ItemStack contentsStack = sieve.getContentsStack();
-        byte progressCounter = sieve.getProgressCounter();
+        if (tileEntity.getFilter() == null) {
+            ItemStack heldItem = player.getHeldItem();
 
-        if (!world.isRemote) {
-            if (filterStack == null && heldStack != null && SieveUtils.isValidHopperFilter(heldStack)) {
-                // Add new filter
-                filterStack = heldStack.copy();
-                filterStack.stackSize = 1;
-                sieve.setFilterStack(filterStack);
-                heldStack.stackSize--;
-            } else if (contentsStack != null) {
-                if (progressCounter > 0) {
-                    // Keep sieving
-                    progressCounter -= 1;
-                    sieve.progress(progressCounter);
+            // Set a new filter
+            if (heldItem != null && SieveUtils.isValidHopperFilter(heldItem)) {
+                if (!world.isRemote) {
+                    ItemStack filter = heldItem.copy();
+                    filter.stackSize = 1;
+                    tileEntity.setFilter(filter);
+                    heldItem.stackSize--;
+
+                    world.markBlockForUpdate(xCoord, yCoord, zCoord);
                 }
-            } else if (filterStack != null) {
-                if (heldStack == null && player.isSneaking()) {
-                    // Pull filter out
-                    player.addStackToCurrentHeldStackIfEmpty(filterStack);
-                    sieve.setFilterStack(null);
-                } else if (heldStack != null) {
-                    // Fill the sieve
-                    HopperFilterRecipe recipe = crafting.getRecipe(heldStack, filterStack);
-                    if (recipe != null) {
-                        contentsStack = heldStack.copy();
-                        contentsStack.stackSize = 1;
-                        heldStack.stackSize--;
 
-                        sieve.fill(contentsStack);
-                    }
-
-                    SiftingRecipe siftingRecipe = SiftingCraftingManager.getRecipe(heldStack, filterStack);
-                    if (siftingRecipe != null) {
-                        contentsStack = heldStack.copy();
-                        contentsStack.stackSize = 1;
-                        heldStack.stackSize--;
-
-                        sieve.fill(contentsStack);
-                    }
-                }
+                return true;
             }
 
-            world.markBlockForUpdate(xCoord, yCoord, zCoord);
+            return false;
         }
 
-        return true;
+        // Keep sieving
+        if (tileEntity.getContents() != null) {
+            if (!world.isRemote) {
+                if (tileEntity.getProgressCounter() > 0) {
+                    tileEntity.decrementProgress();
+
+                    world.playSoundAtEntity(player, "step.grass", 1F, 1F);
+                }
+
+                if (tileEntity.getProgressCounter() <= 0) {
+                    HopperFilterRecipe hopperFilterRecipe = HopperFilteringCraftingManager.instance.getRecipe(tileEntity.getContents(), tileEntity.getFilter());
+                    SiftingRecipe siftingRecipe = SiftingCraftingManager.getRecipe(tileEntity.getContents(), tileEntity.getFilter());
+
+                    if ((hopperFilterRecipe != null && hopperFilterRecipe.getContainsSouls())
+                            || (siftingRecipe != null && siftingRecipe.getContainsSouls())) {
+                        tileEntity.releaseSouls();
+                    }
+
+                    ArrayList<ItemStack> output = new ArrayList<ItemStack>();
+
+                    if (hopperFilterRecipe != null) {
+                        if (hopperFilterRecipe.getHopperOutput() != null) {
+                            output.add(hopperFilterRecipe.getHopperOutput().copy());
+                        }
+                        if (hopperFilterRecipe.getFilteredOutput() != null) {
+                            output.add(hopperFilterRecipe.getFilteredOutput().copy());
+                        }
+                    }
+
+                    if (siftingRecipe != null) {
+                        for (LootEntry entry : siftingRecipe.getLootTable()) {
+                            for (int i = 0; i < entry.getAmount(); i++) {
+                                double roll = world.rand.nextDouble();
+                                if (roll < entry.getChance()) {
+                                    output.add(entry.getResult().copy());
+                                }
+                            }
+                        }
+                    }
+
+                    if (!output.isEmpty()) {
+                        world.playAuxSFX(BTWEffectManager.ITEM_COLLECTION_POP_EFFECT_ID, xCoord, yCoord, zCoord, 0);
+
+                        for (ItemStack stack : output) {
+                            ItemUtils.ejectStackAroundBlock(world, xCoord, yCoord, zCoord, stack);
+                        }
+                    }
+
+                    tileEntity.setContents(null);
+                }
+
+                world.markBlockForUpdate(xCoord, yCoord, zCoord);
+            }
+
+            return true;
+        }
+
+        // Pull filter out
+        if (player.getHeldItem() == null && player.isSneaking()) {
+            if (!world.isRemote) {
+                player.addStackToCurrentHeldStackIfEmpty(tileEntity.getFilter());
+                tileEntity.setFilter(null);
+
+                world.playAuxSFX(BTWEffectManager.ITEM_COLLECTION_POP_EFFECT_ID, xCoord, yCoord, zCoord, 0);
+
+                world.markBlockForUpdate(xCoord, yCoord, zCoord);
+            }
+
+            return true;
+        }
+
+        // Fill sieve
+        if (player.getHeldItem() != null) {
+            HopperFilterRecipe hopperFilterRecipe = HopperFilteringCraftingManager.instance.getRecipe(player.getHeldItem(), tileEntity.getFilter());
+            SiftingRecipe siftingRecipe = SiftingCraftingManager.getRecipe(player.getHeldItem(), tileEntity.getFilter());
+
+            if (hopperFilterRecipe != null || siftingRecipe != null) {
+                if (!world.isRemote) {
+                    ItemStack input = player.getHeldItem().copy();
+                    input.stackSize = 1;
+                    tileEntity.setContents(input);
+                    player.getHeldItem().stackSize--;
+
+                    world.markBlockForUpdate(xCoord, yCoord, zCoord);
+                }
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -100,13 +170,40 @@ public class SieveBlock extends BlockContainer {
         return new SieveTileEntity();
     }
 
+    @Override
+    public boolean isOpaqueCube() {
+        return false;
+    }
+
+    @Override
+    public void breakBlock(World world, int xCoord, int yCoord, int zCoord, int blockID, int meta)
+    {
+        SieveTileEntity tileEntity = (SieveTileEntity) world.getBlockTileEntity(xCoord, yCoord, zCoord);
+
+        ItemUtils.ejectStackAroundBlock(world, xCoord, yCoord, zCoord, tileEntity.getContents());
+        ItemUtils.ejectStackAroundBlock(world, xCoord, yCoord, zCoord, tileEntity.getFilter());
+
+        tileEntity.setContents(null);
+        tileEntity.setFilter(null);
+
+        super.breakBlock( world, xCoord, yCoord, zCoord, blockID, meta );
+    }
+
+    //----------- Class Specific Methods -----------//
+
+    public void breakSieve(World world, int i, int j, int k) {
+        dropItemsIndividually(world, i, j, k, Item.stick.itemID, 2, 0, 1F);
+        dropItemsIndividually(world, i, j, k, BTWItems.sawDust.itemID, 2, 0, 1F);
+
+        world.playAuxSFX(BTWEffectManager.MECHANICAL_DEVICE_EXPLODE_EFFECT_ID, i, j, k, 0);
+
+        world.setBlockWithNotify(i, j, k, 0);
+    }
+
     //----------- Client Side Functionality -----------//
 
     @Environment(EnvType.CLIENT)
     private Icon filterIcon;
-
-    @Environment(EnvType.CLIENT)
-    private Icon contentsIcon;
 
     @Override
     @Environment(EnvType.CLIENT)
@@ -114,7 +211,6 @@ public class SieveBlock extends BlockContainer {
         this.blockIcon = register.registerIcon("wood");
 
         filterIcon = register.registerIcon("DNBlock_mesh");
-        contentsIcon = register.registerIcon("gravel");
     }
 
     @Override
@@ -124,26 +220,42 @@ public class SieveBlock extends BlockContainer {
         SieveTileEntity tileEntity = (SieveTileEntity) blockAccess.getBlockTileEntity(i, j, k);
 
         // render the filter
-        ItemStack filterStack = tileEntity.getFilterStack();
+        ItemStack filterStack = tileEntity.getFilter();
 
         if (filterStack != null) {
             Icon filterIcon = filterStack.getItem().getHopperFilterIcon();
 
             if (filterIcon != null) {
-                renderer.setRenderBounds(2F / 16F, 1F - (5F / 16F), 2F / 16F, 1F - (2F / 16F), 1F - (4F / 16F), 1F - (2F / 16F));
+                renderer.setRenderBounds(
+                        2 / 16D,
+                        1 - (5 / 16D),
+                        2 / 16D,
+
+                        1 - (2 / 16D),
+                        1 - (4 / 16D),
+                        1 - (2 / 16D)
+                );
 
                 RenderUtils.renderStandardBlockWithTexture(renderer, this, i, j, k, filterIcon);
             }
         }
 
-        byte progressCounter = tileEntity.getProgressCounter();
+        float progress = tileEntity.getProgressPercentage();
 
-        if (progressCounter > 0) {
-            Icon contentsIcon = SieveUtils.getBulkIcon(tileEntity.getContentsStack());
+        if (progress > 0) {
+            Icon contentsIcon = SieveUtils.getBulkIcon(tileEntity.getContents());
 
-            double base = 1F - (4F / 16F);
-            double offset = progressCounter / 16F / (SieveTileEntity.MAX_PROGRESS - 1);
-            renderer.setRenderBounds(2F / 16F, base, 2F / 16F, 1F - (2F / 16F), base + (offset * 6), 1F - (2F / 16F));
+            double base = 1 - (4 / 16D);
+            double offset = (progress * 6) / 16D;
+            renderer.setRenderBounds(
+                    2 / 16D,
+                    base,
+                    2 / 16D,
+
+                    1 - (2 / 16D),
+                    base + offset,
+                    1 - (2 / 16D)
+            );
 
             RenderUtils.renderStandardBlockWithTexture(renderer, this, i, j, k, contentsIcon);
         }
@@ -158,21 +270,13 @@ public class SieveBlock extends BlockContainer {
     }
 
     @Override
-    public boolean renderAsNormalBlock() {
-        return false;
-    }
-
-    @Override
+    @Environment(EnvType.CLIENT)
     public boolean shouldSideBeRendered(IBlockAccess blockAccess, int iNeighborI, int iNeighborJ, int iNeighborK, int iSide) {
         return true;
     }
 
     @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-
-    @Override
+    @Environment(EnvType.CLIENT)
     public void renderBlockAsItem(RenderBlocks renderBlocks, int iItemDamage, float fBrightness) {
         SieveBlock.model.renderAsItemBlock(renderBlocks, this, iItemDamage);
     }
