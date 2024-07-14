@@ -39,5 +39,6 @@ public abstract class SaplingBlockMixin extends DailyGrowthCropsBlock {
     private void reduceGrowthLevel(World world, int x, int y, int z) {
         int newGrowthLevel = getGrowthLevel(world, x, y, z) - 2;
         setGrowthLevel(world, x, y, z, newGrowthLevel);
+        setHasGrownToday(world, x, y, z, false);
     }
 }

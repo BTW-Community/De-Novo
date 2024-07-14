@@ -38,6 +38,6 @@ public class DNItems {
         cookedMaggots = new FoodItem(DeNovoAddon.instance.parseID("DNItemCookedMaggotsID") - 256, COOKED_MAGGOTS_HUNGER_HEALED, COOKED_MAGGOTS_SATURATION_MOD, false, "DNItem_maggots_cooked")
                 .setCreativeTab(CreativeTabs.tabMisc);
 
-        waterBowl = new WaterBowlItem(DeNovoAddon.instance.parseID("DNItemWaterBowlID")- 256);
+        waterBowl = new WaterBowlItem(DeNovoAddon.instance.parseID("DNItemWaterBowlID") - 256);
     }
 }

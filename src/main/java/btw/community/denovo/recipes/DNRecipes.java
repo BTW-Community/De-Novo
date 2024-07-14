@@ -20,6 +20,13 @@ public class DNRecipes {
     }
 
     private static void addCraftingRecipes() {
+        RecipeManager.addRecipe(new ItemStack(DNBlocks.sieve), new Object[]{
+                "TT",
+                "SS",
+                'T', new ItemStack(Item.silk),
+                'S', new ItemStack(Item.stick),
+        });
+
         RecipeManager.addShapelessRecipe(new ItemStack(Item.bowlEmpty),
                 new Object[]{
                         new ItemStack(BTWItems.wickerPane),
@@ -85,13 +92,71 @@ public class DNRecipes {
     }
 
     private static void addSieveRecipes() {
+        // Dirt sifting
         SiftingCraftingManager.addSiftingRecipe(
                 new LootEntry[]{
-                        new LootEntry(0.5D, new ItemStack(BTWItems.stone)),
-                        new LootEntry(0.2D, new ItemStack(Block.sapling)),
-                        new LootEntry(0.1D, new ItemStack(BTWItems.sugarCaneRoots))
+                        new LootEntry(1.0D / 2, 1, new ItemStack(BTWItems.stone)),
+                        new LootEntry(1.0D / 5, 1, new ItemStack(Block.sapling)),
+                        new LootEntry(1.0D / 10, 1, new ItemStack(BTWItems.sugarCaneRoots))
                 },
                 new ItemStack(BTWBlocks.aestheticEarth, 1, 7),
+                new ItemStack(DNItems.mesh)
+        );
+
+        SiftingCraftingManager.addSiftingRecipe(
+                new LootEntry[]{
+                        new LootEntry(1.0D / 2, 8, new ItemStack(BTWItems.stone)),
+                        new LootEntry(1.0D / 5, 8, new ItemStack(Block.sapling)),
+                        new LootEntry(1.0D / 10, 8, new ItemStack(BTWItems.sugarCaneRoots))
+                },
+                new ItemStack(BTWBlocks.looseDirt),
+                new ItemStack(DNItems.mesh)
+        );
+
+        // Cobble sifting
+        SiftingCraftingManager.addSiftingRecipe(
+                new LootEntry[]{
+                        new LootEntry(1.0D / 2, 8, new ItemStack(BTWItems.stone)),
+                        new LootEntry(1.0D / 2, 8, new ItemStack(BTWItems.gravelPile))
+                },
+                new ItemStack(BTWBlocks.looseCobblestone),
+                new ItemStack(DNItems.mesh)
+        );
+
+        // Gravel sifting
+        SiftingCraftingManager.addSiftingRecipe(
+                new LootEntry[]{
+                        new LootEntry(1.0D / 8, 1, new ItemStack(Item.flint))
+                },
+                new ItemStack(BTWItems.gravelPile),
+                new ItemStack(DNItems.mesh)
+        );
+
+        SiftingCraftingManager.addSiftingRecipe(
+                new LootEntry[]{
+                        new LootEntry(1.0D, 1, new ItemStack(Item.flint))
+                },
+                new ItemStack(Block.gravel),
+                new ItemStack(DNItems.mesh)
+        );
+
+        SiftingCraftingManager.addSiftingRecipe(
+                new LootEntry[]{
+                        new LootEntry(1.0D, 1, new ItemStack(BTWItems.sandPile)),
+                        new LootEntry(1.0D / 8, 1, new ItemStack(Item.flint))
+                },
+                new ItemStack(BTWItems.gravelPile),
+                new ItemStack(BTWBlocks.wickerPane)
+        );
+
+        // Dung sifting
+        SiftingCraftingManager.addSiftingRecipe(
+                new LootEntry[]{
+                        new LootEntry(1.0D / 3, 1, new ItemStack(Item.pumpkinSeeds)),
+                        new LootEntry(1.0D / 3, 1, new ItemStack(Item.melonSeeds)),
+                        new LootEntry(1.0D / 3, 1, new ItemStack(Item.seeds)),
+                },
+                new ItemStack(BTWItems.dung),
                 new ItemStack(DNItems.mesh)
         );
     }

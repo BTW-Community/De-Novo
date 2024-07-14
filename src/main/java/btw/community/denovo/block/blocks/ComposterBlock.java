@@ -6,7 +6,6 @@ import btw.community.denovo.block.tileentities.ComposterTileEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
-import org.lwjgl.Sys;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -15,6 +14,7 @@ import java.util.Iterator;
 public class ComposterBlock extends BlockContainer {
     private final ComposterModel model = new ComposterModel();
     public static ArrayList<ItemStack> validCompostables = new ArrayList<>();
+
     public ComposterBlock(int blockID) {
         super(blockID, Material.wood);
     }
@@ -23,22 +23,20 @@ public class ComposterBlock extends BlockContainer {
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int iFacing, float fClickX, float fClickY, float fClickZ) {
         ItemStack heldStack = player.getCurrentEquippedItem();
 
-        if (heldStack != null && isValidCompostable(heldStack))
-        {
+        if (heldStack != null && isValidCompostable(heldStack)) {
             System.out.println("TRUE");
             return true;
         }
         return false;
     }
 
-    private boolean isValidCompostable(ItemStack heldStack){
+    private boolean isValidCompostable(ItemStack heldStack) {
         Iterator<ItemStack> validStacks = validCompostables.iterator();
 
         for (Iterator<ItemStack> it = validStacks; it.hasNext(); ) {
             ItemStack stack = it.next();
 
-            if (heldStack.isItemEqual(stack))
-            {
+            if (heldStack.isItemEqual(stack)) {
                 return true;
             }
         }
@@ -63,8 +61,7 @@ public class ComposterBlock extends BlockContainer {
     @Override
     public Icon getIcon(int face, int meta) {
 
-        if (meta == -1)
-        {
+        if (meta == -1) {
             return compost;
         }
 
