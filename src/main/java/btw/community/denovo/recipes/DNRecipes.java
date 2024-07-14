@@ -15,13 +15,13 @@ public class DNRecipes {
     }
 
     private static void addSieveRecipes() {
-        RecipeManager.addRecipe(new ItemStack(DNBlocks.sieve), new Object[] {
+        RecipeManager.addRecipe(new ItemStack(DNBlocks.sieve), new Object[]{
                 "TT",
                 "SS",
                 'T', new ItemStack(Item.silk),
                 'S', new ItemStack(Item.stick),
         });
-        
+
         SiftingCraftingManager.addSiftingRecipe(
                 new LootEntry[]{
                         new LootEntry(1.0D / 2, 1, new ItemStack(BTWItems.stone)),

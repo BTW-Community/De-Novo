@@ -1,20 +1,22 @@
 package btw.community.denovo.tileentity;
 
+import btw.block.blocks.PortalBlock;
 import btw.block.tileentity.TileEntityDataPacketHandler;
-import btw.community.denovo.recipes.LootEntry;
-import btw.community.denovo.recipes.SiftingCraftingManager;
-import btw.community.denovo.recipes.SiftingRecipe;
-import btw.crafting.manager.HopperFilteringCraftingManager;
-import btw.crafting.recipe.types.HopperFilterRecipe;
-import btw.item.util.ItemUtils;
+import btw.client.fx.BTWEffectManager;
+import btw.community.denovo.block.DNBlocks;
+import btw.community.denovo.block.blocks.SieveBlock;
 import net.minecraft.src.*;
 
 public class SieveTileEntity extends TileEntity implements TileEntityDataPacketHandler {
     public static final int MAX_PROGRESS = 8;
 
+    private static final int OVERLOAD_SOUL_COUNT = 8;
+    private static final int POSSESSION_COUNT_ON_OVERLOAD = 4;
+
     private ItemStack filterStack;
     private ItemStack contentsStack;
     private int progressCounter;
+    private int containedSoulCount;
 
     //------------- TileEntity ------------//
 
@@ -76,64 +78,50 @@ public class SieveTileEntity extends TileEntity implements TileEntityDataPacketH
 
     //------------- Class Specific Methods ------------//
 
-    public float getProgress() {
-        return ((float) progressCounter) / MAX_PROGRESS;
+    public void releaseSouls() {
+        containedSoulCount += contentsStack.stackSize;
+
+        worldObj.playAuxSFX(BTWEffectManager.GHAST_MOAN_EFFECT_ID, xCoord, yCoord, zCoord, 0);
+
+        if (containedSoulCount >= OVERLOAD_SOUL_COUNT) {
+            ((SieveBlock) DNBlocks.sieve).breakSieve(worldObj, xCoord, yCoord, zCoord);
+
+            EntityCreature.attemptToPossessCreaturesAroundBlock(this.worldObj, this.xCoord, this.yCoord, this.zCoord, POSSESSION_COUNT_ON_OVERLOAD, PortalBlock.CREATURE_POSSESSION_RANGE);
+        }
     }
 
-    public void fill(ItemStack contents) {
-        this.contentsStack = contents;
-        this.progressCounter = MAX_PROGRESS;
+    public void setContents(ItemStack contentsStack) {
+        this.contentsStack = contentsStack;
+        if (contentsStack != null) {
+            this.progressCounter = MAX_PROGRESS;
+        } else {
+            this.progressCounter = 0;
+        }
         onInventoryChanged();
     }
 
-    public void progress(int progressCounter) {
-        this.progressCounter = progressCounter;
-
-        if (progressCounter <= 0 && contentsStack != null && filterStack != null) {
-            HopperFilterRecipe hopperRecipe = HopperFilteringCraftingManager.instance.getRecipe(contentsStack, filterStack);
-            if (hopperRecipe != null) processHopperRecipe(hopperRecipe);
-        }
-
-        if (progressCounter <= 0 && contentsStack != null && filterStack != null) {
-            SiftingRecipe siftingRecipe = SiftingCraftingManager.getRecipe(contentsStack, filterStack);
-            if (siftingRecipe != null) processSiftingRecipe(siftingRecipe);
-        }
-
-        onInventoryChanged();
-    }
-
-    public void processHopperRecipe(HopperFilterRecipe recipe) {
-        ItemUtils.ejectStackAroundBlock(worldObj, xCoord, yCoord, zCoord, recipe.getHopperOutput().copy());
-        ItemUtils.ejectStackAroundBlock(worldObj, xCoord, yCoord, zCoord, recipe.getFilteredOutput().copy());
-        contentsStack = null;
-    }
-
-    public void processSiftingRecipe(SiftingRecipe recipe) {
-        for (LootEntry entry : recipe.getLootTable()) {
-            for (int i = 0; i < entry.getAmount(); i++) {
-                double roll = worldObj.rand.nextDouble();
-                if (roll < entry.getChance()) {
-                    ItemUtils.ejectStackAroundBlock(worldObj, xCoord, yCoord, zCoord, entry.getResult().copy());
-                }
-            }
-        }
-        contentsStack = null;
-    }
-
-    public void setFilterStack(ItemStack filterStack) {
+    public void setFilter(ItemStack filterStack) {
         this.filterStack = filterStack;
         onInventoryChanged();
     }
 
-    public ItemStack getContentsStack() {
+    public void decrementProgress() {
+        this.progressCounter -= 1;
+    }
+
+    public ItemStack getContents() {
         return contentsStack;
     }
 
-    public ItemStack getFilterStack() {
+    public ItemStack getFilter() {
         return filterStack;
     }
 
     public int getProgressCounter() {
         return progressCounter;
+    }
+
+    public float getProgressPercentage() {
+        return ((float) progressCounter) / MAX_PROGRESS;
     }
 }
