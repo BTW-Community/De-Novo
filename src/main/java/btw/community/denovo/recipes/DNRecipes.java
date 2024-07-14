@@ -11,17 +11,20 @@ import net.minecraft.src.ItemStack;
 
 public class DNRecipes {
     public static void addRecipes() {
+        addCraftingRecipes();
         addSieveRecipes();
     }
 
-    private static void addSieveRecipes() {
+    private static void addCraftingRecipes() {
         RecipeManager.addRecipe(new ItemStack(DNBlocks.sieve), new Object[]{
                 "TT",
                 "SS",
                 'T', new ItemStack(Item.silk),
                 'S', new ItemStack(Item.stick),
         });
+    }
 
+    private static void addSieveRecipes() {
         SiftingCraftingManager.addSiftingRecipe(
                 new LootEntry[]{
                         new LootEntry(1.0D / 2, 1, new ItemStack(BTWItems.stone)),
