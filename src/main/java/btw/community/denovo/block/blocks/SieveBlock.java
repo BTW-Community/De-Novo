@@ -26,25 +26,19 @@ public class SieveBlock extends BlockContainer {
     private static final SieveModel model = new SieveModel();
 
     public SieveBlock(int id) {
-        super(id, BTWBlocks.plankMaterial);
-
-        setHardness(0.5F);
-
-        setAxesEffectiveOn(true);
-
-        setBuoyancy(1F);
-
+        super(id, Material.wood);
         setFireProperties(Flammability.PLANKS);
-
-        initBlockBounds(0D, 0D, 0D, 1D, 1D, 1D);
-
+        setAxesEffectiveOn(true);
         setStepSound(soundWoodFootstep);
 
+        setHardness(0.5F);
+        setBuoyancy(1F);
+
         setUnlocalizedName("DNSieve");
-
-        setTickRandomly(true);
-
         setCreativeTab(CreativeTabs.tabRedstone);
+
+        initBlockBounds(0D, 0D, 0D, 1D, 1D, 1D);
+        setTickRandomly(true);
     }
 
     @Override
