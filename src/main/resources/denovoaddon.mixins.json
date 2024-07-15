@@ -6,7 +6,9 @@
   "mixins": [
     "DeadBushBlockMixin",
     "SaplingBlockMixin",
-    "FishingRodBaitingRecipeMixin"
+    "FishingRodBaitingRecipeMixin",
+    "FarmlandBlockBaseMixin",
+    "PlanterBlockSoilMixin"
   ],
   "client": [
   ],
