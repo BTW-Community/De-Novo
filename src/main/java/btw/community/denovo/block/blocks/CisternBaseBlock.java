@@ -31,8 +31,10 @@ public abstract class CisternBaseBlock extends BlockContainer {
 
                     heldStack.stackSize--;
                     return true;
-                } else if (heldStack.isItemEqual(new ItemStack(BTWItems.dirtPile)) && cisternBase.getProgressCounter() == 0) {
+                } else if (cisternBase.isFullWithWater() && heldStack.isItemEqual(new ItemStack(BTWItems.dirtPile)) && cisternBase.getProgressCounter() == 0) {
                     cisternBase.setFillType(CisternBaseTileEntity.CONTENTS_MUDDY_WATER);
+                    world.markBlockForUpdate(x, y, z);
+
                     heldStack.stackSize--;
                     return true;
                 }
@@ -147,15 +149,17 @@ public abstract class CisternBaseBlock extends BlockContainer {
 
             if (cisternBase.getFillType() == CisternBaseTileEntity.CONTENTS_MUDDY_WATER) {
                 if (cisternBase.getProgressCounter() < CisternBaseTileEntity.MUDDY_WATER_SETTLE_TIME && rand.nextInt(5) == 0) {
-                    double xPos = x + 0.25F + rand.nextFloat() * 0.5F;
-                    double yPos = y + 1.0F + rand.nextFloat() * 0.25F;
-                    double zPos = z + 0.25F + rand.nextFloat() * 0.5F;
-
-                    world.spawnParticle("fcwhitesmoke", xPos, yPos, zPos, 0.0D, 0.0D, 0.0D);
+                    spawnParticles(world, x, y, z, rand);
                 }
             }
         }
+    }
 
+    protected static void spawnParticles(World world, int x, int y, int z, Random rand) {
+        double xPos = x + 0.25F + rand.nextFloat() * 0.5F;
+        double yPos = y + 1.0F + rand.nextFloat() * 0.25F;
+        double zPos = z + 0.25F + rand.nextFloat() * 0.5F;
 
+        world.spawnParticle("fcwhitesmoke", xPos, yPos, zPos, 0.0D, 0.0D, 0.0D);
     }
 }

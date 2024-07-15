@@ -1,9 +1,12 @@
 package btw.community.denovo.block.blocks;
 
+import btw.block.BTWBlocks;
+import btw.block.util.Flammability;
 import btw.client.render.util.RenderUtils;
 import btw.community.denovo.block.models.ComposterModel;
 import btw.community.denovo.block.tileentities.CisternBaseTileEntity;
 import btw.community.denovo.block.tileentities.ComposterTileEntity;
+import btw.community.denovo.item.DNItems;
 import btw.item.BTWItems;
 import btw.item.util.ItemUtils;
 import net.fabricmc.api.EnvType;
@@ -12,13 +15,30 @@ import net.minecraft.src.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 public class ComposterBlock extends CisternBaseBlock {
     private final ComposterModel model = new ComposterModel();
     public static ArrayList<ItemStack> validCompostables = new ArrayList<>();
 
     public ComposterBlock(int blockID) {
-        super(blockID, Material.wood);
+        super(blockID, BTWBlocks.plankMaterial);
+
+        setHardness(0.5F);
+
+        setAxesEffectiveOn(true);
+
+        setBuoyancy(1F);
+
+        setFireProperties(Flammability.PLANKS);
+
+        initBlockBounds(0D, 0D, 0D, 1D, 1D, 1D);
+
+        setStepSound(soundWoodFootstep);
+
+        setUnlocalizedName("DNComposter");
+
+        setCreativeTab(CreativeTabs.tabRedstone);
     }
 
     @Override
@@ -28,29 +48,47 @@ public class ComposterBlock extends CisternBaseBlock {
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int facing, float clickX, float clickY, float clickZ) {
+
         ComposterTileEntity composter = (ComposterTileEntity) world.getBlockTileEntity(x, y, z);
         ItemStack heldStack = player.getHeldItem();
 
-        if (composter != null && composter.isFullWithWater()) {
+        if (composter != null ) {
             if (heldStack != null) {
-                if (isValidWaterContainer(heldStack)) {
-                    ItemUtils.givePlayerStackOrEjectFromTowardsFacing(player, getFullWaterContainer(heldStack), x, y, z, facing);
+                if (isValidCompostable(heldStack) ) {
+                    if (composter.isEmpty() || (!composter.isFull() && composter.getFillType() == ComposterTileEntity.CONTENTS_COMPOST)) {
+                        composter.addCompost(1);
+                        composter.setFillType(ComposterTileEntity.CONTENTS_COMPOST);
+                        world.markBlockForUpdate(x, y, z);
+
+                        heldStack.stackSize--;
+                        return true;
+                    }
+                }
+            } else {
+                if (composter.isFullWithCompostOrMaggots())
+                {
+                    if (composter.getFillType() == ComposterTileEntity.CONTENTS_COMPOST)
+                    {
+                        if (!world.isRemote) {
+                            ItemUtils.ejectStackFromBlockTowardsFacing(world, x,y,z, new ItemStack(BTWItems.dirtPile), facing);
+                        }
+                    }
+                    else if (composter.getFillType() == ComposterTileEntity.CONTENTS_MAGGOTS) {
+                        if (!world.isRemote) {
+                            ItemUtils.ejectStackFromBlockTowardsFacing(world, x,y,z, new ItemStack(DNItems.rawMaggots), facing);
+                        }
+                    }
+
                     composter.setFillLevel(0);
-                    composter.setFillType(CisternBaseTileEntity.CONTENTS_EMPTY);
+                    composter.setFillType(ComposterTileEntity.CONTENTS_EMPTY);
                     world.markBlockForUpdate(x, y, z);
 
-                    heldStack.stackSize--;
-                    return true;
-                } else if (heldStack.isItemEqual(new ItemStack(BTWItems.dirtPile)) && composter.getProgressCounter() == 0) {
-                    composter.setFillType(CisternBaseTileEntity.CONTENTS_MUDDY_WATER);
-                    heldStack.stackSize--;
                     return true;
                 }
             }
         }
-        return false;
+        return super.onBlockActivated(world, x, y, z, player, facing, clickX, clickY, clickZ);
     }
-
     private boolean isValidCompostable(ItemStack heldStack) {
         Iterator<ItemStack> validStacks = validCompostables.iterator();
 
@@ -63,6 +101,17 @@ public class ComposterBlock extends CisternBaseBlock {
         }
         return false;
     }
+
+    @Override
+    public boolean dropComponentItemsOnBadBreak(World world, int i, int j, int k, int iMetadata, float fChanceOfDrop) {
+        super.dropComponentItemsOnBadBreak(world, i, j, k, iMetadata, fChanceOfDrop);
+
+        dropItemsIndividually(world, i, j, k, Item.stick.itemID, 2, 0, fChanceOfDrop);
+        dropItemsIndividually(world, i, j, k, BTWItems.sawDust.itemID, 4, 0, fChanceOfDrop);
+
+        return true;
+    }
+
     // --- Client --- //
 
     private Icon compost;
@@ -87,6 +136,7 @@ public class ComposterBlock extends CisternBaseBlock {
 
         if (fillType != ComposterTileEntity.CONTENTS_EMPTY) {
             if (fillType == ComposterTileEntity.CONTENTS_COMPOST) return compost;
+            if (fillType == ComposterTileEntity.CONTENTS_MAGGOTS) return maggots;
             if (fillType == ComposterTileEntity.CONTENTS_WATER) return water;
             if (fillType == ComposterTileEntity.CONTENTS_MUDDY_WATER) return water;
         }
@@ -123,5 +173,20 @@ public class ComposterBlock extends CisternBaseBlock {
     @Override
     public void renderBlockAsItem(RenderBlocks renderer, int damage, float brightness) {
         model.renderAsItemBlock(renderer, this, damage);
+    }
+
+    @Override
+    public void randomDisplayTick(World world, int x, int y, int z, Random rand) {
+        super.randomDisplayTick(world,x,y,z,rand);
+
+        ComposterTileEntity composter = (ComposterTileEntity) world.getBlockTileEntity(x, y, z);
+
+        if (composter.isFull()) {
+            if (composter.getFillType() == ComposterTileEntity.CONTENTS_COMPOST) {
+                if (composter.getProgressCounter() < ComposterTileEntity.MAGGOT_CREATION_TIME && rand.nextInt(5) == 0) {
+                    spawnParticles(world, x, y, z, rand);
+                }
+            }
+        }
     }
 }

@@ -41,7 +41,7 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
 
     private void attemptToFillWithWater() {
         int timeOfDay = (int) (worldObj.worldInfo.getWorldTime() % 24000L);
-        boolean isMorning = timeOfDay < 2000 || timeOfDay > 23500;
+        boolean isMorning = timeOfDay < 500 || timeOfDay > 23500;
         boolean isNight = timeOfDay > 16000 && timeOfDay < 20000;
         boolean isRaining = worldObj.isRainingAtPos(xCoord, yCoord + 1, zCoord);
 
@@ -80,10 +80,30 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
         return this.fillLevel == 15 && this.fillType == CONTENTS_MUDDY_WATER;
     }
 
-    public boolean isFull() {
-        return this.fillLevel >= 15;
+    public boolean isFullWithCompostOrMaggots() {
+        return this.fillLevel == MAX_FILL_LEVEL && (this.fillType == CONTENTS_COMPOST || this.fillType == CONTENTS_MAGGOTS)  ;
     }
 
+    public boolean isFullWithCompost() {
+        return this.fillLevel == MAX_FILL_LEVEL && this.fillType == CONTENTS_COMPOST;
+    }
+
+    public boolean isFull() {
+        if (this.fillType == CONTENTS_WATER || this.fillType == CONTENTS_MUDDY_WATER) {
+            return this.fillLevel == 15;
+        }
+        else if (this.fillType == CONTENTS_COMPOST || this.fillType == CONTENTS_MAGGOTS) {
+            return this.fillLevel == 16;
+        }
+        else return false;
+    }
+    public boolean isEmpty() {
+        return this.fillLevel == 0 && this.fillType == CONTENTS_EMPTY;
+    }
+
+    public void addCompost(int amount) {
+        this.fillLevel += 1 * amount;
+    }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
@@ -160,6 +180,4 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
     public void setHasCollectedWaterToday(boolean hasCollectedWaterToday) {
         this.hasCollectedWaterToday = hasCollectedWaterToday;
     }
-
-
 }
