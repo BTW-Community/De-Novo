@@ -58,8 +58,17 @@ public class DNRecipes {
         });
 
         //Compostables
+        ComposterBlock.validCompostables.add(new ItemStack(DNItems.rawMaggots));
+
         ComposterBlock.validCompostables.add(new ItemStack(Item.stick));
         ComposterBlock.validCompostables.add(new ItemStack(BTWItems.sawDust));
+        for (int type = 0; type < 5; type++) {
+            ComposterBlock.validCompostables.add(new ItemStack(BTWItems.bark, 1, type));
+        }
+
+        ComposterBlock.validCompostables.add(new ItemStack(Item.poisonousPotato));
+        ComposterBlock.validCompostables.add(new ItemStack(BTWItems.hemp));
+        ComposterBlock.validCompostables.add(new ItemStack(BTWItems.hempFibers));
 
         ComposterBlock.validCompostables.add(new ItemStack(Item.rottenFlesh));
         ComposterBlock.validCompostables.add(new ItemStack(Item.spiderEye));
@@ -71,10 +80,11 @@ public class DNRecipes {
         ComposterBlock.validCompostables.add(new ItemStack(Block.deadBush));
         ComposterBlock.validCompostables.add(new ItemStack(Block.plantRed));
         ComposterBlock.validCompostables.add(new ItemStack(Block.plantYellow));
+        ComposterBlock.validCompostables.add(new ItemStack(Block.cocoaPlant));
+        ComposterBlock.validCompostables.add(new ItemStack(Block.vine));
+        ComposterBlock.validCompostables.add(new ItemStack(Block.waterlily));
         ComposterBlock.validCompostables.add(new ItemStack(BTWItems.redMushroom));
         ComposterBlock.validCompostables.add(new ItemStack(BTWItems.brownMushroom));
-
-        ComposterBlock.validCompostables.add(new ItemStack(DNItems.rawMaggots));
 
         for (int type = 0; type < 5; type++) {
             ComposterBlock.validCompostables.add(new ItemStack(Block.wood, 1, type));

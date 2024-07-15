@@ -2,7 +2,11 @@ package btw.community.denovo.block.blocks;
 
 import btw.client.render.util.RenderUtils;
 import btw.community.denovo.block.models.ComposterModel;
+import btw.community.denovo.block.tileentities.CisternBaseTileEntity;
 import btw.community.denovo.block.tileentities.ComposterTileEntity;
+import btw.community.denovo.item.DNItems;
+import btw.item.BTWItems;
+import btw.item.util.ItemUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -10,22 +14,44 @@ import net.minecraft.src.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
-public class ComposterBlock extends BlockContainer {
+public class ComposterBlock extends CisternBaseBlock {
     private final ComposterModel model = new ComposterModel();
     public static ArrayList<ItemStack> validCompostables = new ArrayList<>();
-
     public ComposterBlock(int blockID) {
         super(blockID, Material.wood);
     }
 
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int iFacing, float fClickX, float fClickY, float fClickZ) {
-        ItemStack heldStack = player.getCurrentEquippedItem();
+    public TileEntity createNewTileEntity(World world) {
+        return new ComposterTileEntity();
+    }
 
-        if (heldStack != null && isValidCompostable(heldStack)) {
-            System.out.println("TRUE");
-            return true;
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int facing, float clickX, float clickY, float clickZ) {
+        ComposterTileEntity composter = (ComposterTileEntity) world.getBlockTileEntity(x, y, z);
+        ItemStack heldStack = player.getHeldItem();
+
+        if (composter != null && composter.isFullWithWater())
+        {
+            if (heldStack != null)
+            {
+                if (isValidWaterContainer(heldStack)){
+                    ItemUtils.givePlayerStackOrEjectFromTowardsFacing(player, getFullWaterContainer(heldStack), x, y, z, facing);
+                    composter.setFillLevel(0);
+                    composter.setFillType(CisternBaseTileEntity.CONTENTS_EMPTY);
+                    world.markBlockForUpdate(x,y,z);
+
+                    heldStack.stackSize--;
+                    return true;
+                }
+                else if (heldStack.isItemEqual(new ItemStack(BTWItems.dirtPile)) && composter.getProgressCounter() == 0){
+                    composter.setFillType(CisternBaseTileEntity.CONTENTS_MUDDY_WATER);
+                    heldStack.stackSize--;
+                    return true;
+                }
+            }
         }
         return false;
     }
@@ -42,21 +68,11 @@ public class ComposterBlock extends BlockContainer {
         }
         return false;
     }
-
-    @Override
-    public TileEntity createNewTileEntity(World world) {
-        return new ComposterTileEntity();
-    }
-
     // --- Client --- //
 
-    private Icon top;
-    private Icon side;
-    private Icon bottom;
     private Icon compost;
     private Icon maggots;
 
-    private Icon water;
 
     @Override
     public Icon getIcon(int face, int meta) {
@@ -71,45 +87,30 @@ public class ComposterBlock extends BlockContainer {
     }
 
     @Override
+    public Icon getContentsIcon(ComposterTileEntity composter){
+        int fillType = composter.getFillType();
+
+        if (fillType != ComposterTileEntity.CONTENTS_EMPTY)
+        {
+            if (fillType == ComposterTileEntity.CONTENTS_COMPOST) return compost;
+            if (fillType == ComposterTileEntity.CONTENTS_WATER) return water;
+            if (fillType == ComposterTileEntity.CONTENTS_MUDDY_WATER) return water;
+        }
+
+        return null;
+    }
+
+    @Override
     public void registerIcons(IconRegister register) {
+        super.registerIcons(register);
         top = register.registerIcon("DNBlock_composter_top");
         side = register.registerIcon("DNBlock_composter");
         bottom = register.registerIcon("DNBlock_composter_bottom");
 
         compost = register.registerIcon("DNBlock_composter_compost");
         maggots = register.registerIcon("DNBlock_composter_maggots");
-        water = register.registerIcon("water");
-    }
 
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
-    }
-
-    private boolean secondPass;
-
-    @Override
-    public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z) {
-        if (secondPass) {
-            ComposterTileEntity composter = (ComposterTileEntity) blockAccess.getBlockTileEntity(x, y, z);
-            int counter = composter.getProgressCounter();
-
-            Color color = new Color(255, 130, 0);
-            float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
-            float saturation = hsb[1];
-
-            saturation += counter;
-
-            Color newColor = Color.getHSBColor(hsb[0], 1 - saturation / 256, hsb[2]);
-            return newColor.getRGB() & 0x00FFFFFF;
-        }
-
-        return super.colorMultiplier(blockAccess, x, y, z);
+        blockIcon = side;
     }
 
     @Environment(EnvType.CLIENT)
@@ -117,32 +118,12 @@ public class ComposterBlock extends BlockContainer {
     public boolean renderBlock(RenderBlocks renderer, int x, int y, int z) {
 
         //floor render, didn't work as part of the ComposterModel???
-        renderer.setRenderBounds(2 / 16D, 0 / 16D, 2 / 16D, 14 / 16D, 2 / 16D, 14 / 16D);
+        renderer.setRenderBounds(2 / 16D, 0 / 16D, 2 / 16D, 14 / 16D, 1 / 32D, 14 / 16D);
         RenderUtils.renderStandardBlockWithTexture(renderer, this, x, y, z, bottom);
 
         //render composter
         renderer.setRenderBounds(0D, 0D, 0D, 1D, 1D, 1D);
         return model.renderAsBlock(renderer, this, x, y, z);
-    }
-
-    @Override
-    public void renderBlockSecondPass(RenderBlocks renderer, int x, int y, int z, boolean bFirstPassResult) {
-        secondPass = true;
-
-        ComposterTileEntity composter = (ComposterTileEntity) renderer.blockAccess.getBlockTileEntity(x, y, z);
-
-        //render contents
-        if (composter != null) {
-            int fillLevel = composter.getFillLevel();
-
-            if (fillLevel >= 0) {
-                fillLevel = 15;
-                renderer.setRenderBounds(2 / 16D, 2 / 16D, 2 / 16D, 14 / 16D, fillLevel / 16D, 14 / 16D);
-                RenderUtils.renderStandardBlockWithTexture(renderer, this, x, y, z, water);
-            }
-        }
-
-        secondPass = false;
     }
 
     @Override
