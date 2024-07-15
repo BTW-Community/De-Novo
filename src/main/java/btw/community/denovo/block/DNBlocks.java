@@ -4,7 +4,7 @@ import btw.community.denovo.DeNovoAddon;
 import btw.community.denovo.block.blocks.ComposterBlock;
 import btw.community.denovo.block.blocks.SieveBlock;
 import btw.community.denovo.block.tileentities.ComposterTileEntity;
-import btw.community.denovo.tileentity.SieveTileEntity;
+import btw.community.denovo.block.tileentities.SieveTileEntity;
 import net.minecraft.src.*;
 
 public class DNBlocks {

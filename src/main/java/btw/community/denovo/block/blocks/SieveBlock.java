@@ -8,7 +8,7 @@ import btw.community.denovo.block.models.SieveModel;
 import btw.community.denovo.recipes.LootEntry;
 import btw.community.denovo.recipes.SiftingCraftingManager;
 import btw.community.denovo.recipes.SiftingRecipe;
-import btw.community.denovo.tileentity.SieveTileEntity;
+import btw.community.denovo.block.tileentities.SieveTileEntity;
 import btw.community.denovo.utils.SieveUtils;
 import btw.crafting.manager.HopperFilteringCraftingManager;
 import btw.crafting.recipe.types.HopperFilterRecipe;

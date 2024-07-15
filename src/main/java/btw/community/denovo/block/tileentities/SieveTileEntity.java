@@ -1,4 +1,4 @@
-package btw.community.denovo.tileentity;
+package btw.community.denovo.block.tileentities;
 
 import btw.block.blocks.PortalBlock;
 import btw.block.tileentity.TileEntityDataPacketHandler;
