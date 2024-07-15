@@ -1,10 +1,8 @@
 package btw.community.denovo.block.tileentities;
 
 import btw.block.tileentity.TileEntityDataPacketHandler;
-import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.Packet;
-import net.minecraft.src.Packet132TileEntityData;
-import net.minecraft.src.TileEntity;
+import btw.item.util.ItemUtils;
+import net.minecraft.src.*;
 
 public abstract class CisternBaseTileEntity extends TileEntity implements TileEntityDataPacketHandler {
 
@@ -24,51 +22,61 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
     public void updateEntity() {
         super.updateEntity();
         if (fillType == CONTENTS_EMPTY || (fillType == CONTENTS_WATER && !isFullWithWater())) {
-           if (worldObj.canBlockSeeTheSky(xCoord,yCoord,zCoord) && !worldObj.isRemote)
-           {
-               attemptToFillWithWater();
-           }
+            if (worldObj.canBlockSeeTheSky(xCoord, yCoord, zCoord) && !worldObj.isRemote) {
+                attemptToFillWithWater();
+            }
+        } else if (fillType == CONTENTS_MUDDY_WATER) {
+            if (progressCounter < MUDDY_WATER_SETTLE_TIME) {
+                progressCounter += 1;
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            } else {
+                if (!worldObj.isRemote) {
+                    ItemUtils.ejectStackFromBlockTowardsFacing(worldObj, xCoord, yCoord, zCoord, new ItemStack(Item.clay), 1);
+                }
+                setFillType(CONTENTS_WATER);
+                setProgressCounter(0);
+            }
         }
     }
 
     private void attemptToFillWithWater() {
-        int timeOfDay = (int)( worldObj.worldInfo.getWorldTime() % 24000L );
+        int timeOfDay = (int) (worldObj.worldInfo.getWorldTime() % 24000L);
         boolean isMorning = timeOfDay < 2000 || timeOfDay > 23500;
         boolean isNight = timeOfDay > 16000 && timeOfDay < 20000;
         boolean isRaining = worldObj.isRainingAtPos(xCoord, yCoord + 1, zCoord);
 
-        if (isRaining)
-        {
-            if (worldObj.rand.nextFloat() <= 0.25F){
+        if (isRaining) {
+            if (worldObj.rand.nextFloat() <= 0.25F) {
                 addWater(1);
                 setFillType(CONTENTS_WATER);
-                worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
             }
         } else {
-            if (isMorning && !getHasCollectedWaterToday() && worldObj.rand.nextFloat() <= 0.125F){
+            if (isMorning && !getHasCollectedWaterToday() && worldObj.rand.nextFloat() <= 0.125F) {
                 addWater(1);
                 setFillType(CONTENTS_WATER);
                 setHasCollectedWaterToday(true);
-                worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
-            } else if (isNight && getHasCollectedWaterToday()){
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            } else if (isNight && getHasCollectedWaterToday()) {
                 setHasCollectedWaterToday(false);
             }
         }
 
     }
+
     public void removeWater(int amount) {
         this.fillLevel -= 5 * amount;
     }
 
-    public void addWater(int amount){
+    public void addWater(int amount) {
         this.fillLevel += 5 * amount;
     }
 
-    public boolean isFullWithWater(){
+    public boolean isFullWithWater() {
         return this.fillLevel == 15 && this.fillType == CONTENTS_WATER;
     }
 
-    public boolean isFullWithMuddyWater(){
+    public boolean isFullWithMuddyWater() {
         return this.fillLevel == 15 && this.fillType == CONTENTS_MUDDY_WATER;
     }
 

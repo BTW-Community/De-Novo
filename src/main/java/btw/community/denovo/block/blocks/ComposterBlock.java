@@ -4,21 +4,19 @@ import btw.client.render.util.RenderUtils;
 import btw.community.denovo.block.models.ComposterModel;
 import btw.community.denovo.block.tileentities.CisternBaseTileEntity;
 import btw.community.denovo.block.tileentities.ComposterTileEntity;
-import btw.community.denovo.item.DNItems;
 import btw.item.BTWItems;
 import btw.item.util.ItemUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Random;
 
 public class ComposterBlock extends CisternBaseBlock {
     private final ComposterModel model = new ComposterModel();
     public static ArrayList<ItemStack> validCompostables = new ArrayList<>();
+
     public ComposterBlock(int blockID) {
         super(blockID, Material.wood);
     }
@@ -33,20 +31,17 @@ public class ComposterBlock extends CisternBaseBlock {
         ComposterTileEntity composter = (ComposterTileEntity) world.getBlockTileEntity(x, y, z);
         ItemStack heldStack = player.getHeldItem();
 
-        if (composter != null && composter.isFullWithWater())
-        {
-            if (heldStack != null)
-            {
-                if (isValidWaterContainer(heldStack)){
+        if (composter != null && composter.isFullWithWater()) {
+            if (heldStack != null) {
+                if (isValidWaterContainer(heldStack)) {
                     ItemUtils.givePlayerStackOrEjectFromTowardsFacing(player, getFullWaterContainer(heldStack), x, y, z, facing);
                     composter.setFillLevel(0);
                     composter.setFillType(CisternBaseTileEntity.CONTENTS_EMPTY);
-                    world.markBlockForUpdate(x,y,z);
+                    world.markBlockForUpdate(x, y, z);
 
                     heldStack.stackSize--;
                     return true;
-                }
-                else if (heldStack.isItemEqual(new ItemStack(BTWItems.dirtPile)) && composter.getProgressCounter() == 0){
+                } else if (heldStack.isItemEqual(new ItemStack(BTWItems.dirtPile)) && composter.getProgressCounter() == 0) {
                     composter.setFillType(CisternBaseTileEntity.CONTENTS_MUDDY_WATER);
                     heldStack.stackSize--;
                     return true;
@@ -87,11 +82,10 @@ public class ComposterBlock extends CisternBaseBlock {
     }
 
     @Override
-    public Icon getContentsIcon(ComposterTileEntity composter){
+    public Icon getContentsIcon(ComposterTileEntity composter) {
         int fillType = composter.getFillType();
 
-        if (fillType != ComposterTileEntity.CONTENTS_EMPTY)
-        {
+        if (fillType != ComposterTileEntity.CONTENTS_EMPTY) {
             if (fillType == ComposterTileEntity.CONTENTS_COMPOST) return compost;
             if (fillType == ComposterTileEntity.CONTENTS_WATER) return water;
             if (fillType == ComposterTileEntity.CONTENTS_MUDDY_WATER) return water;

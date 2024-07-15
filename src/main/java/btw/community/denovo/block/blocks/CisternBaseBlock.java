@@ -21,20 +21,17 @@ public abstract class CisternBaseBlock extends BlockContainer {
         CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) world.getBlockTileEntity(x, y, z);
         ItemStack heldStack = player.getHeldItem();
 
-        if (cisternBase != null && cisternBase.isFullWithWater())
-        {
-            if (heldStack != null)
-            {
-                if (isValidWaterContainer(heldStack)){
+        if (cisternBase != null && cisternBase.isFullWithWater()) {
+            if (heldStack != null) {
+                if (isValidWaterContainer(heldStack)) {
                     ItemUtils.givePlayerStackOrEjectFromTowardsFacing(player, getFullWaterContainer(heldStack), x, y, z, facing);
                     cisternBase.setFillLevel(0);
                     cisternBase.setFillType(CisternBaseTileEntity.CONTENTS_EMPTY);
-                    world.markBlockForUpdate(x,y,z);
+                    world.markBlockForUpdate(x, y, z);
 
                     heldStack.stackSize--;
                     return true;
-                }
-                else if (heldStack.isItemEqual(new ItemStack(BTWItems.dirtPile)) && cisternBase.getProgressCounter() == 0){
+                } else if (heldStack.isItemEqual(new ItemStack(BTWItems.dirtPile)) && cisternBase.getProgressCounter() == 0) {
                     cisternBase.setFillType(CisternBaseTileEntity.CONTENTS_MUDDY_WATER);
                     heldStack.stackSize--;
                     return true;
@@ -44,11 +41,11 @@ public abstract class CisternBaseBlock extends BlockContainer {
         return false;
     }
 
-    protected boolean isValidWaterContainer(ItemStack stack){
+    protected boolean isValidWaterContainer(ItemStack stack) {
         return stack.isItemEqual(new ItemStack(Item.bowlEmpty)) || stack.isItemEqual(new ItemStack(Item.glassBottle));
     }
 
-    protected ItemStack getFullWaterContainer(ItemStack stack){
+    protected ItemStack getFullWaterContainer(ItemStack stack) {
         if (stack.isItemEqual(new ItemStack(Item.bowlEmpty))) return new ItemStack(DNItems.waterBowl);
         if (stack.isItemEqual(new ItemStack(Item.glassBottle))) return new ItemStack(Item.potion, 1, 0);
         return null;
@@ -69,6 +66,8 @@ public abstract class CisternBaseBlock extends BlockContainer {
         return true;
     }
 
+    // CLIENT //
+
     protected Icon top;
     protected Icon side;
     protected Icon bottom;
@@ -79,11 +78,10 @@ public abstract class CisternBaseBlock extends BlockContainer {
         water = register.registerIcon("water");
     }
 
-    public Icon getContentsIcon(ComposterTileEntity composter){
+    public Icon getContentsIcon(ComposterTileEntity composter) {
         int fillType = composter.getFillType();
 
-        if (fillType != ComposterTileEntity.CONTENTS_EMPTY)
-        {
+        if (fillType != ComposterTileEntity.CONTENTS_EMPTY) {
             if (fillType == ComposterTileEntity.CONTENTS_WATER) return water;
             if (fillType == ComposterTileEntity.CONTENTS_MUDDY_WATER) return water;
         }
@@ -98,8 +96,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
             CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) blockAccess.getBlockTileEntity(x, y, z);
             int fillType = cisternBase.getFillType();
 
-            if (fillType == CisternBaseTileEntity.CONTENTS_MUDDY_WATER)
-            {
+            if (fillType == CisternBaseTileEntity.CONTENTS_MUDDY_WATER) {
                 int counter = cisternBase.getProgressCounter();
 
                 Color color = new Color(255, 130, 0);
@@ -137,35 +134,27 @@ public abstract class CisternBaseBlock extends BlockContainer {
     }
 
     @Override
-    public void randomDisplayTick(World world, int x, int y, int z, Random rand)
-    {
-        CisternBaseTileEntity cisternBase = (CisternBaseTileEntity)world.getBlockTileEntity( x, y, z );
+    public void randomDisplayTick(World world, int x, int y, int z, Random rand) {
+        CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) world.getBlockTileEntity(x, y, z);
 
-        if (cisternBase.isFull())
-        {
+        if (cisternBase.isFull()) {
             int fillType = cisternBase.getFillType();
-            if ( fillType == CisternBaseTileEntity.CONTENTS_MUDDY_WATER || fillType == CisternBaseTileEntity.CONTENTS_COMPOST || fillType == CisternBaseTileEntity.CONTENTS_MAGGOTS)
-            {
-                if (rand.nextInt(5) == 0)
-                {
-                    world.spawnParticle("townaura", (double)((float)x + rand.nextFloat()), (double)((float)y + 1.1F), (double)((float)z + rand.nextFloat()), 0.0D, 0.0D, 0.0D);
+            if (fillType == CisternBaseTileEntity.CONTENTS_MUDDY_WATER || fillType == CisternBaseTileEntity.CONTENTS_COMPOST || fillType == CisternBaseTileEntity.CONTENTS_MAGGOTS) {
+                if (rand.nextInt(5) == 0) {
+                    world.spawnParticle("townaura", (float) x + rand.nextFloat(), (float) y + 1.1F, (float) z + rand.nextFloat(), 0.0D, 0.0D, 0.0D);
                 }
             }
 
-            if ( cisternBase.getFillType() == CisternBaseTileEntity.CONTENTS_MUDDY_WATER)
-            {
-                if ( cisternBase.getProgressCounter() < CisternBaseTileEntity.MUDDY_WATER_SETTLE_TIME && rand.nextInt( 5 ) == 0 )
-                {
+            if (cisternBase.getFillType() == CisternBaseTileEntity.CONTENTS_MUDDY_WATER) {
+                if (cisternBase.getProgressCounter() < CisternBaseTileEntity.MUDDY_WATER_SETTLE_TIME && rand.nextInt(5) == 0) {
                     double xPos = x + 0.25F + rand.nextFloat() * 0.5F;
                     double yPos = y + 1.0F + rand.nextFloat() * 0.25F;
                     double zPos = z + 0.25F + rand.nextFloat() * 0.5F;
 
-                    world.spawnParticle( "fcwhitesmoke", xPos, yPos, zPos, 0.0D, 0.0D, 0.0D );
+                    world.spawnParticle("fcwhitesmoke", xPos, yPos, zPos, 0.0D, 0.0D, 0.0D);
                 }
             }
         }
-
-
 
 
     }
