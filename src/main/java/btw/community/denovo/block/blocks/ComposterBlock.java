@@ -39,11 +39,23 @@ public class ComposterBlock extends CisternBaseBlock {
         setUnlocalizedName("DNComposter");
 
         setCreativeTab(CreativeTabs.tabRedstone);
+
+        setTickRandomly(true);
     }
 
     @Override
     public TileEntity createNewTileEntity(World world) {
         return new ComposterTileEntity();
+    }
+
+    @Override
+    public void randomUpdateTick(World world, int x, int y, int z, Random rand) {
+        ComposterTileEntity composter = (ComposterTileEntity) world.getBlockTileEntity(x, y, z);
+        if (composter.isFullWithCompostOrMaggots())
+        {
+            checkForSpread(world, x, y, z, rand);
+        }
+
     }
 
     @Override
@@ -113,7 +125,73 @@ public class ComposterBlock extends CisternBaseBlock {
         return true;
     }
 
-    // --- Client --- //
+    //----------- Mushroom Related Methods -----------//
+
+    protected void checkForSpread(World world, int i, int j, int k, Random rand)
+    {
+        // copy of MushroomBlockBrown
+        // basically a copy/paste of the BlockMushroom updateTick cleaned up and with additional requirements that brown mushrooms can only grow in complete darkness
+        int brownMushroomBlockID = Block.mushroomBrown.blockID;
+
+        if ( rand.nextInt( 25 ) == 0 && canSpreadToOrFromLocation(world, i, j, k) )
+        {
+            int iHorizontalSpreadRange = 4;
+            int iNeighboringMushroomsCountdown = 5;
+
+            for ( int iTempI = i - iHorizontalSpreadRange; iTempI <= i + iHorizontalSpreadRange; ++iTempI )
+            {
+                for ( int iTempK = k - iHorizontalSpreadRange; iTempK <= k + iHorizontalSpreadRange; ++iTempK )
+                {
+                    for ( int iTempJ = j - 1; iTempJ <= j + 1; ++iTempJ )
+                    {
+                        if ( world.getBlockId( iTempI, iTempJ, iTempK ) == brownMushroomBlockID )
+                        {
+                            --iNeighboringMushroomsCountdown;
+
+                            if (iNeighboringMushroomsCountdown <= 0)
+                            {
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+
+            int iSpreadI = i + rand.nextInt(3) - 1;
+            int iSpreadK = j + rand.nextInt(2) - rand.nextInt(2);
+            int iSpreadJ = k + rand.nextInt(3) - 1;
+
+            for ( int iTempCount = 0; iTempCount < 4; ++iTempCount )
+            {
+                if (world.isAirBlock( iSpreadI, iSpreadK, iSpreadJ ) && Block.mushroomBrown.canBlockStay(world, iSpreadI, iSpreadK, iSpreadJ ) &&
+                        canSpreadToOrFromLocation(world, iSpreadI, iSpreadK, iSpreadJ) )
+                {
+                    i = iSpreadI;
+                    j = iSpreadK;
+                    k = iSpreadJ;
+                }
+
+                iSpreadI = i + rand.nextInt(3) - 1;
+                iSpreadK = j + rand.nextInt(2) - rand.nextInt(2);
+                iSpreadJ = k + rand.nextInt(3) - 1;
+            }
+
+            if (world.isAirBlock( iSpreadI, iSpreadK, iSpreadJ ) && Block.mushroomBrown.canBlockStay( world, iSpreadI, iSpreadK, iSpreadJ ) &&
+                    canSpreadToOrFromLocation(world, iSpreadI, iSpreadK, iSpreadJ) )
+            {
+                world.setBlock( iSpreadI, iSpreadK, iSpreadJ, brownMushroomBlockID );
+            }
+        }
+    }
+
+    protected boolean canSpreadToOrFromLocation(World world, int i, int j, int k)
+    {
+        int iBlockBelowID = world.getBlockId(i, j - 1, k);
+
+        return iBlockBelowID == Block.mycelium.blockID || world.getFullBlockLightValue( i, j, k ) == 0;
+    }
+
+    //----------- Client Side Functionality -----------//
 
     private Icon compost;
     private Icon[] maggots = new Icon[8];
