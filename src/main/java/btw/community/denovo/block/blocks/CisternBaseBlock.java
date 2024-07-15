@@ -80,8 +80,8 @@ public abstract class CisternBaseBlock extends BlockContainer {
         water = register.registerIcon("water");
     }
 
-    public Icon getContentsIcon(ComposterTileEntity composter) {
-        int fillType = composter.getFillType();
+    public Icon getContentsIcon(CisternBaseTileEntity cisternBase) {
+        int fillType = cisternBase.getFillType();
 
         if (fillType != ComposterTileEntity.CONTENTS_EMPTY) {
             if (fillType == ComposterTileEntity.CONTENTS_WATER) return water;
@@ -90,11 +90,11 @@ public abstract class CisternBaseBlock extends BlockContainer {
         return null;
     }
 
-    protected boolean secondPass;
+    protected boolean mudColorPass;
 
     @Override
     public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z) {
-        if (secondPass) {
+        if (mudColorPass) {
             CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) blockAccess.getBlockTileEntity(x, y, z);
             int fillType = cisternBase.getFillType();
 
@@ -116,15 +116,15 @@ public abstract class CisternBaseBlock extends BlockContainer {
     }
 
     @Override
-    public void renderBlockSecondPass(RenderBlocks renderer, int x, int y, int z, boolean bFirstPassResult) {
-        secondPass = true;
+    public boolean renderBlock(RenderBlocks renderer, int x, int y, int z) {
+        mudColorPass = true;
 
-        ComposterTileEntity composter = (ComposterTileEntity) renderer.blockAccess.getBlockTileEntity(x, y, z);
+        CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) renderer.blockAccess.getBlockTileEntity(x, y, z);
 
         //render contents
-        if (composter != null) {
-            int fillLevel = composter.getFillLevel();
-            Icon contentsIcon = getContentsIcon(composter);
+        if (cisternBase != null) {
+            int fillLevel = cisternBase.getFillLevel();
+            Icon contentsIcon = getContentsIcon(cisternBase);
 
             if (fillLevel >= 0 && contentsIcon != null) {
                 renderer.setRenderBounds(2 / 16D, 2 / 16D, 2 / 16D, 14 / 16D, fillLevel / 16D, 14 / 16D);
@@ -132,8 +132,12 @@ public abstract class CisternBaseBlock extends BlockContainer {
             }
         }
 
-        secondPass = false;
+        mudColorPass = false;
+
+        return true;
     }
+
+
 
     @Override
     public void randomDisplayTick(World world, int x, int y, int z, Random rand) {
