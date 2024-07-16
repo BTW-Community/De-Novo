@@ -21,7 +21,7 @@ public class DirtPileItem extends PlaceAsBlockItem {
 
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int facing, float clickX, float clickY, float clickZ) {
-        if (world.getBlockId(x, y, z) != Block.grass.blockID) {
+        if (world.isRemote || world.getBlockId(x, y, z) != Block.grass.blockID) {
             return false;
         }
 
