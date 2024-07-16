@@ -1,6 +1,7 @@
 package btw.community.denovo.block.tileentities;
 
 import btw.block.tileentity.TileEntityDataPacketHandler;
+import btw.community.denovo.block.blocks.CisternBaseBlock;
 import btw.item.util.ItemUtils;
 import net.minecraft.src.*;
 
@@ -38,6 +39,11 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
             } else {
                 if (!worldObj.isRemote) {
                     ItemUtils.ejectStackFromBlockTowardsFacing(worldObj, xCoord, yCoord, zCoord, new ItemStack(Item.clay), 1);
+                    worldObj.playSoundEffect(
+                            (double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D,
+                            Block.blockClay.stepSound.getStepSound(),
+                            1/8F,
+                            1F);
                 }
                 setFillType(CONTENTS_WATER);
                 setProgressCounter(0);
