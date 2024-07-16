@@ -4,6 +4,7 @@
   "package": "btw.community.denovo.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "GrassBlockMixin",
     "DeadBushBlockMixin",
     "SaplingBlockMixin",
     "FishingRodBaitingRecipeMixin",
