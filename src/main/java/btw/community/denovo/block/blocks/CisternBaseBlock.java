@@ -37,6 +37,8 @@ public abstract class CisternBaseBlock extends BlockContainer {
                     cisternBase.setFillType(CisternBaseTileEntity.CONTENTS_MUDDY_WATER);
                     world.markBlockForUpdate(x, y, z);
 
+                    playSound(world, x, y, z, "random.splash", 1/32F, 1F);
+
                     heldStack.stackSize--;
                     return true;
                 }
@@ -65,6 +67,16 @@ public abstract class CisternBaseBlock extends BlockContainer {
         if (stack.isItemEqual(new ItemStack(Item.bowlEmpty))) return new ItemStack(DNItems.waterBowl);
         if (stack.isItemEqual(new ItemStack(Item.glassBottle))) return new ItemStack(Item.potion, 1, 0);
         return null;
+    }
+
+    protected void playSound(World world, int x, int y, int z, String soundName, float volume, float pitch) {
+        if (!world.isRemote) {
+            world.playSoundEffect(
+                    (double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D,
+                    soundName,
+                    volume,
+                    pitch);
+        }
     }
 
     //----------- Client Side Functionality -----------//

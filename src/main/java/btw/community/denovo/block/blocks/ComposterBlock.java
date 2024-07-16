@@ -1,6 +1,7 @@
 package btw.community.denovo.block.blocks;
 
 import btw.block.util.Flammability;
+import btw.client.fx.BTWEffectManager;
 import btw.client.render.util.RenderUtils;
 import btw.community.denovo.block.models.ComposterModel;
 import btw.community.denovo.block.tileentities.CisternBaseTileEntity;
@@ -71,6 +72,10 @@ public class ComposterBlock extends CisternBaseBlock {
                         world.markBlockForUpdate(x, y, z);
 
                         heldStack.stackSize--;
+
+                        if (!world.isRemote) {
+                            playSound(world, x, y, z, Block.leaves.stepSound.getStepSound(), 0.25F, 1F);
+                        }
                         return true;
                     }
                 }
@@ -79,11 +84,16 @@ public class ComposterBlock extends CisternBaseBlock {
                     if (composter.getFillType() == ComposterTileEntity.CONTENTS_COMPOST) {
                         if (!world.isRemote) {
                             ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(BTWItems.dirtPile), facing);
+
+                            playSound(world, x, y, z, Block.dirt.stepSound.getStepSound(), 1/4F, 1F);
                         }
                     } else if (composter.getFillType() == ComposterTileEntity.CONTENTS_MAGGOTS) {
                         if (!world.isRemote) {
                             ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(DNItems.rawMaggots), facing);
                             ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(BTWItems.dirtPile), facing);
+
+                            playSound(world, x, y, z, Block.dirt.stepSound.getStepSound(), 1/4F, 1F);
+                            playSound(world, x, y, z, Block.blockClay.stepSound.getStepSound(), 1/8F, 1F);
                         }
                     }
 
