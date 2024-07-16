@@ -20,6 +20,13 @@ public class DNRecipes {
     }
 
     private static void addCraftingRecipes() {
+        RecipeManager.addShapelessRecipe(new ItemStack(DNItems.mesh), new Object[]{
+                new ItemStack(Item.silk),
+                new ItemStack(Item.silk),
+                new ItemStack(Item.silk),
+                new ItemStack(Item.silk),
+        });
+
         RecipeManager.addRecipe(new ItemStack(DNBlocks.sieve), new Object[]{
                 "TT",
                 "SS",
@@ -27,12 +34,11 @@ public class DNRecipes {
                 'S', new ItemStack(Item.stick),
         });
 
-        RecipeManager.addShapelessRecipe(new ItemStack(Item.bowlEmpty),
-                new Object[]{
-                        new ItemStack(BTWItems.wickerPane),
-                        new ItemStack(BTWItems.wickerPane),
-                        new ItemStack(Item.clay)
-                });
+        RecipeManager.addShapelessRecipe(new ItemStack(Item.bowlEmpty), new Object[]{
+                new ItemStack(BTWItems.wickerPane),
+                new ItemStack(BTWItems.wickerPane),
+                new ItemStack(Item.clay)
+        });
     }
 
     private static void addMaggotsRecipes() {
