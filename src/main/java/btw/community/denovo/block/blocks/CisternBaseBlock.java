@@ -21,7 +21,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
         CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) world.getBlockTileEntity(x, y, z);
         ItemStack heldStack = player.getHeldItem();
 
-        if (cisternBase != null && cisternBase.isFullWithWater()) {
+        if (world.getBlockTileEntity(x, y, z) instanceof CisternBaseTileEntity && cisternBase.isFullWithWater()) {
             if (heldStack != null) {
                 if (isValidWaterContainer(heldStack)) {
                     ItemUtils.givePlayerStackOrEjectFromTowardsFacing(player, getFullWaterContainer(heldStack), x, y, z, facing);
@@ -115,14 +115,15 @@ public abstract class CisternBaseBlock extends BlockContainer {
         return super.colorMultiplier(blockAccess, x, y, z);
     }
 
+
     @Override
-    public boolean renderBlock(RenderBlocks renderer, int x, int y, int z) {
+    public void renderBlockSecondPass(RenderBlocks renderer, int x, int y, int z, boolean bFirstPassResult) {
         mudColorPass = true;
 
         CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) renderer.blockAccess.getBlockTileEntity(x, y, z);
 
         //render contents
-        if (cisternBase != null) {
+        if (renderer.blockAccess.getBlockTileEntity(x, y, z) instanceof CisternBaseTileEntity) {
             int fillLevel = cisternBase.getFillLevel();
             Icon contentsIcon = getContentsIcon(cisternBase);
 
@@ -133,11 +134,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
         }
 
         mudColorPass = false;
-
-        return true;
     }
-
-
 
     @Override
     public void randomDisplayTick(World world, int x, int y, int z, Random rand) {

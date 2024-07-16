@@ -42,12 +42,15 @@ public class DeNovoAddon extends BTWAddon {
 
         //Block IDs
         this.registerProperty("DNBlockSieveID", "3900", "***Block IDs***\n\n");
+        this.registerProperty("DNBlockComposterID", "3901");
+        this.registerProperty("DNBlockCisternID", "3902");
 
         //Item IDs
         this.registerProperty("DNItemMeshID", "23000", "***Item IDs***\n\n");
         this.registerProperty("DNItemRawMaggotsID", "23001");
         this.registerProperty("DNItemCookedMaggotsID", "23002");
         this.registerProperty("DNItemWaterBowlID", "23003");
+        this.registerProperty("DNItemCisternID", "23004");
     }
 
     @Override

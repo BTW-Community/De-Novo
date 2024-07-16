@@ -11,9 +11,9 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
     public static final int CONTENTS_MUDDY_WATER = 2;
     public static final int CONTENTS_COMPOST = 3;
     public static final int CONTENTS_MAGGOTS = 4;
-    protected int fillType;
-    protected int fillLevel;
-    protected int progressCounter;
+    protected int fillType = 0;
+    protected int fillLevel = 0;
+    protected int progressCounter = 0;
     protected boolean hasCollectedWaterToday = false;
     public static final int MAX_FILL_LEVEL = 16;
     public static final int MUDDY_WATER_SETTLE_TIME = 6000; //24000 is 20min
@@ -21,6 +21,7 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
     @Override
     public void updateEntity() {
         super.updateEntity();
+
         if (fillType == CONTENTS_EMPTY || (fillType == CONTENTS_WATER && !isFullWithWater())) {
             if (worldObj.canBlockSeeTheSky(xCoord, yCoord, zCoord) && !worldObj.isRemote) {
                 attemptToFillWithWater();
@@ -39,7 +40,7 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
         }
     }
 
-    private void attemptToFillWithWater() {
+    protected void attemptToFillWithWater() {
         int timeOfDay = (int) (worldObj.worldInfo.getWorldTime() % 24000L);
         boolean isMorning = timeOfDay < 500 || timeOfDay > 23500;
         boolean isNight = timeOfDay > 16000 && timeOfDay < 20000;
@@ -81,7 +82,7 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
     }
 
     public boolean isFullWithCompostOrMaggots() {
-        return this.fillLevel == MAX_FILL_LEVEL && (this.fillType == CONTENTS_COMPOST || this.fillType == CONTENTS_MAGGOTS)  ;
+        return this.fillLevel == MAX_FILL_LEVEL && (this.fillType == CONTENTS_COMPOST || this.fillType == CONTENTS_MAGGOTS);
     }
 
     public boolean isFullWithCompost() {
@@ -91,18 +92,17 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
     public boolean isFull() {
         if (this.fillType == CONTENTS_WATER || this.fillType == CONTENTS_MUDDY_WATER) {
             return this.fillLevel == 15;
-        }
-        else if (this.fillType == CONTENTS_COMPOST || this.fillType == CONTENTS_MAGGOTS) {
+        } else if (this.fillType == CONTENTS_COMPOST || this.fillType == CONTENTS_MAGGOTS) {
             return this.fillLevel == 16;
-        }
-        else return false;
+        } else return false;
     }
+
     public boolean isEmpty() {
         return this.fillLevel == 0 && this.fillType == CONTENTS_EMPTY;
     }
 
     public void addCompost(int amount) {
-        this.fillLevel += 1 * amount;
+        this.fillLevel += amount;
     }
 
     @Override
