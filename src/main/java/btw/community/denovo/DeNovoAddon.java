@@ -15,6 +15,8 @@ public class DeNovoAddon extends BTWAddon {
 
     // configuration settings
     public static boolean allowGoldenDungOnHCS = false;
+    public static boolean disableSlimeSpawningInFlatWorlds = false;
+    public static boolean limitSlimeSpawningInFlatWorlds = false;
 
     private DeNovoAddon() {
         super("@NAME@", "@VERSION@", "@PREFIX@");
@@ -38,7 +40,9 @@ public class DeNovoAddon extends BTWAddon {
 
     private void registerConfigProperties() {
         //Gameplay config
-        this.registerProperty("AllowGoldenDungOnHCS", "False", "Set the following to true to allow players to get a piece of golden dung on every HCS");
+        this.registerProperty("AllowGoldenDungOnHCS", "False", "Set the following to True to allow players to get a piece of golden dung on every HCS");
+        this.registerProperty("DisableSlimeSpawningInFlatWorlds", "False", "Set the following to True to disable all Slime spawning in flat worlds");
+        this.registerProperty("LimitSlimeSpawningInFlatWorlds", "False", "Set the following to True to disable Slime Spawning on Grass in slime chunks in flat worlds");
 
         //Block IDs
         this.registerProperty("DNBlockSieveID", "3900", "***Block IDs***\n\n");
