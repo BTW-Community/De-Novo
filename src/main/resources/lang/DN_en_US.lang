@@ -5,6 +5,7 @@ tile.deadbush.medium.name=Medium Dead Bush
 tile.deadbush.mature.name=Dead Bush
 tile.DNSieve.name=Sieve
 tile.DNComposter.name=Composter
+tile.DNCistern.name=Cistern
 
 #Items
 item.DNItem_mesh.name=Mesh

@@ -1,6 +1,7 @@
 package btw.community.denovo.item;
 
 import btw.community.denovo.DeNovoAddon;
+import btw.community.denovo.block.DNBlocks;
 import btw.community.denovo.item.items.DirtPileItem;
 import btw.community.denovo.item.items.MeshItem;
 import btw.community.denovo.item.items.RawMaggotsItem;
@@ -17,6 +18,7 @@ public class DNItems {
     public static Item rawMaggots;
     public static Item cookedMaggots;
     public static Item waterBowl;
+    public static Item cistern;
 
     //TODO: progressive maggots to string item?
 
@@ -39,5 +41,8 @@ public class DNItems {
                 .setCreativeTab(CreativeTabs.tabMisc);
 
         waterBowl = new WaterBowlItem(DeNovoAddon.instance.parseID("DNItemWaterBowlID") - 256);
+
+        cistern = new PlaceAsBlockItem(DeNovoAddon.instance.parseID("DNItemCisternID") - 256, DNBlocks.cistern.blockID).setUnlocalizedName("cauldron").setCreativeTab(CreativeTabs.tabBrewing);
+        Item.cauldron.setCreativeTab(null);
     }
 }

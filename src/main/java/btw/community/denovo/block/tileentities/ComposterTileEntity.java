@@ -1,13 +1,10 @@
 package btw.community.denovo.block.tileentities;
 
-import btw.item.util.ItemUtils;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 
 public class ComposterTileEntity extends CisternBaseTileEntity {
 
-    public static final int MAGGOT_CREATION_TIME = 255;
+    public static final int MAGGOT_CREATION_TIME = 1200; //2 min
 
     @Override
     public void updateEntity() {
@@ -16,6 +13,7 @@ public class ComposterTileEntity extends CisternBaseTileEntity {
         if (isFullWithCompost()) {
             if (progressCounter < MAGGOT_CREATION_TIME) {
                 progressCounter += 1;
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
             } else {
                 setFillType(CONTENTS_MAGGOTS);
                 setProgressCounter(0);

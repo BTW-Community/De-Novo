@@ -21,7 +21,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
         CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) world.getBlockTileEntity(x, y, z);
         ItemStack heldStack = player.getHeldItem();
 
-        if (cisternBase != null && cisternBase.isFullWithWater()) {
+        if (world.getBlockTileEntity(x, y, z) instanceof CisternBaseTileEntity && cisternBase.isFullWithWater()) {
             if (heldStack != null) {
                 if (isValidWaterContainer(heldStack)) {
                     ItemUtils.givePlayerStackOrEjectFromTowardsFacing(player, getFullWaterContainer(heldStack), x, y, z, facing);
@@ -80,8 +80,8 @@ public abstract class CisternBaseBlock extends BlockContainer {
         water = register.registerIcon("water");
     }
 
-    public Icon getContentsIcon(ComposterTileEntity composter) {
-        int fillType = composter.getFillType();
+    public Icon getContentsIcon(CisternBaseTileEntity cisternBase) {
+        int fillType = cisternBase.getFillType();
 
         if (fillType != ComposterTileEntity.CONTENTS_EMPTY) {
             if (fillType == ComposterTileEntity.CONTENTS_WATER) return water;
@@ -90,11 +90,11 @@ public abstract class CisternBaseBlock extends BlockContainer {
         return null;
     }
 
-    protected boolean secondPass;
+    protected boolean mudColorPass;
 
     @Override
     public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z) {
-        if (secondPass) {
+        if (mudColorPass) {
             CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) blockAccess.getBlockTileEntity(x, y, z);
             int fillType = cisternBase.getFillType();
 
@@ -115,16 +115,17 @@ public abstract class CisternBaseBlock extends BlockContainer {
         return super.colorMultiplier(blockAccess, x, y, z);
     }
 
+
     @Override
     public void renderBlockSecondPass(RenderBlocks renderer, int x, int y, int z, boolean bFirstPassResult) {
-        secondPass = true;
+        mudColorPass = true;
 
-        ComposterTileEntity composter = (ComposterTileEntity) renderer.blockAccess.getBlockTileEntity(x, y, z);
+        CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) renderer.blockAccess.getBlockTileEntity(x, y, z);
 
         //render contents
-        if (composter != null) {
-            int fillLevel = composter.getFillLevel();
-            Icon contentsIcon = getContentsIcon(composter);
+        if (renderer.blockAccess.getBlockTileEntity(x, y, z) instanceof CisternBaseTileEntity) {
+            int fillLevel = cisternBase.getFillLevel();
+            Icon contentsIcon = getContentsIcon(cisternBase);
 
             if (fillLevel >= 0 && contentsIcon != null) {
                 renderer.setRenderBounds(2 / 16D, 2 / 16D, 2 / 16D, 14 / 16D, fillLevel / 16D, 14 / 16D);
@@ -132,7 +133,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
             }
         }
 
-        secondPass = false;
+        mudColorPass = false;
     }
 
     @Override

@@ -17,6 +17,7 @@ public class DNRecipes {
         addSieveRecipes();
         addMaggotsRecipes();
         addComposterRecipes();
+        addCisternRecipes();
     }
 
     private static void addCraftingRecipes() {
@@ -106,6 +107,15 @@ public class DNRecipes {
         }
 
     }
+
+    private static void addCisternRecipes() {
+        //remove old recipe
+        RecipeManager.removeVanillaRecipe(new ItemStack(Item.cauldron, 1), new Object[]{"# #", "# #", "###", '#', Item.ingotIron});
+        //add new recipe
+        RecipeManager.addRecipe(new ItemStack(DNItems.cistern, 1), new Object[]{"# #", "# #", "###", '#', Item.ingotIron});
+
+    }
+
 
     private static void addSieveRecipes() {
         // Dirt sifting
