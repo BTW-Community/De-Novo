@@ -22,6 +22,11 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
     public void updateEntity() {
         super.updateEntity();
 
+        if (fillLevel == 0) {
+            if (fillType != CONTENTS_EMPTY) setFillType(CONTENTS_EMPTY);
+            if (progressCounter != 0) setProgressCounter(0);
+        }
+
         if (fillType == CONTENTS_EMPTY || (fillType == CONTENTS_WATER && !isFullWithWater())) {
             if (worldObj.canBlockSeeTheSky(xCoord, yCoord, zCoord) && !worldObj.isRemote) {
                 attemptToFillWithWater();

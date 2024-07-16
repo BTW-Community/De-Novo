@@ -180,7 +180,8 @@ public class ComposterBlock extends CisternBaseBlock {
     //----------- Client Side Functionality -----------//
 
     private Icon compost;
-    private final Icon[] maggots = new Icon[8];
+    private Icon maggotsDone;
+    private final Icon[] maggotsGrowing = new Icon[8];
 
     @Override
     public Icon getIcon(int face, int meta) {
@@ -201,17 +202,26 @@ public class ComposterBlock extends CisternBaseBlock {
 
         int fillType = composter.getFillType();
         int counter = composter.getProgressCounter();
+        System.out.println("fillType: " + fillType);
 
         if (fillType != ComposterTileEntity.CONTENTS_EMPTY) {
             if (fillType == ComposterTileEntity.CONTENTS_COMPOST) {
-                if (counter > 0 && counter < ComposterTileEntity.MAGGOT_CREATION_TIME) {
+                if (counter > 0 && counter <= ComposterTileEntity.MAGGOT_CREATION_TIME) {
                     // Change icon based on counter
-                    int iconIndex = (composter.getProgressCounter() / (ComposterTileEntity.MAGGOT_CREATION_TIME / maggots.length)) % maggots.length;
-                    return maggots[iconIndex];
+                    //int iconIndex = (composter.getProgressCounter() / (ComposterTileEntity.MAGGOT_CREATION_TIME / 7)) % 7;
+
+                    int totalStages = maggotsGrowing.length;
+                    float progressRatio = (float) composter.getProgressCounter() / ComposterTileEntity.MAGGOT_CREATION_TIME;
+                    // Use Math.min to ensure the maximum progress maps to the final index
+                    int iconIndex = (int) (progressRatio * totalStages);
+                    iconIndex = Math.min(iconIndex, totalStages - 1);
+
+                    System.out.println("counter: " + composter.getProgressCounter() + " | index: " + iconIndex);
+                    return maggotsGrowing[iconIndex];
                 } else return compost;
 
             }
-            if (fillType == ComposterTileEntity.CONTENTS_MAGGOTS) return maggots[7];
+            if (fillType == ComposterTileEntity.CONTENTS_MAGGOTS) return maggotsDone;
             if (fillType == ComposterTileEntity.CONTENTS_WATER) return water;
             if (fillType == ComposterTileEntity.CONTENTS_MUDDY_WATER) return water;
         }
@@ -227,27 +237,27 @@ public class ComposterBlock extends CisternBaseBlock {
         bottom = register.registerIcon("DNBlock_composter_bottom");
 
         compost = register.registerIcon("DNBlock_composter_compost");
+        maggotsGrowing[0] = register.registerIcon("DNBlock_composter_maggots_0");
+        maggotsGrowing[1] = register.registerIcon("DNBlock_composter_maggots_1");
+        maggotsGrowing[2] = register.registerIcon("DNBlock_composter_maggots_2");
+        maggotsGrowing[3] = register.registerIcon("DNBlock_composter_maggots_3");
+        maggotsGrowing[4] = register.registerIcon("DNBlock_composter_maggots_4");
+        maggotsGrowing[5] = register.registerIcon("DNBlock_composter_maggots_5");
+        maggotsGrowing[6] = register.registerIcon("DNBlock_composter_maggots_6");
+        maggotsGrowing[7] = register.registerIcon("DNBlock_composter_maggots_7");
 
-        maggots[0] = register.registerIcon("DNBlock_composter_maggots_0");
-        maggots[1] = register.registerIcon("DNBlock_composter_maggots_1");
-        maggots[2] = register.registerIcon("DNBlock_composter_maggots_2");
-        maggots[3] = register.registerIcon("DNBlock_composter_maggots_3");
-        maggots[4] = register.registerIcon("DNBlock_composter_maggots_4");
-        maggots[5] = register.registerIcon("DNBlock_composter_maggots_5");
-        maggots[6] = register.registerIcon("DNBlock_composter_maggots_6");
-        maggots[7] = register.registerIcon("DNBlock_composter_maggots_7");
+        maggotsDone = register.registerIcon("DNBlock_composter_maggots");
 
-        blockIcon = side;
+        this.blockIcon = side;
     }
 
     @Environment(EnvType.CLIENT)
     @Override
     public boolean renderBlock(RenderBlocks renderer, int x, int y, int z) {
-        super.renderBlock(renderer, x, y, z);
-
-        //floor render, didn't work as part of the ComposterModel???
-        renderer.setRenderBounds(2 / 16D, 0 / 16D, 2 / 16D, 14 / 16D, 1 / 32D, 14 / 16D);
+        //floor
+        renderer.setRenderBounds(2 / 16D, 0 / 16D, 2 / 16D, 14 / 16D, 1 / 16D, 14 / 16D);
         RenderUtils.renderStandardBlockWithTexture(renderer, this, x, y, z, bottom);
+
 
         //render composter
         renderer.setRenderBounds(0D, 0D, 0D, 1D, 1D, 1D);
@@ -256,6 +266,12 @@ public class ComposterBlock extends CisternBaseBlock {
 
     @Override
     public void renderBlockAsItem(RenderBlocks renderer, int damage, float brightness) {
+
+        //floor
+        renderer.setRenderBounds(2 / 16D, 0 / 16D, 2 / 16D, 14 / 16D, 1 / 16D, 14 / 16D);
+        RenderUtils.renderInvBlockWithTexture(renderer, this, -0.5F, -0.5F, -0.5F, bottom);
+
+        renderer.setRenderBounds(0D, 0D, 0D, 1D, 1D, 1D);
         model.renderAsItemBlock(renderer, this, damage);
     }
 
