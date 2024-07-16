@@ -83,6 +83,7 @@ public class ComposterBlock extends CisternBaseBlock {
                     } else if (composter.getFillType() == ComposterTileEntity.CONTENTS_MAGGOTS) {
                         if (!world.isRemote) {
                             ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(DNItems.rawMaggots), facing);
+                            ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(BTWItems.dirtPile), facing);
                         }
                     }
 
