@@ -98,6 +98,18 @@ public class ComposterBlock extends CisternBaseBlock {
         return super.onBlockActivated(world, x, y, z, player, facing, clickX, clickY, clickZ);
     }
 
+    //Currently not used, since it can be broken by hand
+    @Override
+    public boolean dropComponentItemsOnBadBreak(World world, int i, int j, int k, int iMetadata, float fChanceOfDrop) {
+        super.dropComponentItemsOnBadBreak(world, i, j, k, iMetadata, fChanceOfDrop);
+
+        dropItemsIndividually(world, i, j, k, Item.stick.itemID, 2, 0, fChanceOfDrop);
+        dropItemsIndividually(world, i, j, k, BTWItems.sawDust.itemID, 4, 0, fChanceOfDrop);
+
+        return true;
+    }
+    //----------- Class Specific Methods -----------//
+
     private boolean isValidCompostable(ItemStack heldStack) {
         Iterator<ItemStack> validStacks = validCompostables.iterator();
 
@@ -109,17 +121,6 @@ public class ComposterBlock extends CisternBaseBlock {
             }
         }
         return false;
-    }
-
-    //Currently not used, since it can be broken by hand
-    @Override
-    public boolean dropComponentItemsOnBadBreak(World world, int i, int j, int k, int iMetadata, float fChanceOfDrop) {
-        super.dropComponentItemsOnBadBreak(world, i, j, k, iMetadata, fChanceOfDrop);
-
-        dropItemsIndividually(world, i, j, k, Item.stick.itemID, 2, 0, fChanceOfDrop);
-        dropItemsIndividually(world, i, j, k, BTWItems.sawDust.itemID, 4, 0, fChanceOfDrop);
-
-        return true;
     }
 
     //----------- Mushroom Related Methods -----------//
@@ -178,12 +179,15 @@ public class ComposterBlock extends CisternBaseBlock {
     }
 
     //----------- Client Side Functionality -----------//
-
+    @Environment(EnvType.CLIENT)
     private Icon compost;
+    @Environment(EnvType.CLIENT)
     private Icon maggotsDone;
+    @Environment(EnvType.CLIENT)
     private final Icon[] maggotsGrowing = new Icon[8];
 
     @Override
+    @Environment(EnvType.CLIENT)
     public Icon getIcon(int face, int meta) {
 
         if (meta == -1) {
@@ -197,26 +201,24 @@ public class ComposterBlock extends CisternBaseBlock {
 
 
     @Override
+    @Environment(EnvType.CLIENT)
     public Icon getContentsIcon(CisternBaseTileEntity cisternBase) {
         ComposterTileEntity composter = (ComposterTileEntity) cisternBase;
 
         int fillType = composter.getFillType();
         int counter = composter.getProgressCounter();
-        System.out.println("fillType: " + fillType);
 
         if (fillType != ComposterTileEntity.CONTENTS_EMPTY) {
             if (fillType == ComposterTileEntity.CONTENTS_COMPOST) {
                 if (counter > 0 && counter <= ComposterTileEntity.MAGGOT_CREATION_TIME) {
                     // Change icon based on counter
-                    //int iconIndex = (composter.getProgressCounter() / (ComposterTileEntity.MAGGOT_CREATION_TIME / 7)) % 7;
-
                     int totalStages = maggotsGrowing.length;
                     float progressRatio = (float) composter.getProgressCounter() / ComposterTileEntity.MAGGOT_CREATION_TIME;
+
                     // Use Math.min to ensure the maximum progress maps to the final index
                     int iconIndex = (int) (progressRatio * totalStages);
                     iconIndex = Math.min(iconIndex, totalStages - 1);
 
-                    System.out.println("counter: " + composter.getProgressCounter() + " | index: " + iconIndex);
                     return maggotsGrowing[iconIndex];
                 } else return compost;
 
@@ -230,6 +232,7 @@ public class ComposterBlock extends CisternBaseBlock {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public void registerIcons(IconRegister register) {
         super.registerIcons(register);
         top = register.registerIcon("DNBlock_composter_top");
@@ -251,8 +254,8 @@ public class ComposterBlock extends CisternBaseBlock {
         this.blockIcon = side;
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
+    @Environment(EnvType.CLIENT)
     public boolean renderBlock(RenderBlocks renderer, int x, int y, int z) {
         //floor
         renderer.setRenderBounds(2 / 16D, 0 / 16D, 2 / 16D, 14 / 16D, 1 / 16D, 14 / 16D);
@@ -265,6 +268,7 @@ public class ComposterBlock extends CisternBaseBlock {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public void renderBlockAsItem(RenderBlocks renderer, int damage, float brightness) {
 
         //floor
@@ -276,6 +280,7 @@ public class ComposterBlock extends CisternBaseBlock {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public void randomDisplayTick(World world, int x, int y, int z, Random rand) {
         super.randomDisplayTick(world, x, y, z, rand);
 

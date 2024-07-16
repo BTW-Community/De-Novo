@@ -6,6 +6,8 @@ import btw.community.denovo.block.tileentities.ComposterTileEntity;
 import btw.community.denovo.item.DNItems;
 import btw.item.BTWItems;
 import btw.item.util.ItemUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 
 import java.awt.*;
@@ -43,16 +45,6 @@ public abstract class CisternBaseBlock extends BlockContainer {
         return false;
     }
 
-    protected boolean isValidWaterContainer(ItemStack stack) {
-        return stack.isItemEqual(new ItemStack(Item.bowlEmpty)) || stack.isItemEqual(new ItemStack(Item.glassBottle));
-    }
-
-    protected ItemStack getFullWaterContainer(ItemStack stack) {
-        if (stack.isItemEqual(new ItemStack(Item.bowlEmpty))) return new ItemStack(DNItems.waterBowl);
-        if (stack.isItemEqual(new ItemStack(Item.glassBottle))) return new ItemStack(Item.potion, 1, 0);
-        return null;
-    }
-
     @Override
     public boolean isOpaqueCube() {
         return false;
@@ -63,23 +55,45 @@ public abstract class CisternBaseBlock extends BlockContainer {
         return false;
     }
 
+    //----------- Class Specific Methods -----------//
+
+    protected boolean isValidWaterContainer(ItemStack stack) {
+        return stack.isItemEqual(new ItemStack(Item.bowlEmpty)) || stack.isItemEqual(new ItemStack(Item.glassBottle));
+    }
+
+    protected ItemStack getFullWaterContainer(ItemStack stack) {
+        if (stack.isItemEqual(new ItemStack(Item.bowlEmpty))) return new ItemStack(DNItems.waterBowl);
+        if (stack.isItemEqual(new ItemStack(Item.glassBottle))) return new ItemStack(Item.potion, 1, 0);
+        return null;
+    }
+
+    //----------- Client Side Functionality -----------//
+
     @Override
+    @Environment(EnvType.CLIENT)
     public boolean shouldSideBeRendered(IBlockAccess blockAccess, int iNeighborI, int iNeighborJ, int iNeighborK, int iSide) {
         return true;
     }
 
-    // CLIENT //
-
+    @Environment(EnvType.CLIENT)
     protected Icon top;
+    @Environment(EnvType.CLIENT)
     protected Icon side;
+    @Environment(EnvType.CLIENT)
     protected Icon bottom;
+    @Environment(EnvType.CLIENT)
     protected Icon water;
 
+    @Environment(EnvType.CLIENT)
+    protected boolean mudColorPass;
+
     @Override
+    @Environment(EnvType.CLIENT)
     public void registerIcons(IconRegister register) {
         water = register.registerIcon("water");
     }
 
+    @Environment(EnvType.CLIENT)
     public Icon getContentsIcon(CisternBaseTileEntity cisternBase) {
         int fillType = cisternBase.getFillType();
 
@@ -90,9 +104,8 @@ public abstract class CisternBaseBlock extends BlockContainer {
         return null;
     }
 
-    protected boolean mudColorPass;
-
     @Override
+    @Environment(EnvType.CLIENT)
     public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z) {
         if (mudColorPass) {
             CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) blockAccess.getBlockTileEntity(x, y, z);
@@ -115,8 +128,8 @@ public abstract class CisternBaseBlock extends BlockContainer {
         return super.colorMultiplier(blockAccess, x, y, z);
     }
 
-
     @Override
+    @Environment(EnvType.CLIENT)
     public void renderBlockSecondPass(RenderBlocks renderer, int x, int y, int z, boolean bFirstPassResult) {
         mudColorPass = true;
 
@@ -137,6 +150,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public void randomDisplayTick(World world, int x, int y, int z, Random rand) {
         CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) world.getBlockTileEntity(x, y, z);
 
@@ -156,6 +170,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
         }
     }
 
+    @Environment(EnvType.CLIENT)
     protected static void spawnParticles(World world, int x, int y, int z, Random rand) {
         double xPos = x + 0.25F + rand.nextFloat() * 0.5F;
         double yPos = y + 1.0F + rand.nextFloat() * 0.25F;
