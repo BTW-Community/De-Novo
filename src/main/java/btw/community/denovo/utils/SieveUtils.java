@@ -2,6 +2,7 @@ package btw.community.denovo.utils;
 
 import btw.block.BTWBlocks;
 import btw.community.denovo.block.DNBlocks;
+import btw.community.denovo.block.blocks.SieveBlock;
 import btw.community.denovo.item.DNItems;
 import btw.item.BTWItems;
 import net.minecraft.src.Block;
@@ -63,7 +64,7 @@ public class SieveUtils {
         }
 
         {
-            Icon icon = DNBlocks.composter.getIcon(0, -1);
+            Icon icon = SieveBlock.getCompostIcon();
             if (id == BTWBlocks.aestheticEarth.blockID && metadata == 7) return icon;
             if (id == BTWItems.dung.itemID) return icon;
         }
