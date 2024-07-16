@@ -125,7 +125,7 @@ public class DNRecipes {
                         new LootEntry(1.0D / 5, 1, new ItemStack(Block.sapling)),
                         new LootEntry(1.0D / 10, 1, new ItemStack(BTWItems.sugarCaneRoots))
                 },
-                new ItemStack(BTWBlocks.aestheticEarth, 1, 7),
+                new ItemStack(BTWItems.dirtPile),
                 new ItemStack(DNItems.mesh)
         );
 
@@ -176,6 +176,16 @@ public class DNRecipes {
         );
 
         // Dung sifting
+        SiftingCraftingManager.addSiftingRecipe(
+                new LootEntry[]{
+                        new LootEntry(1.0D / 3, 8, new ItemStack(Item.pumpkinSeeds)),
+                        new LootEntry(1.0D / 3, 8, new ItemStack(Item.melonSeeds)),
+                        new LootEntry(1.0D / 3, 8, new ItemStack(Item.seeds)),
+                },
+                new ItemStack(BTWBlocks.aestheticEarth, 1, 7),
+                new ItemStack(DNItems.mesh)
+        );
+
         SiftingCraftingManager.addSiftingRecipe(
                 new LootEntry[]{
                         new LootEntry(1.0D / 3, 1, new ItemStack(Item.pumpkinSeeds)),
