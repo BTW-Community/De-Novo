@@ -9,12 +9,17 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Random;
 
 @Mixin(DeadBushBlock.class)
 public abstract class DeadBushBlockMixin extends BlockDeadBush {
+    @Inject(method = "<init>", at = @At(value = "RETURN"))
+    public void initDeadBushBlock(int blockID, CallbackInfo info) {
+        this.setBlockMaterial(Material.plants);
+    }
 
     @Shadow
     protected abstract boolean canGrowOnBlock(World world, int i, int j, int k);
