@@ -17,6 +17,7 @@ public class DeNovoAddon extends BTWAddon {
     public static boolean allowGoldenDungOnHCS = false;
     public static boolean disableSlimeSpawningInFlatWorlds = false;
     public static boolean limitSlimeSpawningInFlatWorlds = false;
+    public static boolean disableMobSpawnsOnSurface = false;
 
     private DeNovoAddon() {
         super("@NAME@", "@VERSION@", "@PREFIX@");
@@ -43,6 +44,7 @@ public class DeNovoAddon extends BTWAddon {
         this.registerProperty("AllowGoldenDungOnHCS", "False", "Set the following to True to allow players to get a piece of golden dung on every HCS");
         this.registerProperty("DisableSlimeSpawningInFlatWorlds", "False", "Set the following to True to disable all Slime spawning in flat worlds");
         this.registerProperty("LimitSlimeSpawningInFlatWorlds", "False", "Set the following to True to disable Slime Spawning specifically on Grass Blocks in slime chunks in flat worlds");
+        this.registerProperty("DiableMobSpawnsOnSurface", "False", "Set the following to True to disable mob spawns on blocks with sky access");
 
         //Block IDs
         this.registerProperty("DNBlockSieveID", "3900", "***Block IDs***\n\n");
@@ -62,6 +64,9 @@ public class DeNovoAddon extends BTWAddon {
         this.propertyValues = propertyValues;
 
         allowGoldenDungOnHCS = Boolean.parseBoolean(this.propertyValues.get("AllowGoldenDungOnHCS"));
+        disableSlimeSpawningInFlatWorlds = Boolean.parseBoolean(this.propertyValues.get("DisableSlimeSpawningInFlatWorlds"));
+        limitSlimeSpawningInFlatWorlds = Boolean.parseBoolean(this.propertyValues.get("LimitSlimeSpawningInFlatWorlds"));
+        disableMobSpawnsOnSurface = Boolean.parseBoolean(this.propertyValues.get("DisableMobSpawnsOnSurface"));
     }
 
     public int parseID(String name) {

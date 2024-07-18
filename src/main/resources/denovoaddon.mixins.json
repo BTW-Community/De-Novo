@@ -11,7 +11,8 @@
     "FishingRodBaitingRecipeMixin",
     "FarmlandBlockBaseMixin",
     "PlanterBlockSoilMixin",
-    "SlimeEntityMixin"
+    "SlimeEntityMixin",
+    "EntityLivingMixin"
   ],
   "client": [
   ],
