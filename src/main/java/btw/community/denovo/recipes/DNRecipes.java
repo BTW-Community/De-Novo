@@ -18,6 +18,16 @@ public class DNRecipes {
         addMaggotsRecipes();
         addComposterRecipes();
         addCisternRecipes();
+        addSickleRecipes();
+    }
+
+    private static void addSickleRecipes() {
+        RecipeManager.addShapelessRecipe(new ItemStack(DNItems.sickleWood), new Object[]{
+                new ItemStack(Item.silk),
+                new ItemStack(Item.stick),
+                new ItemStack(BTWItems.pointyStick),
+                new ItemStack(BTWItems.pointyStick)
+        });
     }
 
     private static void addCraftingRecipes() {

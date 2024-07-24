@@ -4,13 +4,14 @@
   "package": "btw.community.denovo.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "HardcoreSpawnUtilsMixin",
-    "GrassBlockMixin",
+    "BlockLeavesMixin",
     "DeadBushBlockMixin",
-    "SaplingBlockMixin",
-    "FishingRodBaitingRecipeMixin",
     "FarmlandBlockBaseMixin",
-    "PlanterBlockSoilMixin"
+    "FishingRodBaitingRecipeMixin",
+    "GrassBlockMixin",
+    "HardcoreSpawnUtilsMixin",
+    "PlanterBlockSoilMixin",
+    "SaplingBlockMixin"
   ],
   "client": [
   ],
