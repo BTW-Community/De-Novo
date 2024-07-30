@@ -13,6 +13,7 @@ item.DNItem_maggots.name=Maggots
 item.DNItem_maggots_cooked.name=Grilled Maggots
 item.DNItem_water_bowl.name=Bowl of Water
 item.DNItem_wood_sickle.name=Wooden Sickle
+item.DNItem_flint_hammer.name=Flint Hammer
 
 #Vanilla Overwrites
 item.hoeStone.name=Primitive Stone Hoe

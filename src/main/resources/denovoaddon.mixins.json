@@ -10,8 +10,10 @@
     "FishingRodBaitingRecipeMixin",
     "GrassBlockMixin",
     "HardcoreSpawnUtilsMixin",
+    "OreBlockStagedMixin",
     "PlanterBlockSoilMixin",
-    "SaplingBlockMixin"
+    "SaplingBlockMixin",
+    "StoneBlockMixin"
   ],
   "client": [
   ],
