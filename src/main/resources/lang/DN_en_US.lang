@@ -6,9 +6,13 @@ tile.deadbush.mature.name=Dead Bush
 tile.DNSieve.name=Sieve
 tile.DNComposter.name=Composter
 tile.DNCistern.name=Cistern
+tile.DNBlock_placed_sticks.name=Placed Shafts
+tile.DNBlock_smoldering_placed_sticks.name=Smoldering Placed Shafts
+tile.DNBlock_charcoal.name=Charcoal Pile
 
 #Items
 item.DNItem_mesh.name=Mesh
 item.DNItem_maggots.name=Maggots
 item.DNItem_maggots_cooked.name=Grilled Maggots
 item.DNItem_water_bowl.name=Bowl of Water
+item.DNItem_charcoal_dust.name=Pile of Charcoal Dust

@@ -6,6 +6,7 @@ import btw.community.denovo.item.items.DirtPileItem;
 import btw.community.denovo.item.items.MeshItem;
 import btw.community.denovo.item.items.RawMaggotsItem;
 import btw.community.denovo.item.items.WaterBowlItem;
+import btw.crafting.util.FurnaceBurnTime;
 import btw.item.BTWItems;
 import btw.item.items.FoodItem;
 import btw.item.items.PlaceAsBlockItem;
@@ -19,6 +20,7 @@ public class DNItems {
     public static Item cookedMaggots;
     public static Item waterBowl;
     public static Item cistern;
+    public static Item charcoalDust;
 
     //TODO: progressive maggots to string item?
 
@@ -44,5 +46,8 @@ public class DNItems {
 
         cistern = new PlaceAsBlockItem(DeNovoAddon.instance.parseID("DNItemCisternID") - 256, DNBlocks.cistern.blockID).setUnlocalizedName("cauldron").setCreativeTab(CreativeTabs.tabBrewing);
         Item.cauldron.setCreativeTab(null);
+
+        charcoalDust = new Item(DeNovoAddon.instance.parseID("DNItemCharcoalDustID") - 256).setUnlocalizedName("DNItem_charcoal_dust").setIncineratedInCrucible().setfurnaceburntime(FurnaceBurnTime.COAL).setFilterableProperties(
+                Item.FILTERABLE_SMALL).setCreativeTab(CreativeTabs.tabMaterials);
     }
 }

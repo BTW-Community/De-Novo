@@ -6,10 +6,7 @@ import btw.community.denovo.block.blocks.ComposterBlock;
 import btw.community.denovo.item.DNItems;
 import btw.crafting.recipe.RecipeManager;
 import btw.item.BTWItems;
-import net.minecraft.src.Block;
-import net.minecraft.src.FurnaceRecipes;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
+import net.minecraft.src.*;
 
 public class DNRecipes {
     public static void addRecipes() {
@@ -18,6 +15,16 @@ public class DNRecipes {
         addMaggotsRecipes();
         addComposterRecipes();
         addCisternRecipes();
+        addCharcoalRecipes();
+    }
+
+    private static void addCharcoalRecipes() {
+        RecipeManager.addShapelessRecipe(new ItemStack(Item.coal,1, 1), new Object[]{
+                new ItemStack(DNItems.charcoalDust),
+                new ItemStack(DNItems.charcoalDust),
+                new ItemStack(DNItems.charcoalDust),
+                new ItemStack(DNItems.charcoalDust)
+        });
     }
 
     private static void addCraftingRecipes() {

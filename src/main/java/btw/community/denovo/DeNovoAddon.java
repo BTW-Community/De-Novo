@@ -44,6 +44,9 @@ public class DeNovoAddon extends BTWAddon {
         this.registerProperty("DNBlockSieveID", "3900", "***Block IDs***\n\n");
         this.registerProperty("DNBlockComposterID", "3901");
         this.registerProperty("DNBlockCisternID", "3902");
+        this.registerProperty("DNBlockPlacedSticksID", "3903");
+        this.registerProperty("DNBlockSmolderingPlacedSticksID", "3904");
+        this.registerProperty("DNBlockCharcoalPileID", "3905");
 
         //Item IDs
         this.registerProperty("DNItemMeshID", "23000", "***Item IDs***\n\n");
@@ -51,6 +54,7 @@ public class DeNovoAddon extends BTWAddon {
         this.registerProperty("DNItemCookedMaggotsID", "23002");
         this.registerProperty("DNItemWaterBowlID", "23003");
         this.registerProperty("DNItemCisternID", "23004");
+        this.registerProperty("DNItemCharcoalDustID", "23005");
     }
 
     @Override
