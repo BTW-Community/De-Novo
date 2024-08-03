@@ -4,6 +4,7 @@ import btw.block.BTWBlocks;
 import btw.block.util.Flammability;
 import btw.community.denovo.block.DNBlocks;
 import btw.item.BTWItems;
+import btw.item.util.ItemUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -33,8 +34,25 @@ public class PlacedSticksBlock extends Block {
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int facing, float clickX, float clickY, float clickZ) {
         ItemStack heldStack = player.getHeldItem();
         int metadata = world.getBlockMetadata(x,y,z);
-
-        if (heldStack != null)
+        if (heldStack == null)
+        {
+            if (player.isSneaking())
+            {
+                if (metadata > 0)
+                {
+                    metadata--;
+                    world.setBlockMetadataWithNotify(x,y,z, metadata);
+                    ItemUtils.givePlayerStackOrEject(player, new ItemStack(Item.stick, 1), x,y,z);
+                    return true;
+                }
+                else {
+                    world.setBlockToAir(x,y,z);
+                    ItemUtils.givePlayerStackOrEject(player, new ItemStack(Item.stick, 1), x,y,z);
+                    return true;
+                }
+            }
+        }
+        else if (heldStack != null)
         {
             if (heldStack.itemID == Item.stick.itemID )
             {
