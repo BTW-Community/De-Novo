@@ -20,6 +20,35 @@ public class DNRecipes {
         addMaggotsRecipes();
         addComposterRecipes();
         addCisternRecipes();
+        addSickleRecipes();
+        addHoeRecipes();
+        addHammerRecipes();
+    }
+
+    private static void addHammerRecipes() {
+        RecipeManager.addShapelessRecipe(new ItemStack( DNItems.flintHammer ), new Object[] {
+                new ItemStack(Item.silk),
+                new ItemStack(Item.stick),
+                new ItemStack(Item.flint),
+                new ItemStack(Item.flint),
+        });
+    }
+
+    private static void addHoeRecipes() {
+        RecipeManager.addShapelessRecipe(new ItemStack( Item.hoeStone ), new Object[] {
+                new ItemStack(Item.silk),
+                new ItemStack(Item.stick),
+                new ItemStack(BTWItems.sharpStone),
+        });
+    }
+
+    private static void addSickleRecipes() {
+        RecipeManager.addShapelessRecipe(new ItemStack(DNItems.woodSickle), new Object[]{
+                new ItemStack(Item.silk),
+                new ItemStack(Item.stick),
+                new ItemStack(BTWItems.pointyStick),
+                new ItemStack(BTWItems.pointyStick)
+        });
     }
 
     private static void addCraftingRecipes() {

@@ -9,6 +9,7 @@ import btw.item.items.FoodItem;
 import btw.item.items.PlaceAsBlockItem;
 import net.minecraft.src.Block;
 import net.minecraft.src.CreativeTabs;
+import net.minecraft.src.EnumToolMaterial;
 import net.minecraft.src.Item;
 
 public class DNItems {
@@ -18,6 +19,8 @@ public class DNItems {
     public static Item maggotsSilkExtraction;
     public static Item waterBowl;
     public static Item cistern;
+    public static Item woodSickle;
+    public static Item flintHammer;
 
     //TODO: progressive maggots to string item?
 
@@ -45,5 +48,9 @@ public class DNItems {
 
         cistern = new PlaceAsBlockItem(DeNovoAddon.instance.parseID("DNItemCisternID") - 256, DNBlocks.cistern.blockID).setUnlocalizedName("cauldron").setCreativeTab(CreativeTabs.tabBrewing);
         Item.cauldron.setCreativeTab(null);
+
+        woodSickle = new SickleItem(DeNovoAddon.instance.parseID("DNItemWoodSickleID") - 256, EnumToolMaterial.WOOD, 10);
+
+        flintHammer = new HammerItem(DeNovoAddon.instance.parseID("DNItemFlintHammerID") - 256,EnumToolMaterial.STONE, 25);
     }
 }
