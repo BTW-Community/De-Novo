@@ -70,10 +70,20 @@ public class CisternBlock extends CisternBaseBlock {
             }
         }
         return false;
-
-
     }
 
+    //Sock: copied from vanilla cistern
+    @Override
+    public void addCollisionBoxesToList(World world, int i, int j, int k,
+                                        AxisAlignedBB intersectingBox, List list, Entity entity) {
+        // parent method is super complicated for no apparent reason
+
+        AxisAlignedBB tempBox = getCollisionBoundingBoxFromPool(world, i, j, k);
+
+        tempBox.addToListIfIntersects(intersectingBox, list);
+    }
+
+    //----------- Class Specific Methods -----------//
     @Override
     protected boolean isValidWaterContainer(ItemStack stack) {
         if (stack.isItemEqual(new ItemStack(Item.bucketEmpty))) return true;
@@ -86,25 +96,10 @@ public class CisternBlock extends CisternBaseBlock {
         return super.getFullWaterContainer(stack);
     }
 
-    protected int getWaterConsumtion(ItemStack stack) {
-        if (stack.isItemEqual(new ItemStack(Item.bucketEmpty))) return 3;
-        return 1;
-    }
+    //----------- Client Side Functionality -----------//
+    //Sock: copied from vanilla cistern
 
     @Override
-    public void addCollisionBoxesToList(World world, int i, int j, int k,
-                                        AxisAlignedBB intersectingBox, List list, Entity entity) {
-        // parent method is super complicated for no apparent reason
-
-        AxisAlignedBB tempBox = getCollisionBoundingBoxFromPool(world, i, j, k);
-
-        tempBox.addToListIfIntersects(intersectingBox, list);
-    }
-
-    //------------- Class Specific Methods ------------//
-
-    //----------- Client Side Functionality -----------//
-
     @Environment(EnvType.CLIENT)
     public Icon getIcon(int par1, int par2) {
         return par1 == 1 ? this.cauldronTopIcon : (par1 == 0 ? this.cauldronBottomIcon : this.blockIcon);
@@ -117,10 +112,7 @@ public class CisternBlock extends CisternBaseBlock {
     @Environment(EnvType.CLIENT)
     private Icon cauldronBottomIcon;
 
-    /**
-     * When this method is called, your block should register all the icons it needs with the given IconRegister. This
-     * is the only chance you get to register icons.
-     */
+    @Override
     @Environment(EnvType.CLIENT)
     public void registerIcons(IconRegister par1IconRegister) {
         super.registerIcons(par1IconRegister);
@@ -135,7 +127,6 @@ public class CisternBlock extends CisternBaseBlock {
         return par0Str == "cauldron_inner" ? field_94378_a : (par0Str == "cauldron_bottom" ? cauldronBottomIcon : null);
     }
 
-
     @Override
     @Environment(EnvType.CLIENT)
     public boolean renderBlock(RenderBlocks renderer, int i, int j, int k) {
@@ -145,6 +136,7 @@ public class CisternBlock extends CisternBaseBlock {
         return renderBlockCauldron(renderer, this, i, j, k);
     }
 
+    //Sock: copy from RenderBlocks
     public boolean renderBlockCauldron(RenderBlocks renderer, CisternBlock cistern, int par2, int par3, int par4) {
         renderer.renderStandardBlock(cistern, par2, par3, par4);
         Tessellator var5 = Tessellator.instance;
@@ -170,7 +162,7 @@ public class CisternBlock extends CisternBaseBlock {
         renderer.renderFaceYNeg(cistern, par2, (float) par3 + 1.0F - 0.75F, par4, var17);
         int var14 = renderer.blockAccess.getBlockMetadata(par2, par3, par4);
 
-        /*
+        /* Sock: water handled elsewhere
         if (var14 > 0)
         {
             Icon var15 = BlockFluid.func_94424_b("water");

@@ -3,15 +3,34 @@ package btw.community.denovo.mixins;
 import btw.block.blocks.GrassBlock;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(GrassBlock.class)
-public class GrassBlockMixin extends BlockGrass {
+public abstract class GrassBlockMixin extends BlockGrass {
     public GrassBlockMixin(int blockID) {
         super(blockID);
     }
 
     protected float getPlacingChance() {
         return 0.25F;
+    }
+
+    @Inject(method = "convertBlock",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/src/World;setBlockWithNotify(IIII)Z",
+                    ordinal = 0,
+                    shift = At.Shift.AFTER
+            ),
+            cancellable = true)
+    public void disableDroppingHempSeeds(ItemStack heldStack, World world, int x, int y, int z, int fromSide, CallbackInfoReturnable<Boolean> cir) {
+
+        if (heldStack != null && heldStack.itemID == Item.hoeStone.itemID)
+        {
+            cir.setReturnValue(true);
+        }
     }
 
     @Override
