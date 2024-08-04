@@ -14,5 +14,11 @@ tile.DNBlock_charcoal.name=Charcoal Pile
 item.DNItem_mesh.name=Mesh
 item.DNItem_maggots.name=Maggots
 item.DNItem_maggots_cooked.name=Grilled Maggots
+item.DNItem_maggots_silk_extraction.name=Silk Extraction
 item.DNItem_water_bowl.name=Bowl of Water
+item.DNItem_wood_sickle.name=Wooden Sickle
+item.DNItem_flint_hammer.name=Flint Hammer
 item.DNItem_charcoal_dust.name=Pile of Charcoal Dust
+
+#Vanilla Overwrites
+item.hoeStone.name=Primitive Stone Hoe

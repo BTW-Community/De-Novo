@@ -4,9 +4,15 @@ import btw.block.BTWBlocks;
 import btw.community.denovo.block.DNBlocks;
 import btw.community.denovo.block.blocks.ComposterBlock;
 import btw.community.denovo.item.DNItems;
+import btw.community.denovo.item.items.MaggotsSilkExtractionItem;
 import btw.crafting.recipe.RecipeManager;
 import btw.item.BTWItems;
 import net.minecraft.src.*;
+import btw.item.items.ProgressiveCraftingItem;
+import net.minecraft.src.Block;
+import net.minecraft.src.FurnaceRecipes;
+import net.minecraft.src.Item;
+import net.minecraft.src.ItemStack;
 
 public class DNRecipes {
     public static void addRecipes() {
@@ -24,6 +30,35 @@ public class DNRecipes {
                 new ItemStack(DNItems.charcoalDust),
                 new ItemStack(DNItems.charcoalDust),
                 new ItemStack(DNItems.charcoalDust)
+        });
+        addSickleRecipes();
+        addHoeRecipes();
+        addHammerRecipes();
+    }
+
+    private static void addHammerRecipes() {
+        RecipeManager.addShapelessRecipe(new ItemStack( DNItems.flintHammer ), new Object[] {
+                new ItemStack(Item.silk),
+                new ItemStack(Item.stick),
+                new ItemStack(Item.flint),
+                new ItemStack(Item.flint),
+        });
+    }
+
+    private static void addHoeRecipes() {
+        RecipeManager.addShapelessRecipe(new ItemStack( Item.hoeStone ), new Object[] {
+                new ItemStack(Item.silk),
+                new ItemStack(Item.stick),
+                new ItemStack(BTWItems.sharpStone),
+        });
+    }
+
+    private static void addSickleRecipes() {
+        RecipeManager.addShapelessRecipe(new ItemStack(DNItems.woodSickle), new Object[]{
+                new ItemStack(Item.silk),
+                new ItemStack(Item.stick),
+                new ItemStack(BTWItems.pointyStick),
+                new ItemStack(BTWItems.pointyStick)
         });
     }
 
@@ -52,11 +87,18 @@ public class DNRecipes {
     private static void addMaggotsRecipes() {
         //Check FishingRodBaitingRecipeMixin for baiting fishing rod
 
-        //maggots to string
+        //Maggots direct to string
+        /*
         RecipeManager.addShapelessRecipe(new ItemStack(Item.silk),
                 new Object[]{
                         new ItemStack(DNItems.rawMaggots)
                 });
+         */
+
+        //Maggots progressively to String
+        RecipeManager.addShapelessRecipe(new ItemStack(DNItems.maggotsSilkExtraction, 1, MaggotsSilkExtractionItem.TIME_TO_CRAFT), new Object[] {
+                new ItemStack(DNItems.rawMaggots)
+        });
 
         FurnaceRecipes.smelting().addSmelting(DNItems.rawMaggots.itemID, new ItemStack(DNItems.cookedMaggots), 0);
         RecipeManager.addCampfireRecipe(DNItems.rawMaggots.itemID, new ItemStack(DNItems.cookedMaggots));

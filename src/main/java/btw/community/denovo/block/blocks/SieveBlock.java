@@ -206,12 +206,20 @@ public class SieveBlock extends BlockContainer {
     @Environment(EnvType.CLIENT)
     private Icon filterIcon;
 
+    @Environment(EnvType.CLIENT)
+    private static Icon compostIcon;
+
     @Override
     @Environment(EnvType.CLIENT)
     public void registerIcons(IconRegister register) {
         this.blockIcon = register.registerIcon("wood");
 
         filterIcon = register.registerIcon("DNBlock_mesh");
+        compostIcon = register.registerIcon("DNBlock_composter_compost");
+    }
+
+    public static Icon getCompostIcon() {
+        return compostIcon;
     }
 
     @Override

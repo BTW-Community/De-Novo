@@ -6,21 +6,26 @@ import btw.community.denovo.item.items.DirtPileItem;
 import btw.community.denovo.item.items.MeshItem;
 import btw.community.denovo.item.items.RawMaggotsItem;
 import btw.community.denovo.item.items.WaterBowlItem;
+import btw.community.denovo.item.items.*;
 import btw.crafting.util.FurnaceBurnTime;
 import btw.item.BTWItems;
 import btw.item.items.FoodItem;
 import btw.item.items.PlaceAsBlockItem;
 import net.minecraft.src.Block;
 import net.minecraft.src.CreativeTabs;
+import net.minecraft.src.EnumToolMaterial;
 import net.minecraft.src.Item;
 
 public class DNItems {
     public static Item mesh;
     public static Item rawMaggots;
     public static Item cookedMaggots;
+    public static Item maggotsSilkExtraction;
     public static Item waterBowl;
     public static Item cistern;
     public static Item charcoalDust;
+    public static Item woodSickle;
+    public static Item flintHammer;
 
     //TODO: progressive maggots to string item?
 
@@ -42,6 +47,8 @@ public class DNItems {
         cookedMaggots = new FoodItem(DeNovoAddon.instance.parseID("DNItemCookedMaggotsID") - 256, COOKED_MAGGOTS_HUNGER_HEALED, COOKED_MAGGOTS_SATURATION_MOD, false, "DNItem_maggots_cooked")
                 .setCreativeTab(CreativeTabs.tabMisc);
 
+        maggotsSilkExtraction = new MaggotsSilkExtractionItem(DeNovoAddon.instance.parseID("DNItemMaggotsSilkExtractionID") - 256, "DNItem_maggots_silk_extraction");
+
         waterBowl = new WaterBowlItem(DeNovoAddon.instance.parseID("DNItemWaterBowlID") - 256);
 
         cistern = new PlaceAsBlockItem(DeNovoAddon.instance.parseID("DNItemCisternID") - 256, DNBlocks.cistern.blockID).setUnlocalizedName("cauldron").setCreativeTab(CreativeTabs.tabBrewing);
@@ -49,5 +56,9 @@ public class DNItems {
 
         charcoalDust = new Item(DeNovoAddon.instance.parseID("DNItemCharcoalDustID") - 256).setUnlocalizedName("DNItem_charcoal_dust").setIncineratedInCrucible().setfurnaceburntime(FurnaceBurnTime.COAL).setFilterableProperties(
                 Item.FILTERABLE_SMALL).setCreativeTab(CreativeTabs.tabMaterials);
+
+        woodSickle = new SickleItem(DeNovoAddon.instance.parseID("DNItemWoodSickleID") - 256, EnumToolMaterial.WOOD, 10);
+
+        flintHammer = new HammerItem(DeNovoAddon.instance.parseID("DNItemFlintHammerID") - 256,EnumToolMaterial.STONE, 25);
     }
 }
