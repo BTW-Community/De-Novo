@@ -10,13 +10,13 @@
     "PlanterBlockSoilMixin",
     "ShaftItemMixin",
     "CampfireBlockMixin",
-    "ItemCoalMixin"
+    "ItemCoalMixin",
     "FishingRodBaitingRecipeMixin",
     "GrassBlockMixin",
     "HardcoreSpawnUtilsMixin",
     "OreBlockStagedMixin",
     "SaplingBlockMixin",
-    "StoneBlockMixin"
+    "StoneBlockMixin",
     "SlimeEntityMixin",
     "EntityLivingMixin"
   ],
