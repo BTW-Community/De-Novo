@@ -57,6 +57,7 @@ public class DeNovoAddon extends BTWAddon {
         this.registerProperty("DNItemCookedMaggotsID", "23002");
         this.registerProperty("DNItemWaterBowlID", "23003");
         this.registerProperty("DNItemCisternID", "23004");
+        this.registerProperty("DNItemMaggotsSilkExtractionID", "23005");
     }
 
     @Override

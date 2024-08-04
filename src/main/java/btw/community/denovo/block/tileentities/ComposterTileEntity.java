@@ -13,11 +13,11 @@ public class ComposterTileEntity extends CisternBaseTileEntity {
         if (isFullWithCompost()) {
             if (progressCounter < MAGGOT_CREATION_TIME) {
                 progressCounter += 1;
-                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                worldObj.markBlockRangeForRenderUpdate(xCoord,yCoord,zCoord,xCoord,yCoord,zCoord);
+
             } else {
                 setFillType(CONTENTS_MAGGOTS);
-                setProgressCounter(0);
-                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                worldObj.markBlockRangeForRenderUpdate(xCoord,yCoord,zCoord,xCoord,yCoord,zCoord);
             }
         }
     }
