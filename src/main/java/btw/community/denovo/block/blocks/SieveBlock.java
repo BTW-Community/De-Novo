@@ -169,6 +169,11 @@ public class SieveBlock extends BlockContainer {
     }
 
     @Override
+    public boolean renderAsNormalBlock() {
+        return false;
+    }
+
+    @Override
     public void breakBlock(World world, int xCoord, int yCoord, int zCoord, int blockID, int meta) {
         SieveTileEntity tileEntity = (SieveTileEntity) world.getBlockTileEntity(xCoord, yCoord, zCoord);
 
