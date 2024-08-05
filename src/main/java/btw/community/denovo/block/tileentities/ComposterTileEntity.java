@@ -4,7 +4,7 @@ import net.minecraft.src.NBTTagCompound;
 
 public class ComposterTileEntity extends CisternBaseTileEntity {
 
-    public static final int MAGGOT_CREATION_TIME = 1200; //2 min
+    public static final int MAGGOT_CREATION_TIME = 2400; //was 2 min (1200), now 4 min
 
     @Override
     public void updateEntity() {
