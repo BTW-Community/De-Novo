@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "BlockLeavesMixin",
+    "BlockMixin",
     "CampfireBlockMixin",
     "DeadBushBlockMixin",
     "EntityLivingMixin",
@@ -13,13 +14,13 @@
     "GrassBlockMixin",
     "HardcoreSpawnUtilsMixin",
     "ItemCoalMixin",
+    "ItemMixin",
     "OreBlockStagedMixin",
     "PlanterBlockSoilMixin",
     "SaplingBlockMixin",
     "ShaftItemMixin",
     "SlimeEntityMixin",
-    "StoneBlockMixin",
-    "ItemMixin"
+    "StoneBlockMixin"
   ],
   "client": [
   ],
