@@ -167,7 +167,7 @@ public class CisternBlock extends CisternBaseBlock {
             Icon contentsIcon = getContentsIcon(cisternBase);
 
             if (fillLevel >= 0 && contentsIcon != null) {
-                renderer.setRenderBounds(2 / 16D, 4 / 16D, 2 / 16D, 14 / 16D, fillLevel / 16D, 14 / 16D);
+                renderer.setRenderBounds(2 / 16D, 9 / 32D, 2 / 16D, 14 / 16D, fillLevel / 16D, 14 / 16D);
                 RenderUtils.renderStandardBlockWithTexture(renderer, this, x, y, z, contentsIcon);
             }
         }
