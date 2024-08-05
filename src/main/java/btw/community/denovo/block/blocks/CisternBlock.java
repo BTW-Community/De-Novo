@@ -1,6 +1,9 @@
 package btw.community.denovo.block.blocks;
 
+import btw.client.render.util.RenderUtils;
+import btw.community.denovo.block.tileentities.CisternBaseTileEntity;
 import btw.community.denovo.block.tileentities.CisternTileEntity;
+import btw.community.denovo.item.DNItems;
 import btw.item.BTWItems;
 import btw.item.util.ItemUtils;
 import com.prupe.mcpatcher.cc.ColorizeBlock;
@@ -10,6 +13,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 
 import java.util.List;
+import java.util.Random;
 
 public class CisternBlock extends CisternBaseBlock {
     public CisternBlock(int blockID) {
@@ -31,6 +35,16 @@ public class CisternBlock extends CisternBaseBlock {
     @Override
     public TileEntity createNewTileEntity(World var1) {
         return new CisternTileEntity();
+    }
+
+    @Override
+    public int idDropped(int par1, Random par2Random, int par3) {
+        return DNItems.cistern.itemID;
+    }
+
+    @Override
+    public int idPicked(World par1World, int par2, int par3, int par4) {
+        return DNItems.cistern.itemID;
     }
 
     @Override
@@ -177,6 +191,27 @@ public class CisternBlock extends CisternBaseBlock {
          */
 
         return true;
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public void renderBlockSecondPass(RenderBlocks renderer, int x, int y, int z, boolean bFirstPassResult) {
+        mudColorPass = true;
+
+        CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) renderer.blockAccess.getBlockTileEntity(x, y, z);
+
+        //render contents
+        if (renderer.blockAccess.getBlockTileEntity(x, y, z) instanceof CisternBaseTileEntity) {
+            int fillLevel = cisternBase.getFillLevel();
+            Icon contentsIcon = getContentsIcon(cisternBase);
+
+            if (fillLevel >= 0 && contentsIcon != null) {
+                renderer.setRenderBounds(2 / 16D, 4 / 16D, 2 / 16D, 14 / 16D, fillLevel / 16D, 14 / 16D);
+                RenderUtils.renderStandardBlockWithTexture(renderer, this, x, y, z, contentsIcon);
+            }
+        }
+
+        mudColorPass = false;
     }
 
 }
