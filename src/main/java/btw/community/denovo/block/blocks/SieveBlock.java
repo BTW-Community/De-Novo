@@ -190,6 +190,23 @@ public class SieveBlock extends BlockContainer {
         super.breakBlock(world, xCoord, yCoord, zCoord, blockID, meta);
     }
 
+    @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, int par5) {
+        if (!this.canBlockStay(world, x, y, z)) {
+            this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+            world.setBlockToAir(x, y, z);
+        }
+    }
+    @Override
+    public boolean canPlaceBlockAt(World world, int x, int y, int z) {
+        return canBlockStay(world, x, y, z) && super.canPlaceBlockAt(world, x, y, z);
+    }
+
+    @Override
+    public boolean canBlockStay(World world, int x, int y, int z) {
+        return world.doesBlockHaveSolidTopSurface(x, y - 1, z) && super.canBlockStay(world, x, y, z);
+    }
+
     //----------- Class Specific Methods -----------//
 
     public void breakSieve(World world, int i, int j, int k) {
