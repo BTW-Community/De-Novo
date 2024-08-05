@@ -47,45 +47,6 @@ public class CisternBlock extends CisternBaseBlock {
         return DNItems.cistern.itemID;
     }
 
-    @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int facing, float clickX, float clickY, float clickZ) {
-        CisternTileEntity cistern = (CisternTileEntity) world.getBlockTileEntity(x, y, z);
-        ItemStack heldStack = player.getHeldItem();
-
-        if (world.getBlockTileEntity(x, y, z) instanceof CisternTileEntity) {
-            if (heldStack != null && !cistern.isEmpty()) {
-                if (isValidWaterContainer(heldStack)) {
-
-                    if (cistern.isFullWithWater() && heldStack.isItemEqual(new ItemStack(Item.bucketEmpty))) {
-                        cistern.setFillLevel(0);
-                        cistern.setFillType(CisternTileEntity.CONTENTS_EMPTY);
-                        ItemUtils.givePlayerStackOrEjectFromTowardsFacing(player, getFullWaterContainer(heldStack), x, y, z, facing);
-                        world.markBlockForUpdate(x, y, z);
-
-                        heldStack.stackSize--;
-                        return true;
-                    } else if (cistern.getFillType() == CisternTileEntity.CONTENTS_WATER) {
-                        cistern.removeWater(1);
-                        if (cistern.getFillLevel() <= 0) cistern.setFillType(CisternTileEntity.CONTENTS_EMPTY);
-                        ItemUtils.givePlayerStackOrEjectFromTowardsFacing(player, getFullWaterContainer(heldStack), x, y, z, facing);
-                        world.markBlockForUpdate(x, y, z);
-
-                        heldStack.stackSize--;
-                        return true;
-                    }
-
-                } else if (cistern.isFullWithWater() && heldStack.isItemEqual(new ItemStack(BTWItems.dirtPile)) && cistern.getProgressCounter() == 0) {
-                    cistern.setFillType(CisternTileEntity.CONTENTS_MUDDY_WATER);
-                    world.markBlockForUpdate(x, y, z);
-
-                    heldStack.stackSize--;
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     //Sock: copied from vanilla cistern
     @Override
     public void addCollisionBoxesToList(World world, int i, int j, int k,

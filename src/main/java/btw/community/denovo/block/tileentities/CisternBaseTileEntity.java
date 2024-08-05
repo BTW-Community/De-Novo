@@ -81,11 +81,16 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
     }
 
     public void addWater(int amount) {
+        if (this.fillType != CONTENTS_WATER) this.fillType = CONTENTS_WATER;
         this.fillLevel += 5 * amount;
     }
 
     public boolean isFullWithWater() {
         return this.fillLevel == 15 && this.fillType == CONTENTS_WATER;
+    }
+
+    public boolean hasWater() {
+        return this.fillLevel > 0 && this.fillType == CONTENTS_WATER;
     }
 
     public boolean isFullWithMuddyWater() {

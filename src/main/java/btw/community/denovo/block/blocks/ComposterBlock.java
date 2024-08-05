@@ -105,6 +105,7 @@ public class ComposterBlock extends CisternBaseBlock {
                 }
             }
         }
+        //handle water
         return super.onBlockActivated(world, x, y, z, player, facing, clickX, clickY, clickZ);
     }
 

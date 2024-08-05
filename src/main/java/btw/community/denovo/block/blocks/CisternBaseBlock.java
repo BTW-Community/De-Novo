@@ -4,6 +4,7 @@ import btw.client.render.util.RenderUtils;
 import btw.community.denovo.block.tileentities.CisternBaseTileEntity;
 import btw.community.denovo.block.tileentities.ComposterTileEntity;
 import btw.community.denovo.item.DNItems;
+import btw.community.denovo.utils.CisternUtils;
 import btw.item.BTWItems;
 import btw.item.util.ItemUtils;
 import net.fabricmc.api.EnvType;
@@ -13,6 +14,8 @@ import net.minecraft.src.*;
 import java.awt.*;
 import java.util.Random;
 
+import static btw.community.denovo.block.tileentities.CisternBaseTileEntity.CONTENTS_WATER;
+
 public abstract class CisternBaseBlock extends BlockContainer {
     public CisternBaseBlock(int blockID, Material material) {
         super(blockID, material);
@@ -20,30 +23,42 @@ public abstract class CisternBaseBlock extends BlockContainer {
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int facing, float clickX, float clickY, float clickZ) {
-        CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) world.getBlockTileEntity(x, y, z);
+        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+        CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) tileEntity;
         ItemStack heldStack = player.getHeldItem();
 
-        if (world.getBlockTileEntity(x, y, z) instanceof CisternBaseTileEntity && cisternBase.isFullWithWater()) {
-            if (heldStack != null) {
-                if (isValidWaterContainer(heldStack)) {
-                    ItemUtils.givePlayerStackOrEjectFromTowardsFacing(player, getFullWaterContainer(heldStack), x, y, z, facing);
-                    cisternBase.setFillLevel(0);
-                    cisternBase.setFillType(CisternBaseTileEntity.CONTENTS_EMPTY);
-                    world.markBlockForUpdate(x, y, z);
+        if (cisternBase.isFullWithWater())
+        {
+            if (heldStack != null && heldStack.isItemEqual(new ItemStack(BTWItems.dirtPile)) && cisternBase.getProgressCounter() == 0) {
+                cisternBase.setFillType(CisternBaseTileEntity.CONTENTS_MUDDY_WATER);
+                world.markBlockForUpdate(x, y, z);
 
-                    heldStack.stackSize--;
-                    return true;
-                } else if (cisternBase.isFullWithWater() && heldStack.isItemEqual(new ItemStack(BTWItems.dirtPile)) && cisternBase.getProgressCounter() == 0) {
-                    cisternBase.setFillType(CisternBaseTileEntity.CONTENTS_MUDDY_WATER);
-                    world.markBlockForUpdate(x, y, z);
+                playSound(world, x, y, z, "random.splash", 1/32F, 1F);
 
-                    playSound(world, x, y, z, "random.splash", 1/32F, 1F);
-
-                    heldStack.stackSize--;
-                    return true;
-                }
+                heldStack.stackSize--;
+                return true;
             }
         }
+
+        if (cisternBase.isEmpty())
+        {
+            if (heldStack != null && CisternUtils.isValidWaterContainer(heldStack))
+            {
+                return CisternUtils.addWaterAndReturnContainer(world, x,y,z, facing, player, tileEntity, heldStack);
+            }
+        }
+        else if (cisternBase.hasWater())
+        {
+            if (heldStack != null && CisternUtils.isValidWaterContainer(heldStack))
+            {
+                return CisternUtils.addWaterAndReturnContainer(world, x,y,z, facing, player, tileEntity, heldStack);
+            }
+            else if (heldStack != null && CisternUtils.isValidEmptyContainer(heldStack))
+            {
+                return CisternUtils.reduceWaterAndReturnContainer(world, x,y,z, facing, player, tileEntity, heldStack);
+            }
+        }
+
         return false;
     }
 
@@ -127,7 +142,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
         int fillType = cisternBase.getFillType();
 
         if (fillType != ComposterTileEntity.CONTENTS_EMPTY) {
-            if (fillType == ComposterTileEntity.CONTENTS_WATER) return water;
+            if (fillType == CONTENTS_WATER) return water;
             if (fillType == ComposterTileEntity.CONTENTS_MUDDY_WATER) return water;
         }
         return null;
