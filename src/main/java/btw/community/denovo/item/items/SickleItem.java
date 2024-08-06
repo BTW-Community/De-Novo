@@ -11,7 +11,7 @@ public class SickleItem extends ToolItem {
         setMaxStackSize(1);
         setMaxDamage( maxUses );
 
-        setUnlocalizedName("DNItem_sickle_wood");
+        setUnlocalizedName("DNItem_wood_sickle");
         setCreativeTab(CreativeTabs.tabTools);
     }
 

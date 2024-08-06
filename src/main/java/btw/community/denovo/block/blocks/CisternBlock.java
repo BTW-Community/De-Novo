@@ -29,7 +29,7 @@ public class CisternBlock extends CisternBaseBlock {
 
         setStepSound(soundMetalFootstep);
 
-        setUnlocalizedName("DNCistern");
+        setUnlocalizedName("DNBlock_cistern");
     }
 
     @Override

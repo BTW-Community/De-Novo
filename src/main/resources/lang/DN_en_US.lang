@@ -1,11 +1,8 @@
+### DeNovo ###
 #Blocks
-tile.deadbush.tiny.name=Tiny Dead Bush
-tile.deadbush.small.name=Small Dead Bush
-tile.deadbush.medium.name=Medium Dead Bush
-tile.deadbush.mature.name=Dead Bush
-tile.DNSieve.name=Sieve
-tile.DNComposter.name=Composter
-tile.DNCistern.name=Cistern
+tile.DNBlock_sieve.name=Sieve
+tile.DNBlock_composter.name=Composter
+tile.DNBlock_cistern.name=Cistern
 tile.DNBlock_placed_sticks.name=Placed Shafts
 tile.DNBlock_smoldering_placed_sticks.name=Smoldering Placed Shafts
 tile.DNBlock_charcoal.name=Charcoal Pile
@@ -20,5 +17,12 @@ item.DNItem_wood_sickle.name=Wooden Sickle
 item.DNItem_flint_hammer.name=Flint Hammer
 item.DNItem_charcoal_dust.name=Pile of Charcoal Dust
 
-#Vanilla Overwrites
+### Vanilla Overwrites ###
+#Blocks
+tile.deadbush.tiny.name=Tiny Dead Bush
+tile.deadbush.small.name=Small Dead Bush
+tile.deadbush.medium.name=Medium Dead Bush
+tile.deadbush.mature.name=Dead Bush
+
+#Items
 item.hoeStone.name=Primitive Stone Hoe

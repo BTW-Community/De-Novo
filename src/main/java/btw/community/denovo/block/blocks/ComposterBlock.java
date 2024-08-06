@@ -36,7 +36,7 @@ public class ComposterBlock extends CisternBaseBlock {
 
         setStepSound(soundWoodFootstep);
 
-        setUnlocalizedName("DNComposter");
+        setUnlocalizedName("DNBlock_composter");
 
         setCreativeTab(CreativeTabs.tabRedstone);
 

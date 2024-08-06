@@ -34,7 +34,7 @@ public class SieveBlock extends BlockContainer {
         setHardness(0.5F);
         setBuoyancy(1F);
 
-        setUnlocalizedName("DNSieve");
+        setUnlocalizedName("DNBlock_sieve");
         setCreativeTab(CreativeTabs.tabRedstone);
 
         initBlockBounds(0D, 0D, 0D, 1D, 1D, 1D);
