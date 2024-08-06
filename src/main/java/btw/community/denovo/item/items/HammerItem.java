@@ -1,9 +1,8 @@
 package btw.community.denovo.item.items;
 
-import btw.block.BTWBlocks;
 import btw.item.items.PickaxeItem;
-import btw.item.items.ToolItem;
-import net.minecraft.src.*;
+import net.minecraft.src.CreativeTabs;
+import net.minecraft.src.EnumToolMaterial;
 
 public class HammerItem extends PickaxeItem {
     public HammerItem(int itemID, EnumToolMaterial material, int maxUses) {

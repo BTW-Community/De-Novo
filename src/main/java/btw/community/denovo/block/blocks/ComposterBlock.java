@@ -1,7 +1,6 @@
 package btw.community.denovo.block.blocks;
 
 import btw.block.util.Flammability;
-import btw.client.fx.BTWEffectManager;
 import btw.client.render.util.RenderUtils;
 import btw.community.denovo.block.models.ComposterModel;
 import btw.community.denovo.block.tileentities.CisternBaseTileEntity;

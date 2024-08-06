@@ -1,8 +1,10 @@
 package btw.community.denovo.block.tileentities;
 
 import btw.block.tileentity.TileEntityDataPacketHandler;
-import btw.community.denovo.block.blocks.SmolderingPlacedSticksBlock;
-import net.minecraft.src.*;
+import net.minecraft.src.NBTTagCompound;
+import net.minecraft.src.Packet;
+import net.minecraft.src.Packet132TileEntityData;
+import net.minecraft.src.TileEntity;
 
 public class SmolderingPlacedSticksTileEntity extends TileEntity implements TileEntityDataPacketHandler {
 

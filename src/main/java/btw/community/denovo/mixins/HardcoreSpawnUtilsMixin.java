@@ -4,15 +4,14 @@ import btw.community.denovo.DeNovoAddon;
 import btw.item.BTWItems;
 import btw.util.hardcorespawn.HardcoreSpawnUtils;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.src.*;
+import net.minecraft.src.EntityPlayerMP;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
-import java.util.Random;
 
 @Mixin(HardcoreSpawnUtils.class)
 public class HardcoreSpawnUtilsMixin {

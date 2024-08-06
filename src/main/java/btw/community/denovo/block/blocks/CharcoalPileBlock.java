@@ -1,6 +1,5 @@
 package btw.community.denovo.block.blocks;
 
-import btw.block.BTWBlocks;
 import btw.community.denovo.block.DNBlocks;
 import btw.community.denovo.item.DNItems;
 import btw.item.util.ItemUtils;

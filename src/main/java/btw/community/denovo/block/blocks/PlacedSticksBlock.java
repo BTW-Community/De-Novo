@@ -1,9 +1,7 @@
 package btw.community.denovo.block.blocks;
 
-import btw.block.BTWBlocks;
 import btw.block.util.Flammability;
 import btw.community.denovo.block.DNBlocks;
-import btw.item.BTWItems;
 import btw.item.util.ItemUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

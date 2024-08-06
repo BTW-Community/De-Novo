@@ -1,13 +1,11 @@
 package btw.community.denovo.mixins;
 
 import btw.community.denovo.item.items.SickleItem;
-import btw.item.items.ShearsItem;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BlockLeaves.class)
 public abstract class BlockLeavesMixin extends BlockLeavesBase {

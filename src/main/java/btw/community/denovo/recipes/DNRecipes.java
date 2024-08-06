@@ -7,8 +7,6 @@ import btw.community.denovo.item.DNItems;
 import btw.community.denovo.item.items.MaggotsSilkExtractionItem;
 import btw.crafting.recipe.RecipeManager;
 import btw.item.BTWItems;
-import net.minecraft.src.*;
-import btw.item.items.ProgressiveCraftingItem;
 import net.minecraft.src.Block;
 import net.minecraft.src.FurnaceRecipes;
 import net.minecraft.src.Item;

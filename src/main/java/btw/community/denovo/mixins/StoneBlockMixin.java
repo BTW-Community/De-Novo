@@ -2,13 +2,12 @@ package btw.community.denovo.mixins;
 
 import btw.block.blocks.FullBlock;
 import btw.block.blocks.StoneBlock;
-import btw.community.denovo.DeNovoAddon;
-import btw.community.denovo.item.DNItems;
 import btw.community.denovo.item.items.HammerItem;
 import btw.item.BTWItems;
 import btw.item.util.ItemUtils;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.src.*;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.Material;
+import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

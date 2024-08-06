@@ -12,7 +12,6 @@ import btw.world.util.BlockPos;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
-import org.lwjgl.Sys;
 
 import java.util.Random;
 

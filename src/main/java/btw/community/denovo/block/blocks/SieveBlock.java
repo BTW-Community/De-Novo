@@ -1,6 +1,5 @@
 package btw.community.denovo.block.blocks;
 
-import btw.block.BTWBlocks;
 import btw.block.util.Flammability;
 import btw.client.fx.BTWEffectManager;
 import btw.client.render.util.RenderUtils;

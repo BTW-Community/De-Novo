@@ -1,7 +1,6 @@
 package btw.community.denovo.block.tileentities;
 
 import btw.block.tileentity.TileEntityDataPacketHandler;
-import btw.community.denovo.block.blocks.CisternBaseBlock;
 import btw.item.util.ItemUtils;
 import net.minecraft.src.*;
 

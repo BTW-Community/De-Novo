@@ -1,15 +1,15 @@
 package btw.community.denovo.mixins;
 
-import btw.block.BTWBlocks;
 import btw.block.blocks.CampfireBlock;
 import btw.community.denovo.block.DNBlocks;
-import net.minecraft.src.*;
+import net.minecraft.src.Block;
+import net.minecraft.src.BlockContainer;
+import net.minecraft.src.Material;
+import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Random;
 
 @Mixin(CampfireBlock.class
 )

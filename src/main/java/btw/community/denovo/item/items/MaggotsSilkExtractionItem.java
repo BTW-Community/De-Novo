@@ -1,6 +1,5 @@
 package btw.community.denovo.item.items;
 
-import btw.item.BTWItems;
 import btw.item.items.ProgressiveCraftingItem;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Item;

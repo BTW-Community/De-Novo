@@ -6,7 +6,6 @@ import btw.community.denovo.block.tileentities.ComposterTileEntity;
 import btw.community.denovo.item.DNItems;
 import btw.community.denovo.utils.CisternUtils;
 import btw.item.BTWItems;
-import btw.item.util.ItemUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
