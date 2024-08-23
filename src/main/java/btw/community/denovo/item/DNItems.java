@@ -2,7 +2,6 @@ package btw.community.denovo.item;
 
 import btw.community.denovo.DeNovoAddon;
 import btw.community.denovo.block.DNBlocks;
-import btw.community.denovo.item.items.DirtPileItem;
 import btw.community.denovo.item.items.MeshItem;
 import btw.community.denovo.item.items.RawMaggotsItem;
 import btw.community.denovo.item.items.WaterBowlItem;
@@ -22,6 +21,8 @@ public class DNItems {
     public static Item cookedMaggots;
     public static Item maggotsSilkExtraction;
     public static Item waterBowl;
+    public static Item rustWaterBowl;
+    public static Item ironDust;
     public static Item cistern;
     public static Item charcoalDust;
     public static Item woodSickle;
@@ -47,11 +48,14 @@ public class DNItems {
         cookedMaggots = new FoodItem(DeNovoAddon.instance.parseID("DNItemCookedMaggotsID") - 256, COOKED_MAGGOTS_HUNGER_HEALED, COOKED_MAGGOTS_SATURATION_MOD, false, "DNItem_maggots_cooked")
                 .setCreativeTab(CreativeTabs.tabMisc);
 
-        maggotsSilkExtraction = new MaggotsSilkExtractionItem(DeNovoAddon.instance.parseID("DNItemMaggotsSilkExtractionID") - 256, "DNItem_maggots_silk_extraction");
+        maggotsSilkExtraction = new RustWaterBowlItem(DeNovoAddon.instance.parseID("DNItemMaggotsSilkExtractionID") - 256, "DNItem_maggots_silk_extraction");
 
         waterBowl = new WaterBowlItem(DeNovoAddon.instance.parseID("DNItemWaterBowlID") - 256);
+        rustWaterBowl = new RustWaterBowlItem(DeNovoAddon.instance.parseID("DNItemRustWaterBowlID") - 256, "DNItem_rust_water_bowl");
 
-        cistern = new PlaceAsBlockItem(DeNovoAddon.instance.parseID("DNItemCisternID") - 256, DNBlocks.cistern.blockID).setUnlocalizedName("cauldron").setCreativeTab(CreativeTabs.tabBrewing);
+        ironDust = new Item(DeNovoAddon.instance.parseID("DNItemIronDustID") - 256).setUnlocalizedName("DNItem_iron_dust");
+
+        cistern = new PlaceAsBlockItem(DeNovoAddon.instance.parseID("DNItemCisternID") - 256, DNBlocks.cistern.blockID).setUnlocalizedName("cauldron"); //.setCreativeTab(CreativeTabs.tabBrewing);
         Item.cauldron.setCreativeTab(null);
 
         charcoalDust = new Item(DeNovoAddon.instance.parseID("DNItemCharcoalDustID") - 256).setUnlocalizedName("DNItem_charcoal_dust").setIncineratedInCrucible().setfurnaceburntime(FurnaceBurnTime.COAL).setFilterableProperties(

@@ -2,13 +2,11 @@ package btw.community.denovo.recipes;
 
 import btw.block.BTWBlocks;
 import btw.community.denovo.block.DNBlocks;
-import btw.community.denovo.block.blocks.ComposterBlock;
 import btw.community.denovo.item.DNItems;
-import btw.community.denovo.item.items.MaggotsSilkExtractionItem;
+import btw.community.denovo.item.items.RustWaterBowlItem;
+import btw.community.denovo.utils.CisternUtils;
 import btw.crafting.recipe.RecipeManager;
 import btw.item.BTWItems;
-import net.minecraft.src.*;
-import btw.item.items.ProgressiveCraftingItem;
 import net.minecraft.src.Block;
 import net.minecraft.src.FurnaceRecipes;
 import net.minecraft.src.Item;
@@ -96,7 +94,7 @@ public class DNRecipes {
          */
 
         //Maggots progressively to String
-        RecipeManager.addShapelessRecipe(new ItemStack(DNItems.maggotsSilkExtraction, 1, MaggotsSilkExtractionItem.TIME_TO_CRAFT), new Object[] {
+        RecipeManager.addShapelessRecipe(new ItemStack(DNItems.maggotsSilkExtraction, 1, RustWaterBowlItem.TIME_TO_CRAFT), new Object[] {
                 new ItemStack(DNItems.rawMaggots)
         });
 
@@ -113,46 +111,60 @@ public class DNRecipes {
                 'C', new ItemStack(BTWBlocks.unlitCampfire)
         });
 
-        //Compostables
-        ComposterBlock.validCompostables.add(new ItemStack(DNItems.rawMaggots));
+        //
+        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.ironOrePile), new Object[] {
+                new ItemStack(DNItems.ironDust),
+                new ItemStack(DNItems.ironDust),
+                new ItemStack(DNItems.ironDust),
+                new ItemStack(DNItems.ironDust)
+        });
 
-        ComposterBlock.validCompostables.add(new ItemStack(Item.stick));
-        ComposterBlock.validCompostables.add(new ItemStack(BTWItems.sawDust));
+        // Valid Dirts
+        CisternUtils.validDirt.add(new ItemStack(BTWItems.dirtPile));
+        CisternUtils.validDirt.add(new ItemStack(BTWItems.gravelPile));
+
+        //Compostables
+        //CisternUtils.validCompostables.add(new ItemStack(DNItems.rawMaggots));
+
+        CisternUtils.validCompostables.add(new ItemStack(Item.stick));
+        CisternUtils.validCompostables.add(new ItemStack(BTWItems.sawDust));
         for (int type = 0; type < 5; type++) {
-            ComposterBlock.validCompostables.add(new ItemStack(BTWItems.bark, 1, type));
+            CisternUtils.validCompostables.add(new ItemStack(BTWItems.bark, 1, type));
         }
 
-        ComposterBlock.validCompostables.add(new ItemStack(Item.poisonousPotato));
-        ComposterBlock.validCompostables.add(new ItemStack(BTWItems.hemp));
-        ComposterBlock.validCompostables.add(new ItemStack(BTWItems.hempFibers));
+        CisternUtils.validCompostables.add(new ItemStack(Item.poisonousPotato));
+        CisternUtils.validCompostables.add(new ItemStack(Item.reed));
+        CisternUtils.validCompostables.add(new ItemStack(BTWItems.sugarCaneRoots));
+        CisternUtils.validCompostables.add(new ItemStack(BTWItems.hemp));
+        CisternUtils.validCompostables.add(new ItemStack(BTWItems.hempFibers));
 
-        ComposterBlock.validCompostables.add(new ItemStack(Item.rottenFlesh));
-        ComposterBlock.validCompostables.add(new ItemStack(Item.spiderEye));
-        ComposterBlock.validCompostables.add(new ItemStack(Item.fermentedSpiderEye));
-        ComposterBlock.validCompostables.add(new ItemStack(BTWItems.creeperOysters));
-        ComposterBlock.validCompostables.add(new ItemStack(BTWItems.batWing));
-        ComposterBlock.validCompostables.add(new ItemStack(BTWItems.mysteriousGland));
+        CisternUtils.validCompostables.add(new ItemStack(Item.rottenFlesh));
+        CisternUtils.validCompostables.add(new ItemStack(Item.spiderEye));
+        CisternUtils.validCompostables.add(new ItemStack(Item.fermentedSpiderEye));
+        CisternUtils.validCompostables.add(new ItemStack(BTWItems.creeperOysters));
+        CisternUtils.validCompostables.add(new ItemStack(BTWItems.batWing));
+        CisternUtils.validCompostables.add(new ItemStack(BTWItems.mysteriousGland));
 
-        ComposterBlock.validCompostables.add(new ItemStack(Block.deadBush));
-        ComposterBlock.validCompostables.add(new ItemStack(Block.plantRed));
-        ComposterBlock.validCompostables.add(new ItemStack(Block.plantYellow));
-        ComposterBlock.validCompostables.add(new ItemStack(Block.cocoaPlant));
-        ComposterBlock.validCompostables.add(new ItemStack(Block.vine));
-        ComposterBlock.validCompostables.add(new ItemStack(Block.waterlily));
-        ComposterBlock.validCompostables.add(new ItemStack(BTWItems.redMushroom));
-        ComposterBlock.validCompostables.add(new ItemStack(BTWItems.brownMushroom));
+        CisternUtils.validCompostables.add(new ItemStack(Block.deadBush));
+        CisternUtils.validCompostables.add(new ItemStack(Block.plantRed));
+        CisternUtils.validCompostables.add(new ItemStack(Block.plantYellow));
+        CisternUtils.validCompostables.add(new ItemStack(Block.cocoaPlant));
+        CisternUtils.validCompostables.add(new ItemStack(Block.vine));
+        CisternUtils.validCompostables.add(new ItemStack(Block.waterlily));
+        CisternUtils.validCompostables.add(new ItemStack(BTWItems.redMushroom));
+        CisternUtils.validCompostables.add(new ItemStack(BTWItems.brownMushroom));
 
         for (int type = 0; type < 5; type++) {
-            ComposterBlock.validCompostables.add(new ItemStack(Block.wood, 1, type));
+            CisternUtils.validCompostables.add(new ItemStack(Block.wood, 1, type));
         }
         for (int type = 0; type < 4; type++) {
-            ComposterBlock.validCompostables.add(new ItemStack(Block.leaves, 1, type));
+            CisternUtils.validCompostables.add(new ItemStack(Block.leaves, 1, type));
         }
         for (int type = 0; type < 16; type++) {
-            ComposterBlock.validCompostables.add(new ItemStack(Block.sapling, 1, type));
+            CisternUtils.validCompostables.add(new ItemStack(Block.sapling, 1, type));
         }
         for (int type = 0; type < 3; type++) {
-            ComposterBlock.validCompostables.add(new ItemStack(Block.tallGrass, 1, type));
+            CisternUtils.validCompostables.add(new ItemStack(Block.tallGrass, 1, type));
         }
 
     }
@@ -161,7 +173,7 @@ public class DNRecipes {
         //remove old recipe
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.cauldron, 1), new Object[]{"# #", "# #", "###", '#', Item.ingotIron});
         //add new recipe
-        RecipeManager.addRecipe(new ItemStack(DNItems.cistern, 1), new Object[]{"# #", "# #", "###", '#', Item.ingotIron});
+        RecipeManager.addRecipe(new ItemStack(DNBlocks.cistern, 1), new Object[]{"# #", "# #", "###", '#', Item.ingotIron});
 
     }
 

@@ -1,52 +1,103 @@
 package btw.community.denovo.block.tileentities;
 
 import btw.block.tileentity.TileEntityDataPacketHandler;
-import btw.community.denovo.block.blocks.CisternBaseBlock;
+import btw.community.denovo.utils.CisternUtils;
 import btw.item.util.ItemUtils;
 import net.minecraft.src.*;
 
 public abstract class CisternBaseTileEntity extends TileEntity implements TileEntityDataPacketHandler {
 
-    public static final int CONTENTS_EMPTY = 0;
-    public static final int CONTENTS_WATER = 1;
-    public static final int CONTENTS_MUDDY_WATER = 2;
-    public static final int CONTENTS_COMPOST = 3;
-    public static final int CONTENTS_MAGGOTS = 4;
     protected int fillType = 0;
-    protected int fillLevel = 0;
+    protected int solidFillLevel = 0;
+    protected int liquidFillLevel = 0;
     protected int progressCounter = 0;
     protected boolean hasCollectedWaterToday = false;
     public static final int MAX_FILL_LEVEL = 16;
-    public static final int MUDDY_WATER_SETTLE_TIME = 6000; //24000 is 20min
 
     @Override
     public void updateEntity() {
-        super.updateEntity();
 
-        if (fillLevel == 0) {
-            if (fillType != CONTENTS_EMPTY) setFillType(CONTENTS_EMPTY);
-            if (progressCounter != 0) setProgressCounter(0);
+        if (getProgressCounter() > 0)
+        {
+            if (worldObj.isRemote)
+            {
+                System.out.println("CLIENT: fillType= " + getFillType());
+            }
+            else System.out.println("SERVER: fillType= " + getFillType());
         }
 
-        if (fillType == CONTENTS_EMPTY || (fillType == CONTENTS_WATER && !isFullWithWater())) {
+        if (fillType == CisternUtils.CONTENTS_EMPTY){
+            setProgressCounter(0);
+            setSolidFillLevel(0);
+            setLiquidFillLevel(0);
+        }
+
+        if (fillType == CisternUtils.CONTENTS_EMPTY || (fillType == CisternUtils.CONTENTS_WATER && !isFullWithWater())) {
             if (worldObj.canBlockSeeTheSky(xCoord, yCoord, zCoord) && !worldObj.isRemote) {
                 attemptToFillWithWater();
             }
-        } else if (fillType == CONTENTS_MUDDY_WATER) {
-            if (progressCounter < MUDDY_WATER_SETTLE_TIME) {
-                progressCounter += 1;
-                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-            } else {
-                if (!worldObj.isRemote) {
-                    ItemUtils.ejectStackFromBlockTowardsFacing(worldObj, xCoord, yCoord, zCoord, new ItemStack(Item.clay), 1);
-                    worldObj.playSoundEffect(
-                            (double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D,
-                            Block.blockClay.stepSound.getStepSound(),
-                            1/8F,
-                            1F);
+        }
+
+        if (fillType == CisternUtils.CONTENTS_MUDDY_WATER) {
+            handleMuddyWater();
+        }else if (fillType == CisternUtils.CONTENTS_CLAY_WATER) {
+            handleClayWater();
+        } else if (fillType == CisternUtils.CONTENTS_INFECTED_WATER) {
+            handleInfectedWater();
+        }
+    }
+
+    private void handleMuddyWater() {
+        if (progressCounter < CisternUtils.MUDDY_WATER_SETTLE_TIME) {
+            progressCounter += 1;
+            worldObj.markBlockRangeForRenderUpdate(xCoord,yCoord,zCoord,xCoord,yCoord,zCoord);
+        } else {
+            if (!worldObj.isRemote) {
+                ItemUtils.ejectStackFromBlockTowardsFacing(worldObj, xCoord, yCoord, zCoord, new ItemStack(Item.clay), 1);
+                worldObj.playSoundEffect(
+                        (double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D,
+                        Block.blockClay.stepSound.getStepSound(),
+                        1/8F,
+                        1F);
+            }
+            setFillType(CisternUtils.CONTENTS_WATER);
+            setProgressCounter(0);
+            worldObj.markBlockRangeForRenderUpdate(xCoord,yCoord,zCoord,xCoord,yCoord,zCoord);
+        }
+    }
+
+    private void handleClayWater() {
+        if (progressCounter < CisternUtils.CLAY_WATER_CONVERSION_TIME) {
+            progressCounter += 1;
+
+            if (progressCounter == CisternUtils.CLAY_WATER_CONVERSION_TIME / 2)
+            {
+                if (worldObj.rand.nextFloat() > 0.1F)
+                {
+                    setFillType(CisternUtils.CONTENTS_WATER);
+                    setProgressCounter(0);
                 }
-                setFillType(CONTENTS_WATER);
+            }
+
+            worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+        } else {
+            setFillType(CisternUtils.CONTENTS_INFECTED_WATER);
+            setProgressCounter(0);
+            worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+        }
+    }
+
+    private void handleInfectedWater() {
+        if (solidFillLevel == 16) {
+            if (progressCounter < CisternUtils.MUDDY_WATER_SETTLE_TIME)
+            {
+                progressCounter += 1;
+                worldObj.markBlockRangeForRenderUpdate(xCoord,yCoord,zCoord,xCoord,yCoord,zCoord);
+            } else {
+                setFillType(CisternUtils.CONTENTS_RUST_WATER);
+                setSolidFillLevel(0);
                 setProgressCounter(0);
+                worldObj.markBlockRangeForRenderUpdate(xCoord,yCoord,zCoord,xCoord,yCoord,zCoord);
             }
         }
     }
@@ -59,14 +110,14 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
 
         if (isRaining) {
             if (worldObj.rand.nextFloat() <= 0.25F) {
-                addWater(1);
-                setFillType(CONTENTS_WATER);
+                addLiquid(1);
+                setFillType(CisternUtils.CONTENTS_WATER);
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
             }
         } else {
             if (isMorning && !getHasCollectedWaterToday() && worldObj.rand.nextFloat() <= 0.125F) {
-                addWater(1);
-                setFillType(CONTENTS_WATER);
+                addLiquid(1);
+                setFillType(CisternUtils.CONTENTS_WATER);
                 setHasCollectedWaterToday(true);
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
             } else if (isNight && getHasCollectedWaterToday()) {
@@ -76,49 +127,53 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
 
     }
 
-    public void removeWater(int amount) {
-        this.fillLevel -= 5 * amount;
+    public void removeLiquid(int amount) {
+        this.liquidFillLevel -= 5 * amount;
+        if (this.liquidFillLevel == 0) setFillType(CisternUtils.CONTENTS_EMPTY);
+        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
     }
 
-    public void addWater(int amount) {
-        if (this.fillType != CONTENTS_WATER) this.fillType = CONTENTS_WATER;
-        this.fillLevel += 5 * amount;
+    public void addLiquid(int amount) {
+        this.liquidFillLevel += 5 * amount;
+        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
     }
 
     public boolean isFullWithWater() {
-        return this.fillLevel == 15 && this.fillType == CONTENTS_WATER;
+        return this.liquidFillLevel == 15 && this.fillType == CisternUtils.CONTENTS_WATER;
     }
 
     public boolean hasWater() {
-        return this.fillLevel > 0 && this.fillType == CONTENTS_WATER;
+        return this.liquidFillLevel > 0 && this.fillType == CisternUtils.CONTENTS_WATER;
     }
 
     public boolean isFullWithMuddyWater() {
-        return this.fillLevel == 15 && this.fillType == CONTENTS_MUDDY_WATER;
+        return this.liquidFillLevel == 15 && this.fillType == CisternUtils.CONTENTS_MUDDY_WATER;
     }
 
     public boolean isFullWithCompostOrMaggots() {
-        return this.fillLevel == MAX_FILL_LEVEL && (this.fillType == CONTENTS_COMPOST || this.fillType == CONTENTS_MAGGOTS);
+        return this.solidFillLevel == MAX_FILL_LEVEL && (this.fillType == CisternUtils.CONTENTS_COMPOST || this.fillType == CisternUtils.CONTENTS_MAGGOTS);
     }
 
     public boolean isFullWithCompost() {
-        return this.fillLevel == MAX_FILL_LEVEL && this.fillType == CONTENTS_COMPOST;
+        return this.solidFillLevel == MAX_FILL_LEVEL && this.fillType == CisternUtils.CONTENTS_COMPOST;
     }
 
     public boolean isFull() {
-        if (this.fillType == CONTENTS_WATER || this.fillType == CONTENTS_MUDDY_WATER) {
-            return this.fillLevel == 15;
-        } else if (this.fillType == CONTENTS_COMPOST || this.fillType == CONTENTS_MAGGOTS) {
-            return this.fillLevel == 16;
-        } else return false;
+        if ( getLiquidFillLevel() == 15) {
+            return true;
+        } else if (getSolidFillLevel() == 16) {
+            return true;
+        }
+        else return false;
     }
 
     public boolean isEmpty() {
-        return this.fillLevel == 0 && this.fillType == CONTENTS_EMPTY;
+        return (this.solidFillLevel == 0 || this.liquidFillLevel == 0 ) && this.fillType == CisternUtils.CONTENTS_EMPTY;
     }
 
     public void addCompost(int amount) {
-        this.fillLevel += amount;
+        this.solidFillLevel += amount;
+        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
     }
 
     @Override
@@ -128,8 +183,11 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
         if (tag.hasKey("progress")) {
             progressCounter = tag.getInteger("progress");
         }
-        if (tag.hasKey("fillLevel")) {
-            fillLevel = tag.getInteger("fillLevel");
+        if (tag.hasKey("solidFillLevel")) {
+            solidFillLevel = tag.getInteger("solidFillLevel");
+        }
+        if (tag.hasKey("liquidFillLevel")) {
+            liquidFillLevel = tag.getInteger("liquidFillLevel");
         }
         if (tag.hasKey("fillType")) {
             fillType = tag.getInteger("fillType");
@@ -160,7 +218,8 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
         super.writeToNBT(tag);
 
         tag.setInteger("progress", progressCounter);
-        tag.setInteger("fillLevel", fillLevel);
+        tag.setInteger("solidFillLevel", solidFillLevel);
+        tag.setInteger("liquidFillLevel", liquidFillLevel);
         tag.setInteger("fillType", fillType);
         tag.setBoolean("hasCollectedWaterToday", hasCollectedWaterToday);
     }
@@ -173,12 +232,20 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
         this.fillType = fillType;
     }
 
-    public int getFillLevel() {
-        return this.fillLevel;
+    public int getSolidFillLevel() {
+        return this.solidFillLevel;
     }
 
-    public void setFillLevel(int fillLevel) {
-        this.fillLevel = fillLevel;
+    public void setSolidFillLevel(int solidFillLevel) {
+        this.solidFillLevel = solidFillLevel;
+    }
+
+    public int getLiquidFillLevel() {
+        return this.liquidFillLevel;
+    }
+
+    public void setLiquidFillLevel(int liquidFillLevel) {
+        this.liquidFillLevel = liquidFillLevel;
     }
 
     public int getProgressCounter() {

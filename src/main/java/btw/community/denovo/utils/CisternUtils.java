@@ -7,10 +7,53 @@ import btw.community.denovo.item.DNItems;
 import btw.item.util.ItemUtils;
 import net.minecraft.src.*;
 
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 public class CisternUtils {
+
+    public static ArrayList<ItemStack> validCompostables = new ArrayList<>();
+    public static ArrayList<ItemStack> validDirt = new ArrayList<>();
+
+    // --- Fill types --- //
+    public static final int CONTENTS_EMPTY = 0;
+    public static final int CONTENTS_WATER = 1;
+    public static final int CONTENTS_MUDDY_WATER = 2;
+    public static final int CONTENTS_COMPOST = 3;
+    public static final int CONTENTS_MAGGOTS = 4;
+    public static final int CONTENTS_CLAY_WATER = 5;
+    public static final int CONTENTS_INFECTED_WATER = 6;
+    public static final int CONTENTS_RUST_WATER = 7;
+
+    // --- Max time values --- //
+    public static final int MAGGOT_CREATION_TIME = 400; //was 2 min (1200), now 4 min 2400
+    public static final int MUDDY_WATER_SETTLE_TIME = 400; //24000 is 20min
+    public static final int CLAY_WATER_CONVERSION_TIME = 400; //24000 is 20min
+    public static final int INFECTED_WATER_CONVERSION_TIME = 400; //24000 is 20min
+
+
+    // --- Colors below are multiplied colors with water --- //
+    public static final Color COLOR_WATER = new Color(255, 255, 255);
+    public static final Color COLOR_MUDDY_WATER = new Color(255, 130, 0);
+    public static final Color COLOR_CLAY_WATER = new Color(255, 223, 77);
+    public static final Color COLOR_INFECTED_WATER = new Color(248, 133, 117);
+    public static final Color COLOR_RUST_WATER = new Color(252, 69, 0);
+
 
     public static boolean isValidEmptyContainer(ItemStack stack) {
         return stack.isItemEqual(new ItemStack(Item.bowlEmpty)) || stack.isItemEqual(new ItemStack(Item.glassBottle)) || stack.isItemEqual(new ItemStack(Item.bucketEmpty));
+    }
+
+    public static boolean isValidEmptyContainer(CisternBaseTileEntity cisternBase, ItemStack stack) {
+        if (cisternBase instanceof ComposterTileEntity)
+        {
+            if (!cisternBase.isFullWithWater())
+            {
+                return false;
+            }
+        }
+        return isValidEmptyContainer(stack);
     }
 
     public static boolean isValidWaterContainer(ItemStack stack) {
@@ -35,16 +78,16 @@ public class CisternUtils {
         if (tileEntity instanceof CisternTileEntity)
         {
             CisternTileEntity cistern = (CisternTileEntity) tileEntity;
-            if (cistern.getFillType() == CisternTileEntity.CONTENTS_WATER)
+            if (cistern.getFillType() == CONTENTS_WATER)
             {
                 if (cistern.isFullWithWater())
                 {
                     if (heldStack.itemID == Item.bucketEmpty.itemID)
                     {
-                        cistern.removeWater(3);
+                        cistern.removeLiquid(3);
                     }
                     else {
-                        cistern.removeWater(1);
+                        cistern.removeLiquid(1);
                     }
 
                     return exchangeContainers(world, x, y, z, facing, player, heldStack, getFullWaterContainerForEmptyContainer(heldStack));
@@ -53,7 +96,7 @@ public class CisternUtils {
                 {
                     if (heldStack.itemID == Item.bucketEmpty.itemID) return false;
 
-                    cistern.removeWater(1);
+                    cistern.removeLiquid(1);
                     return exchangeContainers(world, x, y, z, facing, player, heldStack, getFullWaterContainerForEmptyContainer(heldStack));
                 }
             }
@@ -61,13 +104,14 @@ public class CisternUtils {
         else if (tileEntity instanceof ComposterTileEntity)
         {
             ComposterTileEntity composter = (ComposterTileEntity) tileEntity;
-            if (composter.getFillType() == CisternTileEntity.CONTENTS_WATER)
+            if (composter.getFillType() == CONTENTS_WATER)
             {
                 if (!composter.isEmpty())
                 {
                     if (heldStack.itemID == Item.bucketEmpty.itemID) return false;
 
-                    composter.removeWater(3);
+                    composter.removeLiquid(3);
+                    composter.setFillType(CisternUtils.CONTENTS_EMPTY);
                     return exchangeContainers(world, x, y, z, facing, player, heldStack, getFullWaterContainerForEmptyContainer(heldStack));
                 }
             }
@@ -84,18 +128,20 @@ public class CisternUtils {
             {
                 if (heldStack.itemID == Item.bucketWater.itemID)
                 {
-                    cistern.addWater(3);
+                    cistern.addLiquid(3);
                 }
                 else {
-                    cistern.addWater(1);
+                    cistern.addLiquid(1);
                 }
+                cistern.setFillType(CisternUtils.CONTENTS_WATER);
                 return exchangeContainers(world, x, y, z, facing, player, heldStack, getEmptyContainerForFullWaterContainer(heldStack));
             }
             else if (cistern.hasWater() && !cistern.isFullWithWater())
             {
                 if (heldStack.itemID == Item.bucketWater.itemID) return false;
 
-                cistern.addWater(1);
+                cistern.addLiquid(1);
+                cistern.setFillType(CisternUtils.CONTENTS_WATER);
                 return exchangeContainers(world, x, y, z, facing, player, heldStack, getEmptyContainerForFullWaterContainer(heldStack));
             }
         }
@@ -106,7 +152,8 @@ public class CisternUtils {
             ComposterTileEntity composter = (ComposterTileEntity) tileEntity;
             if (composter.isEmpty())
             {
-                composter.addWater(3);
+                composter.addLiquid(3);
+                composter.setFillType(CisternUtils.CONTENTS_WATER);
                 return exchangeContainers(world, x, y, z, facing, player, heldStack, getEmptyContainerForFullWaterContainer(heldStack));
             }
         }
@@ -122,4 +169,75 @@ public class CisternUtils {
         world.markBlockForUpdate(x, y, z);
         return true;
     }
+
+    public static int getIconIndex(CisternBaseTileEntity cisternBase, int totalStages, int maxTime) {
+        float progressRatio = (float) cisternBase.getProgressCounter() / maxTime;
+
+        int iconIndex = (int) (progressRatio * totalStages);
+        iconIndex = Math.min(iconIndex, totalStages - 1);
+        return iconIndex;
+    }
+
+    public static boolean isValidCompostable(ItemStack heldStack) {
+        Iterator<ItemStack> validStacks = validCompostables.iterator();
+
+        for (Iterator<ItemStack> it = validStacks; it.hasNext(); ) {
+            ItemStack stack = it.next();
+
+            if (heldStack.isItemEqual(stack)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isValidDirt(ItemStack heldStack) {
+        Iterator<ItemStack> validStacks = validDirt.iterator();
+
+        for (Iterator<ItemStack> it = validStacks; it.hasNext(); ) {
+            ItemStack stack = it.next();
+
+            if (heldStack.isItemEqual(stack)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static Color interpolateColor(Color color1, Color color2, float ratio) {
+        // Ensure the ratio is within [0, 1]
+        ratio = Math.max(0, Math.min(1, ratio));
+
+        // Interpolate between the two colors
+        int red = (int) (color1.getRed() * (1 - ratio) + color2.getRed() * ratio);
+        int green = (int) (color1.getGreen() * (1 - ratio) + color2.getGreen() * ratio);
+        int blue = (int) (color1.getBlue() * (1 - ratio) + color2.getBlue() * ratio);
+
+        // Return the new interpolated color
+        return new Color(red, green, blue);
+    }
+
+    public static Color getInterpolatedColor(Color color1, Color color2, Color color3, int progressCounter, int maxCounter) {
+
+        // Calculate the phase ratio
+        float ratio = Math.max(0, Math.min(1, (float) progressCounter / maxCounter));
+
+        // Determine the current phase and interpolate accordingly
+        if (ratio <= 0.5f) {
+            // Phase 1: color1 to color2
+            return interpolateColor(color1, color2, ratio * 2); // ratio * 2 scales it to [0, 1]
+        } else {
+            // Phase 2: color2 to color3
+            return interpolateColor(color2, color3, (ratio - 0.5f) * 2); // (ratio - 0.5) * 2 scales it to [0, 1]
+        }
+    }
+
+    public static Color getInterpolatedColor(Color color1, Color color2, int progressCounter, int maxCounter) {
+
+        // Calculate the phase ratio
+        float ratio = Math.max(0, Math.min(1, (float) progressCounter / maxCounter));
+
+        return interpolateColor(color1, color2, ratio);
+    }
+
 }

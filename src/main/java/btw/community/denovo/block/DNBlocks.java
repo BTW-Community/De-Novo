@@ -25,7 +25,7 @@ public class DNBlocks {
         composter = registerItemBlock(new ComposterBlock(DeNovoAddon.instance.parseID("DNBlockComposterID")));
         TileEntity.addMapping(ComposterTileEntity.class, "DNComposter");
 
-        cistern = new CisternBlock(DeNovoAddon.instance.parseID("DNBlockCisternID"));
+        cistern =  registerItemBlock(new CisternBlock(DeNovoAddon.instance.parseID("DNBlockCisternID")));
         TileEntity.addMapping(CisternTileEntity.class, "DNCistern");
 
         placedSticks = registerItemBlock(new PlacedSticksBlock(DeNovoAddon.instance.parseID("DNBlockPlacedSticksID")));
