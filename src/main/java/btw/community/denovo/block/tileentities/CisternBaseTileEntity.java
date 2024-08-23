@@ -12,7 +12,6 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
     protected int liquidFillLevel = 0;
     protected int progressCounter = 0;
     protected boolean hasCollectedWaterToday = false;
-    public static final int MAX_FILL_LEVEL = 16;
 
     @Override
     public void updateEntity() {
@@ -88,7 +87,7 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
     }
 
     private void handleInfectedWater() {
-        if (solidFillLevel == 16) {
+        if (solidFillLevel == CisternUtils.MAX_SOLID_FILL_LEVEL) {
             if (progressCounter < CisternUtils.MUDDY_WATER_SETTLE_TIME)
             {
                 progressCounter += 1;
@@ -139,7 +138,7 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
     }
 
     public boolean isFullWithWater() {
-        return this.liquidFillLevel == 15 && this.fillType == CisternUtils.CONTENTS_WATER;
+        return this.liquidFillLevel == CisternUtils.MAX_LIQUID_FILL_LEVEL && this.fillType == CisternUtils.CONTENTS_WATER;
     }
 
     public boolean hasWater() {
@@ -147,21 +146,21 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
     }
 
     public boolean isFullWithMuddyWater() {
-        return this.liquidFillLevel == 15 && this.fillType == CisternUtils.CONTENTS_MUDDY_WATER;
+        return this.liquidFillLevel == CisternUtils.MAX_LIQUID_FILL_LEVEL && this.fillType == CisternUtils.CONTENTS_MUDDY_WATER;
     }
 
     public boolean isFullWithCompostOrMaggots() {
-        return this.solidFillLevel == MAX_FILL_LEVEL && (this.fillType == CisternUtils.CONTENTS_COMPOST || this.fillType == CisternUtils.CONTENTS_MAGGOTS);
+        return this.solidFillLevel == CisternUtils.MAX_SOLID_FILL_LEVEL && (this.fillType == CisternUtils.CONTENTS_COMPOST || this.fillType == CisternUtils.CONTENTS_MAGGOTS);
     }
 
     public boolean isFullWithCompost() {
-        return this.solidFillLevel == MAX_FILL_LEVEL && this.fillType == CisternUtils.CONTENTS_COMPOST;
+        return this.solidFillLevel == CisternUtils.MAX_SOLID_FILL_LEVEL && this.fillType == CisternUtils.CONTENTS_COMPOST;
     }
 
     public boolean isFull() {
-        if ( getLiquidFillLevel() == 15) {
+        if ( getLiquidFillLevel() == CisternUtils.MAX_LIQUID_FILL_LEVEL) {
             return true;
-        } else if (getSolidFillLevel() == 16) {
+        } else if (getSolidFillLevel() == CisternUtils.MAX_SOLID_FILL_LEVEL) {
             return true;
         }
         else return false;

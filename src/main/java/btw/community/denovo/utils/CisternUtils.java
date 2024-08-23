@@ -16,6 +16,9 @@ public class CisternUtils {
     public static ArrayList<ItemStack> validCompostables = new ArrayList<>();
     public static ArrayList<ItemStack> validDirt = new ArrayList<>();
 
+    public static final int MAX_SOLID_FILL_LEVEL = 16;
+    public static final int MAX_LIQUID_FILL_LEVEL = 15;
+
     // --- Fill types --- //
     public static final int CONTENTS_EMPTY = 0;
     public static final int CONTENTS_WATER = 1;

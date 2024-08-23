@@ -63,7 +63,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
 
                 if (CisternUtils.isValidDirt(heldStack) && cisternBase.getProgressCounter() == 0)
                 {
-                    if (cisternBase.getSolidFillLevel() < 16)
+                    if (cisternBase.getSolidFillLevel() < CisternUtils.MAX_SOLID_FILL_LEVEL)
                     {
                         cisternBase.addCompost(1);
                     }
