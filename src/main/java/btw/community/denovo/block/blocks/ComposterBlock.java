@@ -56,15 +56,12 @@ public class ComposterBlock extends CisternBaseBlock {
 
         if (CisternUtils.isValidCompostable(heldStack)) {
             if (cisternBase.isEmpty() || (!cisternBase.isFull() && cisternBase.getFillType() == CisternUtils.CONTENTS_COMPOST)) {
-                cisternBase.addCompost(1);
-                cisternBase.setFillType(CisternUtils.CONTENTS_COMPOST);
+                if ( !world.isRemote ) cisternBase.addCompost(1);
+                if ( !world.isRemote ) cisternBase.setFillType(CisternUtils.CONTENTS_COMPOST);
                 world.markBlockForRenderUpdate(x, y, z);
 
-                heldStack.stackSize--;
-
-                if (!world.isRemote) {
-                    playSound(world, x, y, z, Block.leaves.stepSound.getStepSound(), 0.25F, 1F);
-                }
+                if ( world.isRemote ) heldStack.stackSize--;
+                if ( world.isRemote ) playSound(world, x, y, z, Block.leaves.stepSound.getStepSound(), 0.25F, 1F);
                 return true;
             }
         } else if (cisternBase.isFullWithCompostOrMaggots()) {
@@ -84,7 +81,7 @@ public class ComposterBlock extends CisternBaseBlock {
                 }
             }
 
-            cisternBase.setFillType(CisternUtils.CONTENTS_EMPTY);
+            if (!world.isRemote) cisternBase.setFillType(CisternUtils.CONTENTS_EMPTY);
             world.markBlockForRenderUpdate(x, y, z);
 
             return true;
