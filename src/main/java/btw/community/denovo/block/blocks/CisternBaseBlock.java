@@ -65,10 +65,10 @@ public abstract class CisternBaseBlock extends BlockContainer {
                 {
                     if (cisternBase.getSolidFillLevel() < CisternUtils.MAX_SOLID_FILL_LEVEL)
                     {
-                        cisternBase.addCompost(1);
+                        if ( !world.isRemote ) cisternBase.addCompost(1);
                     }
                     else {
-                        cisternBase.setProgressCounter(1);
+                        if ( !world.isRemote ) cisternBase.setProgressCounter(1);
                     }
 
                     return setType(world, x, y, z, player, cisternBase, heldStack, CisternUtils.CONTENTS_INFECTED_WATER, "random.splash");
@@ -80,7 +80,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
                 {
                     ItemUtils.givePlayerStackOrEjectFromTowardsFacing(player, new ItemStack(DNItems.rustWaterBowl, 1, DNItems.rustWaterBowl.getMaxDamage()), x, y, z, facing);
 
-                    if (cisternBase.getLiquidFillLevel() > 0)
+                    if (!world.isRemote  && cisternBase.getLiquidFillLevel() > 0 )
                     {
                         if (cisternBase instanceof ComposterTileEntity)
                         {
@@ -105,11 +105,11 @@ public abstract class CisternBaseBlock extends BlockContainer {
         if (world.isRemote) playSound(world, x, y, z, sound, 1/8F, 1F);
         if (world.isRemote && !CisternUtils.isValidEmptyContainer(cisternBase, heldStack)) spawnSplashParticles(world,x,y,z,world.rand);
 
-        if (type > 0) cisternBase.setFillType(type);
+        if (!world.isRemote && type > 0 ) cisternBase.setFillType(type);
         world.markBlockForUpdate(x, y, z);
         world.markBlockForRenderUpdate(x, y, z);
 
-        if (!player.capabilities.isCreativeMode) heldStack.stackSize--;
+        if (!player.capabilities.isCreativeMode && world.isRemote) heldStack.stackSize--;
 
         return true;
     }

@@ -87,10 +87,10 @@ public class CisternUtils {
                 {
                     if (heldStack.itemID == Item.bucketEmpty.itemID)
                     {
-                        cistern.removeLiquid(3);
+                        if ( !world.isRemote ) cistern.removeLiquid(3);
                     }
                     else {
-                        cistern.removeLiquid(1);
+                        if ( !world.isRemote ) cistern.removeLiquid(1);
                     }
 
                     return exchangeContainers(world, x, y, z, facing, player, heldStack, getFullWaterContainerForEmptyContainer(heldStack));
@@ -99,7 +99,7 @@ public class CisternUtils {
                 {
                     if (heldStack.itemID == Item.bucketEmpty.itemID) return false;
 
-                    cistern.removeLiquid(1);
+                    if ( !world.isRemote ) cistern.removeLiquid(1);
                     return exchangeContainers(world, x, y, z, facing, player, heldStack, getFullWaterContainerForEmptyContainer(heldStack));
                 }
             }
@@ -113,8 +113,8 @@ public class CisternUtils {
                 {
                     if (heldStack.itemID == Item.bucketEmpty.itemID) return false;
 
-                    composter.removeLiquid(3);
-                    composter.setFillType(CisternUtils.CONTENTS_EMPTY);
+                    if ( !world.isRemote ) composter.removeLiquid(3);
+                    if ( !world.isRemote ) composter.setFillType(CisternUtils.CONTENTS_EMPTY);
                     return exchangeContainers(world, x, y, z, facing, player, heldStack, getFullWaterContainerForEmptyContainer(heldStack));
                 }
             }
@@ -131,20 +131,20 @@ public class CisternUtils {
             {
                 if (heldStack.itemID == Item.bucketWater.itemID)
                 {
-                    cistern.addLiquid(3);
+                    if ( !world.isRemote ) cistern.addLiquid(3);
                 }
                 else {
-                    cistern.addLiquid(1);
+                    if ( !world.isRemote ) cistern.addLiquid(1);
                 }
-                cistern.setFillType(CisternUtils.CONTENTS_WATER);
+                if ( !world.isRemote ) cistern.setFillType(CisternUtils.CONTENTS_WATER);
                 return exchangeContainers(world, x, y, z, facing, player, heldStack, getEmptyContainerForFullWaterContainer(heldStack));
             }
             else if (cistern.hasWater() && !cistern.isFullWithWater())
             {
                 if (heldStack.itemID == Item.bucketWater.itemID) return false;
 
-                cistern.addLiquid(1);
-                cistern.setFillType(CisternUtils.CONTENTS_WATER);
+                if ( !world.isRemote ) cistern.addLiquid(1);
+                if ( !world.isRemote ) cistern.setFillType(CisternUtils.CONTENTS_WATER);
                 return exchangeContainers(world, x, y, z, facing, player, heldStack, getEmptyContainerForFullWaterContainer(heldStack));
             }
         }
@@ -155,8 +155,8 @@ public class CisternUtils {
             ComposterTileEntity composter = (ComposterTileEntity) tileEntity;
             if (composter.isEmpty())
             {
-                composter.addLiquid(3);
-                composter.setFillType(CisternUtils.CONTENTS_WATER);
+                if ( !world.isRemote ) composter.addLiquid(3);
+                if ( !world.isRemote ) composter.setFillType(CisternUtils.CONTENTS_WATER);
                 return exchangeContainers(world, x, y, z, facing, player, heldStack, getEmptyContainerForFullWaterContainer(heldStack));
             }
         }
@@ -167,7 +167,7 @@ public class CisternUtils {
     private static boolean exchangeContainers(World world, int x, int y, int z, int facing, EntityPlayer player, ItemStack heldStack, ItemStack returnStack) {
         if (returnStack == null || heldStack == null) return false;
 
-        heldStack.stackSize--;
+        if ( world.isRemote ) heldStack.stackSize--;
         ItemUtils.givePlayerStackOrEjectFromTowardsFacing(player, returnStack, x, y, z, facing);
         world.markBlockForUpdate(x, y, z);
         return true;
