@@ -1,7 +1,6 @@
 package btw.community.denovo.block.tileentities;
 
 import btw.community.denovo.utils.CisternUtils;
-import net.minecraft.src.NBTTagCompound;
 
 public class ComposterTileEntity extends CisternBaseTileEntity {
 

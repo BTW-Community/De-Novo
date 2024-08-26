@@ -2,7 +2,6 @@ package btw.community.denovo.block.blocks;
 
 import btw.client.render.util.RenderUtils;
 import btw.community.denovo.block.models.CisternModel;
-import btw.community.denovo.block.tileentities.CisternBaseTileEntity;
 import btw.community.denovo.block.tileentities.CisternTileEntity;
 import com.prupe.mcpatcher.cc.ColorizeBlock;
 import com.prupe.mcpatcher.cc.Colorizer;

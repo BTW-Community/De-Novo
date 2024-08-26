@@ -2,7 +2,6 @@ package btw.community.denovo.block.blocks;
 
 import btw.block.util.Flammability;
 import btw.client.render.util.RenderUtils;
-import btw.community.denovo.block.models.CisternModel;
 import btw.community.denovo.block.models.ComposterModel;
 import btw.community.denovo.block.tileentities.CisternBaseTileEntity;
 import btw.community.denovo.block.tileentities.ComposterTileEntity;
@@ -14,8 +13,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
 
 public class ComposterBlock extends CisternBaseBlock {

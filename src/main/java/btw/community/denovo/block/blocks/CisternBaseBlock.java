@@ -2,7 +2,6 @@ package btw.community.denovo.block.blocks;
 
 import btw.client.render.util.RenderUtils;
 import btw.community.denovo.block.tileentities.CisternBaseTileEntity;
-import btw.community.denovo.block.tileentities.CisternTileEntity;
 import btw.community.denovo.block.tileentities.ComposterTileEntity;
 import btw.community.denovo.item.DNItems;
 import btw.community.denovo.utils.CisternUtils;
