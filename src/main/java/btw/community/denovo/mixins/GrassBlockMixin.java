@@ -43,7 +43,9 @@ public abstract class GrassBlockMixin extends BlockGrass {
             }
 
             if (world.isRemote) {
-                spawnParticles(world, player, xCoord, yCoord + 1, zCoord);
+                //spawnParticles(world, player, xCoord, yCoord + 1, zCoord);
+
+                world.playAuxSFX( 2001, xCoord, yCoord, zCoord, Block.dirt.blockID ); //break sfx
             }
 
             return true;
@@ -53,6 +55,7 @@ public abstract class GrassBlockMixin extends BlockGrass {
     }
 
     private void spawnParticles(World world, EntityPlayer player, int xCoord, int yCoord, int zCoord) {
+
         for (int i = 0; i < 3; ++i) {
             world.spawnParticle("happyVillager",
                     (double) xCoord + player.rand.nextFloat(),
