@@ -30,6 +30,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
 
         if (heldStack == null) return false;
 
+        if (cisternBase.getProgressCounter() > 0) return false;
 
         if (cisternBase.isEmpty())
         {
@@ -108,7 +109,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
         world.markBlockForUpdate(x, y, z);
         world.markBlockForRenderUpdate(x, y, z);
 
-        if (!player.capabilities.isCreativeMode && world.isRemote) heldStack.stackSize--;
+        if (!player.capabilities.isCreativeMode) heldStack.stackSize--;
 
         return true;
     }

@@ -168,7 +168,7 @@ public class CisternUtils {
     private static boolean exchangeContainers(World world, int x, int y, int z, int facing, EntityPlayer player, ItemStack heldStack, ItemStack returnStack) {
         if (returnStack == null || heldStack == null) return false;
 
-        if ( world.isRemote ) heldStack.stackSize--;
+        heldStack.stackSize--;
         ItemUtils.givePlayerStackOrEjectFromTowardsFacing(player, returnStack, x, y, z, facing);
         world.markBlockForUpdate(x, y, z);
         return true;

@@ -19,7 +19,7 @@ public class ComposterTileEntity extends CisternBaseTileEntity {
             worldObj.markBlockRangeForRenderUpdate(xCoord,yCoord,zCoord,xCoord,yCoord,zCoord);
 
         } else {
-            setFillType(CisternUtils.CONTENTS_MAGGOTS);
+            if (!worldObj.isRemote) setFillType(CisternUtils.CONTENTS_MAGGOTS);
             worldObj.markBlockRangeForRenderUpdate(xCoord,yCoord,zCoord,xCoord,yCoord,zCoord);
         }
     }

@@ -59,8 +59,8 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
                         1/8F,
                         1F);
             }
-            setFillType(CisternUtils.CONTENTS_WATER);
-            setProgressCounter(0);
+            if (!worldObj.isRemote) setFillType(CisternUtils.CONTENTS_WATER);
+            if (!worldObj.isRemote) setProgressCounter(0);
             worldObj.markBlockRangeForRenderUpdate(xCoord,yCoord,zCoord,xCoord,yCoord,zCoord);
         }
     }
@@ -73,15 +73,15 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
             {
                 if (worldObj.rand.nextFloat() > 0.1F)
                 {
-                    setFillType(CisternUtils.CONTENTS_WATER);
-                    setProgressCounter(0);
+                    if (!worldObj.isRemote) setFillType(CisternUtils.CONTENTS_WATER);
+                    if (!worldObj.isRemote) setProgressCounter(0);
                 }
             }
 
             worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
         } else {
-            setFillType(CisternUtils.CONTENTS_INFECTED_WATER);
-            setProgressCounter(0);
+            if (!worldObj.isRemote) setFillType(CisternUtils.CONTENTS_INFECTED_WATER);
+            if (!worldObj.isRemote) setProgressCounter(0);
             worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
         }
     }
@@ -93,9 +93,9 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
                 progressCounter += 1;
                 worldObj.markBlockRangeForRenderUpdate(xCoord,yCoord,zCoord,xCoord,yCoord,zCoord);
             } else {
-                setFillType(CisternUtils.CONTENTS_RUST_WATER);
-                setSolidFillLevel(0);
-                setProgressCounter(0);
+                if (!worldObj.isRemote) setFillType(CisternUtils.CONTENTS_RUST_WATER);
+                if (!worldObj.isRemote) setSolidFillLevel(0);
+                if (!worldObj.isRemote) setProgressCounter(0);
                 worldObj.markBlockRangeForRenderUpdate(xCoord,yCoord,zCoord,xCoord,yCoord,zCoord);
             }
         }
@@ -109,18 +109,18 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
 
         if (isRaining) {
             if (worldObj.rand.nextFloat() <= 0.25F) {
-                addLiquid(1);
-                setFillType(CisternUtils.CONTENTS_WATER);
+                if (!worldObj.isRemote) addLiquid(1);
+                if (!worldObj.isRemote) setFillType(CisternUtils.CONTENTS_WATER);
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
             }
         } else {
             if (isMorning && !getHasCollectedWaterToday() && worldObj.rand.nextFloat() <= 0.125F) {
-                addLiquid(1);
-                setFillType(CisternUtils.CONTENTS_WATER);
-                setHasCollectedWaterToday(true);
+                if (!worldObj.isRemote) addLiquid(1);
+                if (!worldObj.isRemote)setFillType(CisternUtils.CONTENTS_WATER);
+                if (!worldObj.isRemote) setHasCollectedWaterToday(true);
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
             } else if (isNight && getHasCollectedWaterToday()) {
-                setHasCollectedWaterToday(false);
+                if (!worldObj.isRemote) setHasCollectedWaterToday(false);
             }
         }
 
