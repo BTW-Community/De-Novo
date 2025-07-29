@@ -168,9 +168,16 @@ public class DNRecipes {
         for (int type = 0; type < 4; type++) {
             CisternUtils.validCompostables.add(new ItemStack(Block.leaves, 1, type));
         }
-        for (int type = 0; type < 16; type++) {
-            CisternUtils.validCompostables.add(new ItemStack(Block.sapling, 1, type));
-        }
+
+        CisternUtils.validCompostables.add(new ItemStack(BTWBlocks.oakSapling, 1, 0));
+        CisternUtils.validCompostables.add(new ItemStack(BTWBlocks.oakSapling, 1, 7));
+        CisternUtils.validCompostables.add(new ItemStack(BTWBlocks.birchSapling, 1, 0));
+        CisternUtils.validCompostables.add(new ItemStack(BTWBlocks.birchSapling, 1, 7));
+        CisternUtils.validCompostables.add(new ItemStack(BTWBlocks.spruceSapling, 1, 0));
+        CisternUtils.validCompostables.add(new ItemStack(BTWBlocks.spruceSapling, 1, 7));
+        CisternUtils.validCompostables.add(new ItemStack(BTWBlocks.jungleSapling, 1, 0));
+        CisternUtils.validCompostables.add(new ItemStack(BTWBlocks.jungleSapling, 1, 7));
+
         for (int type = 0; type < 3; type++) {
             CisternUtils.validCompostables.add(new ItemStack(Block.tallGrass, 1, type));
         }
