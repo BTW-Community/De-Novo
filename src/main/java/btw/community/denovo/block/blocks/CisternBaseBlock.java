@@ -68,9 +68,11 @@ public abstract class CisternBaseBlock extends BlockContainer {
 
         if (cisternBase.isFull()){
             if (heldStack.isItemEqual(new ItemStack(Item.clay))) {
+                if (!world.isRemote && !player.capabilities.isCreativeMode) player.getHeldItem().stackSize--;
                 return setContentsType(world, x, y, z, player, cisternBase, CisternUtils.CONTENTS_CLAY_WATER);
             }
             else if (heldStack.isItemEqual(new ItemStack(BTWItems.dirtPile))) {
+                if (!world.isRemote && !player.capabilities.isCreativeMode) player.getHeldItem().stackSize--;
                 return setContentsType(world, x, y, z, player, cisternBase, CisternUtils.CONTENTS_MUDDY_WATER);
             }
         }
@@ -86,6 +88,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
         if (CisternUtils.isValidDirt(heldStack)) {
 
             if (!world.isRemote) cisternBase.addSolid(1);
+            if (!world.isRemote && !player.capabilities.isCreativeMode) player.getHeldItem().stackSize--;
             return setContentsType(world, x, y, z, player, cisternBase, CisternUtils.CONTENTS_INFECTED_WATER);
         }
 
@@ -98,7 +101,6 @@ public abstract class CisternBaseBlock extends BlockContainer {
         if (heldStack == null) return false;
 
         if (heldStack.isItemEqual(new ItemStack(Item.bowlEmpty))) {
-            ItemUtils.givePlayerStackOrEjectFromTowardsFacing(player, new ItemStack(DNItems.rustWaterBowl, 1, DNItems.rustWaterBowl.getMaxDamage()), x, y, z, facing);
 
             if (!world.isRemote && cisternBase.getLiquidFillLevel() > 0 )
             {
@@ -109,6 +111,9 @@ public abstract class CisternBaseBlock extends BlockContainer {
             int type = CisternUtils.CONTENTS_RUST_WATER;
             if (cisternBase.getLiquidFillLevel() <= 0) type = CisternUtils.CONTENTS_EMPTY;
 
+            if (!world.isRemote && !player.capabilities.isCreativeMode) player.getHeldItem().stackSize--;
+
+            ItemUtils.givePlayerStackOrEjectFromTowardsFacing(player, new ItemStack(DNItems.rustWaterBowl, 1, DNItems.rustWaterBowl.getMaxDamage()), x, y, z, facing);
             return setContentsType(world, x, y, z, player, cisternBase, type);
         }
 
@@ -119,8 +124,6 @@ public abstract class CisternBaseBlock extends BlockContainer {
     private boolean setContentsType(World world, int x, int y, int z, EntityPlayer player, CisternBaseTileEntity cisternBase, int type) {
         spawnParticlesAndPlaySound(world,x,y,z,world.rand);
         if (!world.isRemote) cisternBase.setFillType(type);
-        if (!world.isRemote) player.getHeldItem().stackSize--;
-
         return true;
     }
 
