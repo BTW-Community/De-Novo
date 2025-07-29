@@ -40,10 +40,10 @@ public class CisternUtils {
 
     // --- Max time values --- //
     // 24000 is 20min
-    public static final int MAGGOT_CREATION_TIME = 200;// 5 * 60 * 20; //5 min
-    public static final int MUDDY_WATER_SETTLE_TIME = 200;//5 * 60 * 20; //5 min
-    public static final int CLAY_WATER_CONVERSION_TIME = 200;//5 * 60 * 20; // 5 min
-    public static final int INFECTED_WATER_CONVERSION_TIME = 200;//10 * 60 * 20; // 10 min
+    public static final int MAGGOT_CREATION_TIME = 5 * 60 * 20; //5 min
+    public static final int MUDDY_WATER_SETTLE_TIME = 5 * 60 * 20; //5 min
+    public static final int CLAY_WATER_CONVERSION_TIME = 5 * 60 * 20; // 5 min
+    public static final int INFECTED_WATER_CONVERSION_TIME = 10 * 60 * 20; // 10 min
 
 
     // --- Colors below are multiplied colors with water --- //
