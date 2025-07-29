@@ -47,23 +47,24 @@ public class ComposterBlock extends CisternBaseBlock {
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int facing, float clickX, float clickY, float clickZ) {
+
         TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
         CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) tileEntity;
         ItemStack heldStack = player.getHeldItem();
 
-        if (cisternBase.getProgressCounter() > 0) return false;
-
         if (CisternUtils.isValidCompostable(heldStack)) {
             if (cisternBase.isEmpty() || (!cisternBase.isFull() && cisternBase.getFillType() == CisternUtils.CONTENTS_COMPOST)) {
-                if ( !world.isRemote ) cisternBase.addCompost(1);
-                if ( !world.isRemote ) cisternBase.setFillType(CisternUtils.CONTENTS_COMPOST);
+                cisternBase.addSolid(1);
+                cisternBase.setFillType(CisternUtils.CONTENTS_COMPOST);
                 world.markBlockForRenderUpdate(x, y, z);
 
-                heldStack.stackSize--;
-                if ( world.isRemote ) playSound(world, x, y, z, Block.leaves.stepSound.getStepSound(), 0.25F, 1F);
+                if (!player.capabilities.isCreativeMode) heldStack.stackSize--;
+                if (world.isRemote) playSound(world, x, y, z, Block.leaves.stepSound.getStepSound(), 0.25F, 1F);
                 return true;
             }
-        } else if (cisternBase.isFullWithCompostOrMaggots()) {
+        }
+
+        if (cisternBase.isFullWithCompostOrMaggots()) {
             if (cisternBase.getFillType() == CisternUtils.CONTENTS_COMPOST) {
                 if (!world.isRemote) {
                     ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(BTWItems.dirtPile), facing);
@@ -80,12 +81,12 @@ public class ComposterBlock extends CisternBaseBlock {
                 }
             }
 
-            if (!world.isRemote) cisternBase.setFillType(CisternUtils.CONTENTS_EMPTY);
+            cisternBase.setFillType(CisternUtils.CONTENTS_EMPTY);
             world.markBlockForRenderUpdate(x, y, z);
 
             return true;
         }
-
+        //since we want the base functionality of the cistern as well
         return super.onBlockActivated(world, x, y, z, player, facing, clickX, clickY, clickZ);
     }
 

@@ -13,6 +13,14 @@ import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 
 public class DNRecipes {
+
+    //Cistern and Composter Valid Items
+    static {
+        CisternUtils.addLiquidContainers(new ItemStack(Item.bucketWater), new ItemStack(Item.bucketEmpty), 15, 45);
+        CisternUtils.addLiquidContainers(new ItemStack(Item.potion), new ItemStack(Item.glassBottle), 5, 15);
+        CisternUtils.addLiquidContainers(new ItemStack(DNItems.waterBowl), new ItemStack(Item.bowlEmpty), 5, 15);
+    }
+
     public static void addRecipes() {
         addCraftingRecipes();
         addSieveRecipes();
