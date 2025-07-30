@@ -17,9 +17,9 @@ import org.lwjgl.Sys;
 import java.util.Random;
 
 public class SmolderingPlacedSticksBlock extends BlockContainer {
-    private static final int CHANCE_OF_DECAY = 5;
+    private static final int CHANCE_OF_DECAY = 10;
 
-    private static final int CHANCE_OF_EXTINGUISH_IN_RAIN = 5;
+    private static final int CHANCE_OF_EXTINGUISH_IN_RAIN = 2;
 
     private static final float EXPLOSION_STRENGTH = 1F;
 
@@ -80,7 +80,7 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
     @Override
     public void randomUpdateTick(World world, int i, int j, int k, Random rand)
     {
-        //if (!world.isRemote) System.out.println("//------------- Rand tick ------------//");
+//        if (!world.isRemote) System.out.println("//------------- Rand tick ------------//");
 
         if (world.getGameRules().getGameRuleBooleanValue("doFireTick")) {
             if ( !checkForGoOutInRain(world, i, j, k) )
@@ -90,25 +90,29 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
                 FireBlock.checkForSmoulderingSpreadFromLocation(world, i, j, k);
 
                 int iBurnLevel = tileEntity.getBurnLevel();
-                //if (!world.isRemote) System.out.println("burn level: " + iBurnLevel);
+//                if (!world.isRemote) System.out.println("burn level: " + iBurnLevel);
 
                 convertNeighborBlock(world, i,j,k, rand);
 
                 int chanceOfDecay = CHANCE_OF_DECAY;
-                int reducedChanceOfDecay = 2;
 
-                if ( hasNeighborSmolderingSticksInContact(world, i, j, k))
-                {
-                    chanceOfDecay = reducedChanceOfDecay;
-                }
+                int smolderingNeighbors = hasNeighborSmolderingSticksInContact(world, i, j, k);
+                int neighborBonus = Math.min(smolderingNeighbors, 4);
 
-                //if (!world.isRemote) System.out.println("chanceOfDecay: " + chanceOfDecay);
+                chanceOfDecay -= neighborBonus;
+
+                int pileSize = world.getBlockMetadata(i,j,k) + 1;
+                int reduceChangeByPileSize = Math.max(pileSize / 4, 2);
+
+                chanceOfDecay -= reduceChangeByPileSize;
+
+//                if (!world.isRemote) System.out.println("chanceOfDecay: " + chanceOfDecay);
 
                 if ( iBurnLevel < 1 )
                 {
-                    if ( !FireBlock.hasFlammableNeighborsWithinSmoulderRange(world, i, j, k) || hasNeighborSmolderingSticksInContact(world, i, j, k) )
+                    if ( !FireBlock.hasFlammableNeighborsWithinSmoulderRange(world, i, j, k) || hasNeighborSmolderingSticksInContact(world, i, j, k) > 0)
                     {
-                        //if (!world.isRemote) System.out.println("NOThasFlammableNeighborsWithinSmoulderRange");
+//                        if (!world.isRemote) System.out.println("NOThasFlammableNeighborsWithinSmoulderRange");
 
                         tileEntity.setBurnLevel( 1 );
                     }
@@ -117,7 +121,7 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
                 {
                     if ( iBurnLevel < 3 )
                     {
-                        //if (!world.isRemote) System.out.println("increasing burn level by chance");
+//                        if (!world.isRemote) System.out.println("increasing burn level by chance");
 
                         tileEntity.increaseBurnLevelBy( 1 );
                     }
@@ -132,22 +136,22 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
                         {
 
                             if (!hasSmolderingAbove){
-                                //if (!world.isRemote) System.out.println("convertToCharcoal");
+//                                if (!world.isRemote) System.out.println("convertToCharcoal");
                                 convertToCharcoal(world, i, j, k);
                             }
                             else {
-                                //if (!world.isRemote) System.out.println("hasSmolderingAbove");
+//                                if (!world.isRemote) System.out.println("hasSmolderingAbove");
                             }
 
                         }
                         else {
-                            //if (!world.isRemote) System.out.println("CANT CONVERT");
+//                            if (!world.isRemote) System.out.println("CANT CONVERT");
                         }
 
                     }
                 }
                 else {
-                    //if (!world.isRemote) System.out.println("FAILED TO BURN");
+//                    if (!world.isRemote) System.out.println("FAILED TO BURN");
                 }
             }
         }
@@ -158,17 +162,18 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
         this.updateTick(par1World,par2, par3,par4, par1World.rand);
     }
 
-    public boolean hasNeighborSmolderingSticksInContact(World world, int i, int j, int k)
+    public int hasNeighborSmolderingSticksInContact(World world, int i, int j, int k)
     {
+        int count = 0;
         for ( int iTempFacing = 0; iTempFacing < 6; iTempFacing++ )
         {
             if ( hasNeighborSmolderingSticksToFacing(world, i, j, k, iTempFacing) )
             {
-                return true;
+                count += 1;
             }
         }
 
-        return false;
+        return count;
     }
 
 
@@ -325,25 +330,27 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
 
     private void convertToCharcoal(World world, int i, int j, int k)
     {
-        int  metadata = world.getBlockMetadata(i, j, k) + 1;
+        int  pileSize = world.getBlockMetadata(i, j, k) + 1;
 
         float guaranteedAmount = 0.25F;
-        float remainingAmount = 0.25F;
+        float remainingAmount = 0.5F;
         float amount = guaranteedAmount + world.rand.nextFloat() * remainingAmount;
-        int newMeta =  (int) (metadata * amount);
+        int newMeta = MathHelper.floor_float(pileSize * amount);
 
-        SmolderingPlacedSticksTileEntity tileEntity = (SmolderingPlacedSticksTileEntity) world.getBlockTileEntity(i,j,k);
 
-        /*
+        world.removeBlockTileEntity(i,j,k);
+        world.setBlockAndMetadataWithNotify( i, j, k, DNBlocks.charcoalPile.blockID, newMeta );
+
+
+/*        SmolderingPlacedSticksTileEntity tileEntity = (SmolderingPlacedSticksTileEntity) world.getBlockTileEntity(i,j,k);
         if (tileEntity != null)
         {
             int counter = tileEntity.getCounter();
             float seconds = counter / 20F;
 
             System.out.println("it took this time (sec) to convert: " + seconds + " | at " + i + " " + j + " " + k);
-        }
-        */
-        world.setBlockAndMetadataWithNotify( i, j, k, DNBlocks.charcoalPile.blockID, newMeta );
+        }*/
+
     }
 
 
@@ -390,6 +397,26 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
     @Override
     public boolean hasLargeCenterHardPointToFacing(IBlockAccess blockAccess, int i, int j, int k, int iFacing) {
         return true;
+    }
+
+    @Override
+    public boolean isNormalCube(IBlockAccess blockAccess, int i, int j, int k) {
+        return blockAccess.getBlockMetadata(i, j, k) == 15;
+    }
+
+    @Override
+    public boolean canPlaceBlockAt(World world, int x, int y, int z) {
+        return !canBlockStay(world, x, y, z) ? false : super.canPlaceBlockAt(world, x, y, z);
+    }
+
+    @Override
+    public boolean canBlockStay(World world, int x, int y, int z) {
+        return !world.doesBlockHaveSolidTopSurface(x, y - 1, z) ? false : super.canBlockStay(world, x, y, z);
+    }
+
+    @Override
+    public boolean isBlockSolid(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5) {
+        return par1IBlockAccess.getBlockMetadata(par2, par3, par4) == 15;
     }
 
     //----------- Client Side Functionality -----------//
