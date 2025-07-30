@@ -2,10 +2,6 @@ package btw.community.denovo.item;
 
 import btw.community.denovo.DeNovoAddon;
 import btw.community.denovo.block.DNBlocks;
-import btw.community.denovo.item.items.DirtPileItem;
-import btw.community.denovo.item.items.MeshItem;
-import btw.community.denovo.item.items.RawMaggotsItem;
-import btw.community.denovo.item.items.WaterBowlItem;
 import btw.community.denovo.item.items.*;
 import btw.crafting.util.FurnaceBurnTime;
 import btw.item.BTWItems;
