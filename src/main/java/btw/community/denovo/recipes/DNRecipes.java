@@ -169,7 +169,10 @@ public class DNRecipes {
         SiftingCraftingManager.addSiftingRecipe(
                 new LootEntry[]{
                         new LootEntry(1.0D / 2, 1, new ItemStack(BTWItems.stone)),
-                        new LootEntry(1.0D / 5, 1, new ItemStack(Block.sapling)),
+                        new LootEntry(1.0D / 20, 1, new ItemStack(BTWBlocks.oakSapling)),
+                        new LootEntry(1.0D / 20, 1, new ItemStack(BTWBlocks.spruceSapling)),
+                        new LootEntry(1.0D / 20, 1, new ItemStack(BTWBlocks.birchSapling)),
+                        new LootEntry(1.0D / 20, 1, new ItemStack(BTWBlocks.jungleSapling)),
                         new LootEntry(1.0D / 10, 1, new ItemStack(BTWItems.sugarCaneRoots))
                 },
                 new ItemStack(BTWItems.dirtPile),
@@ -179,7 +182,10 @@ public class DNRecipes {
         SiftingCraftingManager.addSiftingRecipe(
                 new LootEntry[]{
                         new LootEntry(1.0D / 2, 4, new ItemStack(BTWItems.stone)),
-                        new LootEntry(1.0D / 5, 4, new ItemStack(Block.sapling)),
+                        new LootEntry(1.0D / 20, 4, new ItemStack(BTWBlocks.oakSapling)),
+                        new LootEntry(1.0D / 20, 4, new ItemStack(BTWBlocks.spruceSapling)),
+                        new LootEntry(1.0D / 20, 4, new ItemStack(BTWBlocks.birchSapling)),
+                        new LootEntry(1.0D / 20, 4, new ItemStack(BTWBlocks.jungleSapling)),
                         new LootEntry(1.0D / 10, 4, new ItemStack(BTWItems.sugarCaneRoots))
                 },
                 new ItemStack(BTWBlocks.looseDirtSlab),
@@ -189,7 +195,10 @@ public class DNRecipes {
         SiftingCraftingManager.addSiftingRecipe(
                 new LootEntry[]{
                         new LootEntry(1.0D / 2, 8, new ItemStack(BTWItems.stone)),
-                        new LootEntry(1.0D / 5, 8, new ItemStack(Block.sapling)),
+                        new LootEntry(1.0D / 20, 8, new ItemStack(BTWBlocks.oakSapling)),
+                        new LootEntry(1.0D / 20, 8, new ItemStack(BTWBlocks.spruceSapling)),
+                        new LootEntry(1.0D / 20, 8, new ItemStack(BTWBlocks.birchSapling)),
+                        new LootEntry(1.0D / 20, 8, new ItemStack(BTWBlocks.jungleSapling)),
                         new LootEntry(1.0D / 10, 8, new ItemStack(BTWItems.sugarCaneRoots))
                 },
                 new ItemStack(BTWBlocks.looseDirt),
