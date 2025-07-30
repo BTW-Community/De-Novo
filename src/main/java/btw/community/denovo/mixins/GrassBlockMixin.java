@@ -36,6 +36,9 @@ public abstract class GrassBlockMixin extends BlockGrass {
     @Override
     public boolean onBlockActivated(World world, int xCoord, int yCoord, int zCoord, EntityPlayer player, int facing, float xClick, float yClick, float zClick) {
         if (player.getHeldItem() == null && player.isSneaking()) {
+
+            player.foodStats.addExhaustion(1F);
+
             if (!world.isRemote && world.rand.nextFloat() <= getPlacingChance()) {
                 Item deadBush = Item.itemsList[Block.deadBush.blockID];
                 deadBush.onItemUse(new ItemStack(deadBush), player, world, xCoord, yCoord, zCoord, facing, xClick, yClick, zClick);
@@ -46,6 +49,9 @@ public abstract class GrassBlockMixin extends BlockGrass {
                 //spawnParticles(world, player, xCoord, yCoord + 1, zCoord);
 
                 world.playAuxSFX( 2001, xCoord, yCoord, zCoord, Block.dirt.blockID ); //break sfx
+                world.playSound((double)xCoord + 0.5D, (double)yCoord, (double)zCoord + 0.5D, Block.dirt.stepSound.getStepSound(),
+                        0.5F, //Volume
+                        1.0F); //Pitch
             }
 
             return true;
