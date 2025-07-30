@@ -9,6 +9,7 @@
     "CampfireBlockMixin",
     "DeadBushBlockMixin",
     "EntityLivingMixin",
+    "EntityPlayerMPMixin",
     "FarmlandBlockBaseMixin",
     "FishingRodBaitingRecipeMixin",
     "GrassBlockMixin",
