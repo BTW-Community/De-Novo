@@ -37,7 +37,6 @@ public class DNItems {
 
     public static void initItems() {
         BTWItems.goldenDung = new PlaceAsBlockItem(BTWItems.goldenDung.itemID - 256, Block.deadBush.blockID).setUnlocalizedName("fcItemDungGolden");
-        //BTWItems.dirtPile = new DirtPileItem(BTWItems.dirtPile.itemID - 256, Block.deadBush.blockID);
 
         mesh = new MeshItem(DeNovoAddon.instance.parseID("DNItemMeshID") - 256);
 
