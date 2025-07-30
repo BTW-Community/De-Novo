@@ -272,18 +272,36 @@ public class SieveBlock extends BlockContainer {
             Icon contentsIcon = SieveUtils.getBulkIcon(tileEntity.getContents());
 
             double base = 1 - (4 / 16D);
-            double offset = (progress * 6) / 16D;
+            double offset = (progress * 8) / 16D;
+            double aboveMax = base + offset - 1D; //added
+
             renderer.setRenderBounds(
                     2 / 16D,
                     base,
                     2 / 16D,
 
                     1 - (2 / 16D),
-                    base + offset,
+                    Math.min(1D, base + offset), //changed
                     1 - (2 / 16D)
             );
 
             RenderUtils.renderStandardBlockWithTexture(renderer, this, i, j, k, contentsIcon);
+
+            //added
+            if (aboveMax > 0D){
+                renderer.setRenderBounds(
+                        2 / 16D,
+                        0D,
+                        2 / 16D,
+
+                        1 - (2 / 16D),
+                        aboveMax,
+                        1 - (2 / 16D)
+                );
+
+                RenderUtils.renderStandardBlockWithTexture(renderer, this, i, j + 1, k, contentsIcon);
+
+            }
         }
 
         return SieveBlock.model.renderAsBlock(renderer, this, i, j, k);

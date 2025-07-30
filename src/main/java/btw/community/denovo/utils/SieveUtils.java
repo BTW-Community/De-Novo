@@ -38,18 +38,22 @@ public class SieveUtils {
             if (id == BTWBlocks.looseDirt.blockID) return icon;
             if (id == Block.dirt.blockID) return icon;
             if (id == BTWItems.dirtPile.itemID) return icon;
+            if (id == BTWBlocks.looseDirtSlab.blockID) return icon;
         }
 
         {
             Icon icon = Block.gravel.blockIcon;
             if (id == Block.gravel.blockID) return icon;
             if (id == BTWItems.gravelPile.itemID) return icon;
+            if (id == BTWBlocks.sandAndGravelSlab.blockID && metadata == 0) return icon;
         }
 
         {
             Icon icon = Block.sand.blockIcon;
             if (id == Block.sand.blockID) return icon;
             if (id == BTWItems.sandPile.itemID) return icon;
+            if (id == BTWBlocks.sandAndGravelSlab.blockID && metadata == 1) return icon;
+
         }
 
         {
@@ -61,6 +65,7 @@ public class SieveUtils {
         {
             Icon icon = BTWBlocks.looseCobblestone.blockIcon;
             if (id == BTWBlocks.looseCobblestone.blockID) return icon;
+            if (id == BTWBlocks.looseCobblestoneSlab.blockID) return icon;
         }
 
         {
