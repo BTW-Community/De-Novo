@@ -19,16 +19,24 @@ public class DeNovoAddon extends BTWAddon {
     private Map<String, String> propertyValues;
 
     // configuration settings
-    /** Set the following to True to allow players to get a piece of golden dung on every HCS */
+    /**
+     * Set the following to True to allow players to get a piece of golden dung on every HCS
+     */
     public static boolean allowGoldenDungOnHCS = false;
 
-    /** Set the following to True to disable all Slime spawning in flat worlds */
+    /**
+     * Set the following to True to disable all Slime spawning in flat worlds
+     */
     public static boolean disableSlimeSpawningInFlatWorlds = false;
 
-    /** Set the following to True to disable Slime Spawning specifically on Grass Blocks in slime chunks in flat worlds */
+    /**
+     * Set the following to True to disable Slime Spawning specifically on Grass Blocks in slime chunks in flat worlds
+     */
     public static boolean limitSlimeSpawningInFlatWorlds = false;
 
-    /** Set the following to True to disable mob spawns on blocks with sky access */
+    /**
+     * Set the following to True to disable mob spawns on blocks with sky access
+     */
     public static boolean disableMobSpawnsOnSurface = false;
 
     private DeNovoAddon() {
