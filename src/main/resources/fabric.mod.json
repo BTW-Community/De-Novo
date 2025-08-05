@@ -21,6 +21,9 @@
   "entrypoints": {
     "btw:addon": [
       "btw.community.denovo.DeNovoAddon"
+    ],
+    "emi": [
+      "btw.community.denovo.emi.DeNovoEmiPlugin"
     ]
   },
   "custom": {
