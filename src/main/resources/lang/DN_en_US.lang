@@ -16,6 +16,8 @@ item.DNItem_water_bowl.name=Bowl of Water
 item.DNItem_wood_sickle.name=Wooden Sickle
 item.DNItem_flint_hammer.name=Flint Hammer
 item.DNItem_charcoal_dust.name=Pile of Charcoal Dust
+item.DNItem_rust_water_bowl.name=Bowl of Rust Water
+item.DNItem_iron_dust.name=Iron Dust
 
 ### Vanilla Overwrites ###
 #Blocks

@@ -1,9 +1,8 @@
 package btw.community.denovo.block.blocks;
 
 import btw.client.render.util.RenderUtils;
-import btw.community.denovo.block.tileentities.CisternBaseTileEntity;
+import btw.community.denovo.block.models.CisternModel;
 import btw.community.denovo.block.tileentities.CisternTileEntity;
-import btw.community.denovo.item.DNItems;
 import com.prupe.mcpatcher.cc.ColorizeBlock;
 import com.prupe.mcpatcher.cc.Colorizer;
 import net.fabricmc.api.EnvType;
@@ -14,6 +13,7 @@ import java.util.List;
 import java.util.Random;
 
 public class CisternBlock extends CisternBaseBlock {
+    private final CisternModel model = new CisternModel();
     public CisternBlock(int blockID) {
         super(blockID, Material.iron);
 
@@ -27,7 +27,11 @@ public class CisternBlock extends CisternBaseBlock {
 
         setStepSound(soundMetalFootstep);
 
-        setUnlocalizedName("DNBlock_cistern");
+        setUnlocalizedName("DNCistern");
+
+        setCreativeTab(CreativeTabs.tabBrewing);
+
+        setTickRandomly(true);
     }
 
     @Override
@@ -37,12 +41,14 @@ public class CisternBlock extends CisternBaseBlock {
 
     @Override
     public int idDropped(int par1, Random par2Random, int par3) {
-        return DNItems.cistern.itemID;
+        return this.blockID;
+        //return DNItems.cistern.itemID;
     }
 
     @Override
     public int idPicked(World par1World, int par2, int par3, int par4) {
-        return DNItems.cistern.itemID;
+        return this.blockID;
+        //return DNItems.cistern.itemID;
     }
 
     //Sock: copied from vanilla cistern
@@ -57,47 +63,26 @@ public class CisternBlock extends CisternBaseBlock {
     }
 
     //----------- Class Specific Methods -----------//
-    @Override
-    protected boolean isValidWaterContainer(ItemStack stack) {
-        if (stack.isItemEqual(new ItemStack(Item.bucketEmpty))) return true;
-        return super.isValidWaterContainer(stack);
-    }
-
-    @Override
-    protected ItemStack getFullWaterContainer(ItemStack stack) {
-        if (stack.isItemEqual(new ItemStack(Item.bucketEmpty))) return new ItemStack(Item.bucketWater);
-        return super.getFullWaterContainer(stack);
-    }
 
     //----------- Client Side Functionality -----------//
-    //Sock: copied from vanilla cistern
+    //Sock: copied and modified from vanilla cistern
 
     @Override
     @Environment(EnvType.CLIENT)
     public Icon getIcon(int par1, int par2) {
-        return par1 == 1 ? this.cauldronTopIcon : (par1 == 0 ? this.cauldronBottomIcon : this.blockIcon);
+        return par1 == 1 ? this.top : (par1 == 0 ? this.bottom : this.blockIcon);
     }
-
     @Environment(EnvType.CLIENT)
-    private Icon field_94378_a;
-    @Environment(EnvType.CLIENT)
-    private Icon cauldronTopIcon;
-    @Environment(EnvType.CLIENT)
-    private Icon cauldronBottomIcon;
+    private Icon inner;
 
     @Override
     @Environment(EnvType.CLIENT)
     public void registerIcons(IconRegister par1IconRegister) {
         super.registerIcons(par1IconRegister);
-        this.field_94378_a = par1IconRegister.registerIcon("cauldron_inner");
-        this.cauldronTopIcon = par1IconRegister.registerIcon("cauldron_top");
-        this.cauldronBottomIcon = par1IconRegister.registerIcon("cauldron_bottom");
-        this.blockIcon = par1IconRegister.registerIcon("cauldron_side");
-    }
-
-    @Environment(EnvType.CLIENT)
-    public Icon func_94375_b(String par0Str) {
-        return par0Str == "cauldron_inner" ? field_94378_a : (par0Str == "cauldron_bottom" ? cauldronBottomIcon : null);
+        this.inner = par1IconRegister.registerIcon("cauldron_inner");
+        this.top = par1IconRegister.registerIcon("cauldron_top");
+        this.bottom = par1IconRegister.registerIcon("cauldron_bottom");
+        this.blockIcon = this.side = par1IconRegister.registerIcon("cauldron_side");
     }
 
     @Override
@@ -154,23 +139,13 @@ public class CisternBlock extends CisternBaseBlock {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void renderBlockSecondPass(RenderBlocks renderer, int x, int y, int z, boolean bFirstPassResult) {
-        mudColorPass = true;
+    public void renderBlockAsItem(RenderBlocks renderer, int damage, float brightness) {
+        //floor
+        renderer.setRenderBounds(2 / 16D, 3 / 16D, 2 / 16D, 14 / 16D, 4 / 16D, 14 / 16D);
+        RenderUtils.renderInvBlockWithTexture(renderer, this, -0.5F, -0.5F, -0.5F, this.inner);
 
-        CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) renderer.blockAccess.getBlockTileEntity(x, y, z);
-
-        //render contents
-        if (renderer.blockAccess.getBlockTileEntity(x, y, z) instanceof CisternBaseTileEntity) {
-            int fillLevel = cisternBase.getFillLevel();
-            Icon contentsIcon = getContentsIcon(cisternBase);
-
-            if (fillLevel >= 0 && contentsIcon != null) {
-                renderer.setRenderBounds(2 / 16D, 9 / 32D, 2 / 16D, 14 / 16D, fillLevel / 16D, 14 / 16D);
-                RenderUtils.renderStandardBlockWithTexture(renderer, this, x, y, z, contentsIcon);
-            }
-        }
-
-        mudColorPass = false;
+        renderer.setRenderBounds(0D, 0D, 0D, 1D, 1D, 1D);
+        model.renderAsItemBlock(renderer, this, damage);
     }
 
 }
