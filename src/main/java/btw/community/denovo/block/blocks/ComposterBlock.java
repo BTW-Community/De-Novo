@@ -47,6 +47,8 @@ public class ComposterBlock extends CisternBaseBlock {
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int facing, float clickX, float clickY, float clickZ) {
+        //since we want the base functionality of the cistern as well
+        super.onBlockActivated(world, x, y, z, player, facing, clickX, clickY, clickZ);
 
         TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
         CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) tileEntity;
@@ -57,8 +59,8 @@ public class ComposterBlock extends CisternBaseBlock {
         else if (cisternBase.isFullWithCompostOrMaggots()) {
             return handleContentsCompostOrMaggots(world, x, y, z, facing, cisternBase);
         }
-        //since we want the base functionality of the cistern as well
-        return super.onBlockActivated(world, x, y, z, player, facing, clickX, clickY, clickZ);
+
+        return false;
     }
 
     @Override
@@ -87,15 +89,15 @@ public class ComposterBlock extends CisternBaseBlock {
             if (!world.isRemote) {
                 returnItemsWhenFullWithCompost(world, x, y, z, facing);
 
-                playSound(world, x, y, z, Block.dirt.stepSound.getStepSound(), 1/4F, 1F);
+                CisternUtils.playSound(world, x, y, z, Block.dirt.stepSound.getStepSound(), 1/4F, 1F);
             }
         } else if (cisternBase.getFillType() == CisternUtils.CONTENTS_MAGGOTS) {
             if (!world.isRemote) {
 
                 returnItemsWhenFullWithMaggots(world, x, y, z, facing);
 
-                playSound(world, x, y, z, Block.dirt.stepSound.getStepSound(), 1/4F, 1F);
-                playSound(world, x, y, z, Block.blockClay.stepSound.getStepSound(), 1/8F, 1F);
+                CisternUtils.playSound(world, x, y, z, Block.dirt.stepSound.getStepSound(), 1/4F, 1F);
+                CisternUtils.playSound(world, x, y, z, Block.blockClay.stepSound.getStepSound(), 1/8F, 1F);
             }
         }
 
@@ -124,7 +126,7 @@ public class ComposterBlock extends CisternBaseBlock {
             world.markBlockForRenderUpdate(x, y, z);
 
             if (!player.capabilities.isCreativeMode) heldStack.stackSize--;
-            if (world.isRemote) playSound(world, x, y, z, Block.leaves.stepSound.getStepSound(), 0.25F, 1F);
+            if (world.isRemote) CisternUtils.playSound(world, x, y, z, Block.leaves.stepSound.getStepSound(), 0.25F, 1F);
             return true;
         }
 

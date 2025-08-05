@@ -1,18 +1,19 @@
 package btw.community.denovo.utils;
 
+import btw.community.denovo.block.blocks.CisternBaseBlock;
 import btw.community.denovo.block.tileentities.CisternBaseTileEntity;
 import btw.community.denovo.block.tileentities.CisternTileEntity;
 import btw.community.denovo.block.tileentities.ComposterTileEntity;
 import btw.item.util.ItemUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.src.Block;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.World;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class CisternUtils {
 
@@ -190,7 +191,9 @@ public class CisternUtils {
     private static boolean exchangeContainers(World world, int x, int y, int z, int facing, EntityPlayer player, ItemStack heldStack, ItemStack returnStack) {
         if (returnStack == null || heldStack == null) return false;
 
-        if (!world.isRemote) heldStack.stackSize--;
+        spawnParticlesAndPlaySound(world,x,y,z,world.rand, (CisternBaseTileEntity)world.getBlockTileEntity(x,y,z));
+
+        if (!world.isRemote && !player.capabilities.isCreativeMode) heldStack.stackSize--;
         ItemUtils.givePlayerStackOrEjectFromTowardsFacing(player, new ItemStack(returnStack.itemID, 1, returnStack.getItemDamage()), x, y, z, facing);
         if (!world.isRemote) world.markBlockForUpdate(x, y, z);
         return true;
@@ -233,6 +236,42 @@ public class CisternUtils {
         }
         return false;
     }
+
+
+    @Environment(EnvType.CLIENT)
+    public static void spawnParticlesAndPlaySound(World world, int x, int y, int z, Random rand, CisternBaseTileEntity cisternBase) {
+
+        if (!world.isRemote) return;
+
+        CisternBaseBlock.mudColorPass = true;
+        Color color = new Color(Block.blocksList[world.getBlockId(x,y,z)].colorMultiplier(world, x, y, z) );
+        CisternBaseBlock.mudColorPass = false;
+
+        int red = color.getRed();
+        int green = color.getGreen();
+        int blue = color.getBlue();
+
+        for (int i = 0; i < 4; i++) {
+            double xPos = x + 0.25F + rand.nextFloat() * 0.5F;
+            double yPos = y + 1.0F;
+            double zPos = z + 0.25F + rand.nextFloat() * 0.5F;
+
+            world.spawnParticle("DNSplash_" + red + "_" + green + "_" + blue , xPos, yPos, zPos, 0.0D, 0.0D, 0.0D);
+        }
+
+        playSound(world, x, y, z, "random.splash", 1/8F, 1F);
+    }
+
+    public static void playSound(World world, int x, int y, int z, String soundName, float volume, float pitch) {
+        if (!world.isRemote) {
+            world.playSoundEffect(
+                    (double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D,
+                    soundName,
+                    volume,
+                    pitch);
+        }
+    }
+
 
     private static Color interpolateColor(Color color1, Color color2, float ratio) {
         // Ensure the ratio is within [0, 1]
