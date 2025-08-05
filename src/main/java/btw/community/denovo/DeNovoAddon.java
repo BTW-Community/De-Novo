@@ -4,7 +4,12 @@ import btw.AddonHandler;
 import btw.BTWAddon;
 import btw.community.denovo.block.DNBlocks;
 import btw.community.denovo.item.DNItems;
+import btw.community.denovo.particles.WaterSplashFX;
 import btw.community.denovo.recipes.DNRecipes;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.src.EntityFX;
+import net.minecraft.src.EntityList;
+import net.minecraft.src.World;
 
 import java.util.Map;
 
@@ -37,6 +42,26 @@ public class DeNovoAddon extends BTWAddon {
         DNItems.initItems();
 
         DNRecipes.addRecipes();
+
+        // Client only
+        if (!MinecraftServer.getIsServer()) {
+            EntityList.addMapping(WaterSplashFX.class, "DNWaterSplashFX", -50);
+        }
+    }
+
+    @Override
+    public EntityFX spawnCustomParticle(World world, String particleType, double x, double y, double z, double velX, double velY, double velZ) {
+
+        if (particleType.startsWith("DNSplash_")) {
+            String[] colors = particleType.split("_", 4);
+            int red = Integer.parseInt(colors[1]);
+            int green = Integer.parseInt(colors[2]);
+            int blue = Integer.parseInt(colors[3]);
+
+            return (EntityFX) EntityList.createEntityOfType(WaterSplashFX.class, world, x, y, z, velX, velY, velZ, red, green, blue);
+        }
+
+        return super.spawnCustomParticle(world, particleType, x, y, z, velX, velY, velZ);
     }
 
     private void registerConfigProperties() {

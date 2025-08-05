@@ -2,9 +2,6 @@ package btw.community.denovo.block.blocks;
 
 import btw.client.render.util.RenderUtils;
 import btw.community.denovo.block.tileentities.CisternBaseTileEntity;
-import btw.community.denovo.block.tileentities.CisternTileEntity;
-import btw.community.denovo.block.tileentities.ComposterTileEntity;
-import btw.community.denovo.item.DNItems;
 import btw.community.denovo.utils.CisternUtils;
 import btw.item.BTWItems;
 import btw.item.util.ItemUtils;
@@ -13,8 +10,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 public abstract class CisternBaseBlock extends BlockContainer {
@@ -79,6 +74,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
 
     protected boolean handleContentsEmpty(World world, int x, int y, int z, int facing, EntityPlayer player, CisternBaseTileEntity cisternBase) {
         if (CisternUtils.isValidWaterContainer(player.getHeldItem())) {
+            spawnParticlesAndPlaySound(world,x,y,z,world.rand, cisternBase);
             return CisternUtils.addWaterAndReturnContainer(world, x,y,z, facing, player, cisternBase);
         }
 
@@ -90,9 +86,11 @@ public abstract class CisternBaseBlock extends BlockContainer {
         if (heldStack == null) return false;
 
         if (CisternUtils.isValidWaterContainer( heldStack )) {
+            spawnParticlesAndPlaySound(world,x,y,z,world.rand, cisternBase);
             return CisternUtils.addWaterAndReturnContainer(world, x,y,z, facing, player, cisternBase);
         }
         else if (CisternUtils.isValidEmptyContainer( heldStack )) {
+            spawnParticlesAndPlaySound(world,x,y,z,world.rand, cisternBase);
             return CisternUtils.reduceWaterAndReturnContainer(world, x,y,z, facing, player, cisternBase);
         }
 
@@ -151,8 +149,8 @@ public abstract class CisternBaseBlock extends BlockContainer {
     }
 
     private boolean setContentsType(World world, int x, int y, int z, EntityPlayer player, CisternBaseTileEntity cisternBase, int type) {
-        spawnParticlesAndPlaySound(world,x,y,z,world.rand);
-        if (!world.isRemote) cisternBase.setFillType(type);
+        cisternBase.setFillType(type);
+        spawnParticlesAndPlaySound(world,x,y,z,world.rand, cisternBase);
         return true;
     }
 
@@ -170,18 +168,28 @@ public abstract class CisternBaseBlock extends BlockContainer {
     //----------- Client Side Functionality -----------//
 
     @Environment(EnvType.CLIENT)
-    protected void spawnParticlesAndPlaySound(World world, int x, int y, int z, Random rand) {
+    protected void spawnParticlesAndPlaySound(World world, int x, int y, int z, Random rand, CisternBaseTileEntity cisternBase) {
+
+        if (!world.isRemote) return;
+
+        mudColorPass = true;
+        Color color = new Color( colorMultiplier(world, x, y, z) );
+        mudColorPass = false;
+
+        int red = color.getRed();
+        int green = color.getGreen();
+        int blue = color.getBlue();
+
         for (int i = 0; i < 4; i++) {
             double xPos = x + 0.25F + rand.nextFloat() * 0.5F;
             double yPos = y + 1.0F;
             double zPos = z + 0.25F + rand.nextFloat() * 0.5F;
 
-            world.spawnParticle("splash", xPos, yPos, zPos, 0.0D, 0.0D, 0.0D);
+            world.spawnParticle("DNSplash_" + red + "_" + green + "_" + blue , xPos, yPos, zPos, 0.0D, 0.0D, 0.0D);
         }
 
         playSound(world, x, y, z, "random.splash", 1/8F, 1F);
     }
-
 
     @Override
     @Environment(EnvType.CLIENT)
