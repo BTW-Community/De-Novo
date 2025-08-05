@@ -9,24 +9,22 @@ import net.minecraft.src.TileEntity;
 public class SmolderingPlacedSticksTileEntity extends TileEntity implements TileEntityDataPacketHandler {
 
     private int burnLevel;
-    /*private int counter;*/
+//    private int counter;
 
     @Override
     public void updateEntity() {
 
+//        this.counter++;
 
-        //TODO: REMOVE BEFORE RELEASE!!! -SOCK
-       /* this.counter++;*/
-        /*
-        if (worldObj.rand.nextFloat() <= 1/64F)
+/*        if (worldObj.rand.nextFloat() <= 1/64F)
         {
             Block block = Block.blocksList[worldObj.getBlockId(xCoord,yCoord,zCoord)];
             if (block instanceof SmolderingPlacedSticksBlock)
             {
                 block.randomUpdateTick(worldObj, xCoord, yCoord, zCoord, worldObj.rand);
             }
-        }
-        */
+        }*/
+
     }
 
     @Override
@@ -44,7 +42,7 @@ public class SmolderingPlacedSticksTileEntity extends TileEntity implements Tile
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         tag.setInteger("burnLevel", burnLevel);
-/*        tag.setInteger("counter", counter);*/
+//        tag.setInteger("counter", counter);
     }
 
     @Override
@@ -68,7 +66,7 @@ public class SmolderingPlacedSticksTileEntity extends TileEntity implements Tile
         return burnLevel;
     }
 
-/*    public int getCounter() {
+    /*public int getCounter() {
         return counter;
     }*/
 
