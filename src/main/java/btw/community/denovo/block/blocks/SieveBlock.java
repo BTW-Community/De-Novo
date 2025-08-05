@@ -189,6 +189,23 @@ public class SieveBlock extends BlockContainer {
         super.breakBlock(world, xCoord, yCoord, zCoord, blockID, meta);
     }
 
+    @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, int par5) {
+        if (!this.canBlockStay(world, x, y, z)) {
+            this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+            world.setBlockToAir(x, y, z);
+        }
+    }
+    @Override
+    public boolean canPlaceBlockAt(World world, int x, int y, int z) {
+        return canBlockStay(world, x, y, z) && super.canPlaceBlockAt(world, x, y, z);
+    }
+
+    @Override
+    public boolean canBlockStay(World world, int x, int y, int z) {
+        return world.doesBlockHaveSolidTopSurface(x, y - 1, z) && super.canBlockStay(world, x, y, z);
+    }
+
     //----------- Class Specific Methods -----------//
 
     public void breakSieve(World world, int i, int j, int k) {
@@ -254,18 +271,36 @@ public class SieveBlock extends BlockContainer {
             Icon contentsIcon = SieveUtils.getBulkIcon(tileEntity.getContents());
 
             double base = 1 - (4 / 16D);
-            double offset = (progress * 6) / 16D;
+            double offset = (progress * 8) / 16D;
+            double aboveMax = base + offset - 1D; //added
+
             renderer.setRenderBounds(
                     2 / 16D,
                     base,
                     2 / 16D,
 
                     1 - (2 / 16D),
-                    base + offset,
+                    Math.min(1D, base + offset), //changed
                     1 - (2 / 16D)
             );
 
             RenderUtils.renderStandardBlockWithTexture(renderer, this, i, j, k, contentsIcon);
+
+            //added
+            if (aboveMax > 0D){
+                renderer.setRenderBounds(
+                        2 / 16D,
+                        0D,
+                        2 / 16D,
+
+                        1 - (2 / 16D),
+                        aboveMax,
+                        1 - (2 / 16D)
+                );
+
+                RenderUtils.renderStandardBlockWithTexture(renderer, this, i, j + 1, k, contentsIcon);
+
+            }
         }
 
         return SieveBlock.model.renderAsBlock(renderer, this, i, j, k);
