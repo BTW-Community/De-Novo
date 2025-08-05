@@ -6,6 +6,7 @@ import btw.community.denovo.item.DNItems;
 import btw.community.denovo.item.items.RustWaterBowlItem;
 import btw.community.denovo.utils.CisternUtils;
 import btw.crafting.recipe.RecipeManager;
+import btw.crafting.recipe.types.customcrafting.FishingRodBaitingRecipe;
 import btw.item.BTWItems;
 import net.minecraft.src.Block;
 import net.minecraft.src.FurnaceRecipes;

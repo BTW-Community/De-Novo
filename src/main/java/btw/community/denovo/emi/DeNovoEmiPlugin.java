@@ -1,6 +1,7 @@
 package btw.community.denovo.emi;
 
 import btw.community.denovo.item.DNItems;
+import btw.crafting.recipe.types.customcrafting.FishingRodBaitingRecipe;
 import btw.item.BTWItems;
 import emi.dev.emi.emi.api.EmiPlugin;
 import emi.dev.emi.emi.api.EmiRegistry;
