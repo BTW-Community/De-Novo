@@ -21,7 +21,7 @@ public class CharcoalPileBlock extends Block {
 
         setTickRandomly(true);
 
-        setUnlocalizedName("DNBlock_charcoal");
+        setUnlocalizedName("denovo.charcoal");
     }
 
     @Override
@@ -164,7 +164,7 @@ public class CharcoalPileBlock extends Block {
     @Override
     @Environment(EnvType.CLIENT)
     public void registerIcons(IconRegister register) {
-        this.blockIcon = register.registerIcon("DNBlock_charcoal");
+        this.blockIcon = register.registerIcon("denovo:charcoal");
     }
 
     @Override

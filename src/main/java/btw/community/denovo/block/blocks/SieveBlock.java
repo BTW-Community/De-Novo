@@ -33,7 +33,7 @@ public class SieveBlock extends BlockContainer {
         setHardness(0.5F);
         setBuoyancy(1F);
 
-        setUnlocalizedName("DNBlock_sieve");
+        setUnlocalizedName("denovo.sieve");
         setCreativeTab(CreativeTabs.tabRedstone);
 
         initBlockBounds(0D, 0D, 0D, 1D, 1D, 1D);
@@ -229,10 +229,10 @@ public class SieveBlock extends BlockContainer {
     @Override
     @Environment(EnvType.CLIENT)
     public void registerIcons(IconRegister register) {
-        this.blockIcon = register.registerIcon("wood");
+        this.blockIcon = register.registerIcon("planks_oak");
 
-        filterIcon = register.registerIcon("DNBlock_mesh");
-        compostIcon = register.registerIcon("DNBlock_composter_compost");
+        filterIcon = register.registerIcon("denovo:mesh");
+        compostIcon = register.registerIcon("denovo:composter_compost");
     }
 
     @Environment(EnvType.CLIENT)

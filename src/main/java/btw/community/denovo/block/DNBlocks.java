@@ -17,7 +17,8 @@ public class DNBlocks {
     public static Block charcoalPile;
 
     public static void initBlocks() {
-        Item.itemsList[Block.deadBush.blockID] = (new ItemMultiTextureTile(Block.deadBush.blockID - 256, Block.deadBush, new String[]{"mature", "medium", "small", "tiny"}));
+        Item.itemsList[Block.deadBush.blockID] = (new ItemMultiTextureTile(Block.deadBush.blockID - 256, Block.deadBush, new String[]{"mature", "medium", "small", "tiny"}))
+                .setUnlocalizedName("denovo.deadbush");
 
         sieve = registerItemBlock(new SieveBlock(DeNovoAddon.instance.parseID("DNBlockSieveID")));
         TileEntity.addMapping(SieveTileEntity.class, "DNSieve");

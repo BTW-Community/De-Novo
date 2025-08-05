@@ -28,7 +28,7 @@ public class CisternBlock extends CisternBaseBlock {
 
         setStepSound(soundMetalFootstep);
 
-        setUnlocalizedName("DNCistern");
+        setUnlocalizedName("denovo.cistern");
 
         setCreativeTab(CreativeTabs.tabBrewing);
 

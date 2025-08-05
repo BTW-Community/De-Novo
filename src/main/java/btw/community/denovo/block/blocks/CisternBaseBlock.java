@@ -184,28 +184,28 @@ public abstract class CisternBaseBlock extends BlockContainer {
     @Override
     @Environment(EnvType.CLIENT)
     public void registerIcons(IconRegister register) {
-        water = register.registerIcon("water");
+        water = register.registerIcon("water_still");
 
-        compost = register.registerIcon("DNBlock_composter_compost");
+        compost = register.registerIcon("denovo:composter_compost");
 
         for (int i = 0; i < maggotsGrowing.length; i++) {
-            maggotsGrowing[i] = register.registerIcon("DNBlock_composter_maggots_" + i);
+            maggotsGrowing[i] = register.registerIcon("denovo:composter_maggots_" + i);
         }
 
         for (int i = 0; i < compostBreaking.length; i++) {
-            compostBreaking[i] = register.registerIcon("DNBlock_compost_breaking_" + i);
+            compostBreaking[i] = register.registerIcon("denovo:compost_breaking_" + i);
         }
 
         for (int i = 0; i < maggotsGrowing.length; i++) {
-            dirtBreaking[i] = register.registerIcon("DNBlock_dirt_breaking_" + i);
+            dirtBreaking[i] = register.registerIcon("denovo:dirt_breaking_" + i);
         }
 
         for (int i = 0; i < maggotsGrowing.length; i++) {
-            gravelBreaking[i] = register.registerIcon("DNBlock_gravel_breaking_" + i);
+            gravelBreaking[i] = register.registerIcon("denovo:gravel_breaking_" + i);
         }
 
 
-        maggotsDone = register.registerIcon("DNBlock_composter_maggots");
+        maggotsDone = register.registerIcon("denovo:composter_maggots");
     }
 
 

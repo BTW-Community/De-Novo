@@ -25,7 +25,7 @@ public class PlacedSticksBlock extends Block {
 
         setStepSound(soundWoodFootstep);
 
-        setUnlocalizedName("DNBlock_placed_sticks");
+        setUnlocalizedName("denovo.placed_sticks");
     }
 
     @Override
@@ -208,18 +208,18 @@ public class PlacedSticksBlock extends Block {
     @Environment(EnvType.CLIENT)
     public void registerIcons(IconRegister register) {
 
-        top[0] = register.registerIcon("DNBlock_placed_shafts_top_0");
-        top[1] = register.registerIcon("DNBlock_placed_shafts_top_1");
-        top[2] = register.registerIcon("DNBlock_placed_shafts_top_2");
-        top[3] = register.registerIcon("DNBlock_placed_shafts_top_3");
+        top[0] = register.registerIcon("denovo:placed_shafts_top_0");
+        top[1] = register.registerIcon("denovo:placed_shafts_top_1");
+        top[2] = register.registerIcon("denovo:placed_shafts_top_2");
+        top[3] = register.registerIcon("denovo:placed_shafts_top_3");
 
-        top_alt[0] = register.registerIcon("DNBlock_placed_shafts_top_alt_0");
-        top_alt[1] = register.registerIcon("DNBlock_placed_shafts_top_alt_1");
-        top_alt[2] = register.registerIcon("DNBlock_placed_shafts_top_alt_2");
-        top_alt[3] = register.registerIcon("DNBlock_placed_shafts_top_alt_3");
+        top_alt[0] = register.registerIcon("denovo:placed_shafts_top_alt_0");
+        top_alt[1] = register.registerIcon("denovo:placed_shafts_top_alt_1");
+        top_alt[2] = register.registerIcon("denovo:placed_shafts_top_alt_2");
+        top_alt[3] = register.registerIcon("denovo:placed_shafts_top_alt_3");
 
-        side[0] = register.registerIcon("DNBlock_placed_shafts_side");
-        side[1] = register.registerIcon("DNBlock_placed_shafts_side_alt");
+        side[0] = register.registerIcon("denovo:placed_shafts_side");
+        side[1] = register.registerIcon("denovo:placed_shafts_side_alt");
 
         blockIcon = side[0];
     }

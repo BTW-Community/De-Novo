@@ -163,10 +163,10 @@ public abstract class DeadBushBlockMixin extends BlockFlower {
     public void registerIcons(IconRegister register) {
         super.registerIcons(register);
         //DN added
-        dead_bush_stages[0] = register.registerIcon("DNBlock_dead_bush_" + 3);
-        dead_bush_stages[1] = register.registerIcon("DNBlock_dead_bush_" + 2);
-        dead_bush_stages[2] = register.registerIcon("DNBlock_dead_bush_" + 1);
-        dead_bush_stages[3] = register.registerIcon("DNBlock_dead_bush_" + 0);
+        dead_bush_stages[0] = register.registerIcon("denovo:dead_bush_" + 3);
+        dead_bush_stages[1] = register.registerIcon("denovo:dead_bush_" + 2);
+        dead_bush_stages[2] = register.registerIcon("denovo:dead_bush_" + 1);
+        dead_bush_stages[3] = register.registerIcon("denovo:dead_bush_" + 0);
         //DN end
     }
 }

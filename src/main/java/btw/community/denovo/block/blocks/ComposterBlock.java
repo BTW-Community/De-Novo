@@ -33,7 +33,7 @@ public class ComposterBlock extends CisternBaseBlock {
 
         setStepSound(soundWoodFootstep);
 
-        setUnlocalizedName("DNComposter");
+        setUnlocalizedName("denovo.composter");
 
         setCreativeTab(CreativeTabs.tabRedstone);
 
@@ -208,9 +208,9 @@ public class ComposterBlock extends CisternBaseBlock {
     @Environment(EnvType.CLIENT)
     public void registerIcons(IconRegister register) {
         super.registerIcons(register);
-        this.top = register.registerIcon("DNBlock_composter_top");
-        this.blockIcon = this.side = register.registerIcon("DNBlock_composter");
-        this.bottom = register.registerIcon("DNBlock_composter_bottom");
+        this.top = register.registerIcon("denovo:composter_top");
+        this.blockIcon = this.side = register.registerIcon("denovo:composter");
+        this.bottom = register.registerIcon("denovo:composter_bottom");
     }
 
     @Override
