@@ -7,7 +7,7 @@ import btw.item.util.ItemUtils;
 import net.minecraft.src.*;
 
 public class RustWaterBowlItem extends ProgressiveCraftingItem {
-    public static final int TIME_TO_CRAFT = DEFAULT_MAX_DAMAGE/64;
+    public static final int TIME_TO_CRAFT = DEFAULT_MAX_DAMAGE;
     public RustWaterBowlItem(int itemID, String name) {
         super(itemID);
 
