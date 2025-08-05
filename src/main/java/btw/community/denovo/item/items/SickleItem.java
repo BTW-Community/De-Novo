@@ -16,7 +16,7 @@ public class SickleItem extends ToolItem {
     }
 
     @Override
-    public boolean onBlockDestroyed(ItemStack stack, World world, int iBlockID, int i, int j, int k, EntityLiving usingEntity) {
+    public boolean onBlockDestroyed(ItemStack stack, World world, int iBlockID, int i, int j, int k, EntityLivingBase usingEntity) {
         if (iBlockID != Block.leaves.blockID &&
                 iBlockID != BTWBlocks.bloodWoodLeaves.blockID) {
             return super.onBlockDestroyed(stack, world, iBlockID, i, j, k, usingEntity);

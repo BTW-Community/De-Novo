@@ -19,15 +19,19 @@
 
   "environment": "*",
   "entrypoints": {
+    "btw:addon": [
+      "btw.community.denovo.DeNovoAddon"
+    ]
+  },
+  "custom": {
+    "btw:addon_prefix": "DN"
   },
   "mixins": [
     "denovoaddon.mixins.json"
   ],
 
   "depends": {
-    "fabricloader": ">=0.7.4"
-  },
-  "suggests": {
-    "flamingo": "*"
+    "fabricloader": ">=0.14.19",
+    "minecraft": "1.6.4"
   }
 }

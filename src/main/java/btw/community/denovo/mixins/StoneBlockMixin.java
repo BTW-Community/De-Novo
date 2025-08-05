@@ -1,10 +1,10 @@
 package btw.community.denovo.mixins;
 
 import btw.block.blocks.FullBlock;
-import btw.block.blocks.StoneBlock;
 import btw.community.denovo.item.items.HammerItem;
 import btw.item.BTWItems;
 import btw.item.util.ItemUtils;
+import net.minecraft.src.BlockStone;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.Material;
 import net.minecraft.src.World;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(StoneBlock.class)
+@Mixin(BlockStone.class)
 public abstract class StoneBlockMixin extends FullBlock {
     protected StoneBlockMixin(int iBlockID, Material material) {
         super(iBlockID, material);
@@ -31,7 +31,7 @@ public abstract class StoneBlockMixin extends FullBlock {
     @Inject(method = "convertBlock",
             at = @At(
                     value = "INVOKE",
-                    target = "Lbtw/block/blocks/StoneBlock;getConversionLevelForTool(Lnet/minecraft/src/ItemStack;Lnet/minecraft/src/World;III)I",
+                    target = "Lnet/minecraft/src/BlockStone;getConversionLevelForTool(Lnet/minecraft/src/ItemStack;Lnet/minecraft/src/World;III)I",
                     ordinal = 0,
                     shift = At.Shift.AFTER
             ),

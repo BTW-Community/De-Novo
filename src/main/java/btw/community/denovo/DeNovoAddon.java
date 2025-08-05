@@ -39,8 +39,8 @@ public class DeNovoAddon extends BTWAddon {
      */
     public static boolean disableMobSpawnsOnSurface = false;
 
-    private DeNovoAddon() {
-        super("@NAME@", "@VERSION@", "@PREFIX@");
+    public DeNovoAddon() {
+        super();
         DeNovoAddon.instance = this;
     }
 
@@ -73,7 +73,7 @@ public class DeNovoAddon extends BTWAddon {
             int green = Integer.parseInt(colors[2]);
             int blue = Integer.parseInt(colors[3]);
 
-            return (EntityFX) EntityList.createEntityOfType(WaterSplashFX.class, world, x, y, z, velX, velY, velZ, red, green, blue);
+            return new WaterSplashFX(world, x, y, z, velX, velY, velZ, red, green, blue);
         }
 
         return super.spawnCustomParticle(world, particleType, x, y, z, velX, velY, velZ);

@@ -2,7 +2,6 @@ package btw.community.denovo.block.blocks;
 
 import btw.block.BTWBlocks;
 import btw.block.blocks.AshGroundCoverBlock;
-import btw.block.blocks.FireBlock;
 import btw.block.util.Flammability;
 import btw.client.fx.BTWEffectManager;
 import btw.client.render.util.RenderUtils;
@@ -80,7 +79,7 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
             if (!checkForGoOutInRain(world, i, j, k)) {
                 SmolderingPlacedSticksTileEntity tileEntity = (SmolderingPlacedSticksTileEntity) world.getBlockTileEntity(i, j, k);
 
-                FireBlock.checkForSmoulderingSpreadFromLocation(world, i, j, k);
+                BlockFire.checkForSmoulderingSpreadFromLocation(world, i, j, k);
 
                 int iBurnLevel = tileEntity.getBurnLevel();
 //                if (!world.isRemote) System.out.println("burn level: " + iBurnLevel);
@@ -102,7 +101,7 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
 //                if (!world.isRemote) System.out.println("chanceOfDecay: " + chanceOfDecay);
 
                 if (iBurnLevel < 1) {
-                    if (!FireBlock.hasFlammableNeighborsWithinSmoulderRange(world, i, j, k) || hasNeighborSmolderingSticksInContact(world, i, j, k) > 0) {
+                    if (!BlockFire.hasFlammableNeighborsWithinSmoulderRange(world, i, j, k) || hasNeighborSmolderingSticksInContact(world, i, j, k) > 0) {
 //                        if (!world.isRemote) System.out.println("NOThasFlammableNeighborsWithinSmoulderRange");
 
                         tileEntity.setBurnLevel(1);

@@ -13,7 +13,7 @@ public abstract class EntityPlayerMPMixin {
     @Inject(method = "updateGloomState",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/src/EntityPlayerMP;attackEntityFrom(Lnet/minecraft/src/DamageSource;I)Z",
+                    target = "Lnet/minecraft/src/EntityPlayerMP;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z",
                     ordinal = 0,
                     shift = At.Shift.AFTER
             ), remap = false)

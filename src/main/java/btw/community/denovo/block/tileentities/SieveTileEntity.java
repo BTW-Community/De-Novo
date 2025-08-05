@@ -1,6 +1,5 @@
 package btw.community.denovo.block.tileentities;
 
-import btw.block.blocks.PortalBlock;
 import btw.block.tileentity.TileEntityDataPacketHandler;
 import btw.client.fx.BTWEffectManager;
 import btw.community.denovo.block.DNBlocks;
@@ -86,7 +85,7 @@ public class SieveTileEntity extends TileEntity implements TileEntityDataPacketH
         if (containedSoulCount >= OVERLOAD_SOUL_COUNT) {
             ((SieveBlock) DNBlocks.sieve).breakSieve(worldObj, xCoord, yCoord, zCoord);
 
-            EntityCreature.attemptToPossessCreaturesAroundBlock(this.worldObj, this.xCoord, this.yCoord, this.zCoord, POSSESSION_COUNT_ON_OVERLOAD, PortalBlock.CREATURE_POSSESSION_RANGE);
+            EntityCreature.attemptToPossessCreaturesAroundBlock(this.worldObj, this.xCoord, this.yCoord, this.zCoord, POSSESSION_COUNT_ON_OVERLOAD, BlockPortal.CREATURE_POSSESSION_RANGE);
         }
     }
 

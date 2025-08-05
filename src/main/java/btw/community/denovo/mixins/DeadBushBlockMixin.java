@@ -1,7 +1,6 @@
 package btw.community.denovo.mixins;
 
 import btw.block.BTWBlocks;
-import btw.block.blocks.DeadBushBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -14,8 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Random;
 
-@Mixin(DeadBushBlock.class)
-public abstract class DeadBushBlockMixin extends BlockDeadBush {
+@Mixin(BlockDeadBush.class)
+public abstract class DeadBushBlockMixin extends BlockFlower {
     @Inject(method = "<init>", at = @At(value = "RETURN"))
     public void initDeadBushBlock(int blockID, CallbackInfo info) {
         this.setBlockMaterial(Material.plants);

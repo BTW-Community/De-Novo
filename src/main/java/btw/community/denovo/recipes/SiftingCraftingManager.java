@@ -11,7 +11,7 @@ public class SiftingCraftingManager {
 
     public static void addSiftingRecipe(LootEntry[] lootTable, ItemStack input, ItemStack filterUsed) {
         if (input.stackSize != 1) {
-            AddonHandler.logWarning("Cannot add hopper filtering recipe with input stack size > 1 for input " + input.getItemName());
+            AddonHandler.logWarning("Cannot add hopper filtering recipe with input stack size > 1 for input " + input.getUnlocalizedName());
         }
 
         input.stackSize = 1;
@@ -22,7 +22,7 @@ public class SiftingCraftingManager {
 
     public static void addSoulSiftingRecipe(LootEntry[] lootTable, ItemStack input) {
         if (input.stackSize != 1) {
-            AddonHandler.logWarning("Cannot add hopper soul filtering recipe with input stack size > 1 for input " + input.getItemName());
+            AddonHandler.logWarning("Cannot add hopper soul filtering recipe with input stack size > 1 for input " + input.getUnlocalizedName());
         }
 
         input.stackSize = 1;

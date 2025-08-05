@@ -1,16 +1,16 @@
 package btw.community.denovo.mixins;
 
 import btw.community.denovo.DeNovoAddon;
-import btw.entity.mob.SlimeEntity;
 import net.minecraft.src.Block;
 import net.minecraft.src.Entity;
+import net.minecraft.src.EntitySlime;
 import net.minecraft.src.WorldType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(SlimeEntity.class)
+@Mixin(EntitySlime.class)
 public class SlimeEntityMixin {
 
     @Inject(method = "getCanSpawnHere", at = @At(value = "HEAD"), cancellable = true)

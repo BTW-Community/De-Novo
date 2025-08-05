@@ -1,16 +1,15 @@
 package btw.community.denovo.mixins;
 
-import btw.block.blocks.GrassBlock;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(GrassBlock.class)
-public abstract class GrassBlockMixin extends BlockGrass {
+@Mixin(BlockGrass.class)
+public abstract class GrassBlockMixin extends Block {
     public GrassBlockMixin(int blockID) {
-        super(blockID);
+        super(blockID, Material.grass);
     }
 
     protected float getPlacingChance() {
