@@ -2,9 +2,6 @@ package btw.community.denovo.item;
 
 import btw.community.denovo.DeNovoAddon;
 import btw.community.denovo.block.DNBlocks;
-import btw.community.denovo.item.items.MeshItem;
-import btw.community.denovo.item.items.RawMaggotsItem;
-import btw.community.denovo.item.items.WaterBowlItem;
 import btw.community.denovo.item.items.*;
 import btw.crafting.util.FurnaceBurnTime;
 import btw.item.BTWItems;
@@ -63,6 +60,6 @@ public class DNItems {
 
         woodSickle = new SickleItem(DeNovoAddon.instance.parseID("DNItemWoodSickleID") - 256, EnumToolMaterial.WOOD, 10);
 
-        flintHammer = new HammerItem(DeNovoAddon.instance.parseID("DNItemFlintHammerID") - 256,EnumToolMaterial.STONE, 25);
+        flintHammer = new HammerItem(DeNovoAddon.instance.parseID("DNItemFlintHammerID") - 256, EnumToolMaterial.STONE, 25);
     }
 }
