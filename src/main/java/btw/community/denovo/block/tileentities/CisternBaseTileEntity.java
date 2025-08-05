@@ -41,9 +41,9 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
         } else {
             dropClayBall();
             worldObj.playSoundEffect(
-                    (double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D,
+                    (double) xCoord + 0.5D, (double) yCoord + 0.5D, (double) zCoord + 0.5D,
                     Block.blockClay.stepSound.getStepSound(),
-                    1/8F,
+                    1 / 8F,
                     1F);
             setFillType(CisternUtils.CONTENTS_WATER);
             setProgressCounter(0);
@@ -146,16 +146,13 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
     }
 
     public boolean isFull() {
-        if ( getLiquidFillLevel() == CisternUtils.MAX_LIQUID_FILL_LEVEL) {
+        if (getLiquidFillLevel() == CisternUtils.MAX_LIQUID_FILL_LEVEL) {
             return true;
-        } else if (getSolidFillLevel() == CisternUtils.MAX_SOLID_FILL_LEVEL) {
-            return true;
-        }
-        else return false;
+        } else return getSolidFillLevel() == CisternUtils.MAX_SOLID_FILL_LEVEL;
     }
 
     public boolean isEmpty() {
-        return (this.solidFillLevel == 0 || this.liquidFillLevel == 0 ) && this.fillType == CisternUtils.CONTENTS_EMPTY;
+        return (this.solidFillLevel == 0 || this.liquidFillLevel == 0) && this.fillType == CisternUtils.CONTENTS_EMPTY;
     }
 
     public void addSolid(int amount) {

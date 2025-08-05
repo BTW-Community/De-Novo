@@ -16,11 +16,11 @@ public class ComposterTileEntity extends CisternBaseTileEntity {
     private void handleCompost() {
         if (getProgressCounter() < CisternUtils.MAGGOT_CREATION_TIME) {
             setProgressCounter(getProgressCounter() + 1);
-            worldObj.markBlockRangeForRenderUpdate(xCoord,yCoord,zCoord,xCoord,yCoord,zCoord);
+            worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
 
         } else {
             if (!worldObj.isRemote) setFillType(CisternUtils.CONTENTS_MAGGOTS);
-            worldObj.markBlockRangeForRenderUpdate(xCoord,yCoord,zCoord,xCoord,yCoord,zCoord);
+            worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
         }
     }
 }

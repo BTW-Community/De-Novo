@@ -73,14 +73,13 @@ public class SmolderingPlacedSticksTileEntity extends TileEntity implements Tile
     public int setBurnLevel(int burnLevel) {
 
         this.burnLevel = burnLevel;
-        this.worldObj.markBlockForRenderUpdate(xCoord,yCoord,zCoord);
+        this.worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
 
         return this.burnLevel;
     }
 
-    public int increaseBurnLevelBy(int amount)
-    {
-        this.worldObj.markBlockForRenderUpdate(xCoord,yCoord,zCoord);
+    public int increaseBurnLevelBy(int amount) {
+        this.worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
         return this.burnLevel += amount;
     }
 }
