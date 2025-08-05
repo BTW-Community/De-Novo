@@ -1,186 +1,169 @@
-import net.fabricmc.loom.task.RunClientTask
-import net.fabricmc.loom.task.RunServerTask
-import org.apache.tools.ant.filters.ReplaceTokens
+import net.fabricmc.loom.api.processor.MinecraftJarProcessor
+import net.fabricmc.loom.api.processor.ProcessorContext
+import net.fabricmc.loom.api.processor.SpecContext
 
-buildscript {
-    dependencies {
-        classpath fileTree(dir: "libs", include: "fabric-loom-0.7.local.jar")
-    }
-}
-
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.file.StandardCopyOption;
 plugins {
-    id 'maven-publish'
-    id 'fabric-loom' version "0.7-SNAPSHOT"
+	id 'maven-publish'
+	id 'fabric-loom' version "1.4-SNAPSHOT"
 }
-
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
 repositories {
-    maven {
-        name = 'legacy-fabric'
-        url = 'https://maven.legacyfabric.net'
-    }
-    maven {
-        url 'https://jitpack.io'
-    }
-    maven {
-        name 'HalfOf2'
-        url 'https://storage.googleapis.com/devan-maven/'
-    }
+	maven {
+		name = 'legacy-fabric'
+		url = 'https://maven.legacyfabric.net'
+	}
+	// Fixed LWJGL on Linux
+	maven {
+		name = 'Babric'
+		url = 'https://maven.glass-launcher.net/babric'
+	}
+	maven {
+		url file('mavenRepo')
+	}
+	mavenCentral() //For fastutil
 }
 
-sourceSets {
-    btw {
-        java {
-            srcDirs = ['src/btw/java']
-        }
-        resources {
-            srcDirs = ['src/btw/resources']
-        }
-    }
+loom {
+	setIntermediaryUrl('https://maven.legacyfabric.net/net/legacyfabric/intermediary/%1$s/intermediary-%1$s-v2.jar');
+	//accessWidenerPath = file('src/main/resources/<NAME>.accesswidener')
+	addMinecraftJarProcessor(
+			BTWJarReplacer, "BTWJarReplacer", projectDir.toString()
+	)
 }
 
 def lwjglVersion = System.getProperty("os.name").toLowerCase().contains("mac") ? "2.9.1" : "2.9.0"
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    implementation 'org.apache.logging.log4j:log4j-core:2.17.0'
-    implementation 'org.apache.logging.log4j:log4j-api:2.17.0'
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "btw.community:mappings:1.0.3"
 
-    implementation "org.lwjgl.lwjgl:lwjgl_util:${lwjglVersion}"
-    implementation "org.lwjgl.lwjgl:lwjgl:${lwjglVersion}"
-    implementation "org.lwjgl.lwjgl:lwjgl-platform:${lwjglVersion}"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    implementation fileTree(dir: "libs", include: "**.zip")
-    compileOnly fileTree(dir: "$projectDir/BTW_dev", include: "*.zip")
-    compileOnly fileTree(dir: "$buildDir/BTW_dev", include: "**.jar")
+	implementation 'net.fabricmc:fabric-loom:1.4-SNAPSHOT'
 
-    runtimeClasspath fileTree(dir: "$buildDir/dev_run", include: "dev.jar")
+	implementation 'org.apache.logging.log4j:log4j-core:2.19.0'
+	implementation 'org.apache.logging.log4j:log4j-api:2.19.0'
 
-    mappings fileTree(dir: "custom_mappings", include: "**.zip")
-    modImplementation("io.github.minecraft-cursed-legacy:cursed-fabric-loader:${loader_version}") {
-        transitive false
-    }
-}
+	implementation "org.lwjgl.lwjgl:lwjgl_util:${lwjglVersion}"
+	implementation "org.lwjgl.lwjgl:lwjgl:${lwjglVersion}"
+	implementation "org.lwjgl.lwjgl:lwjgl-platform:${lwjglVersion}"
 
-configurations {
-    btwCompileClasspath.extendsFrom implementation, modImplementation
+	implementation fileTree(dir: "libs", include: "**.zip")
+
+	implementation 'com.google.guava:guava:14.0.1'
+
+	// This is what MC 1.6 uses
+	implementation 'com.google.code.gson:gson:2.2.2'
+
+	implementation group: 'it.unimi.dsi', name: 'fastutil', version: '8.5.12'
 }
 
 configurations.all {
-    resolutionStrategy {
-        dependencySubstitution {
-            substitute module('org.lwjgl.lwjgl:lwjgl_util:2.9.1-nightly-20130708-debug3') with module("org.lwjgl.lwjgl:lwjgl_util:${lwjglVersion}")
-            substitute module('org.lwjgl.lwjgl:lwjgl:2.9.1-nightly-20130708-debug3') with module("org.lwjgl.lwjgl:lwjgl:${lwjglVersion}")
-        }
-        force "org.lwjgl.lwjgl:lwjgl-platform:${lwjglVersion}"
-    }
+	resolutionStrategy {
+		dependencySubstitution {
+			substitute module('org.lwjgl.lwjgl:lwjgl_util:2.9.1-nightly-20130708-debug3') with {
+				module("org.lwjgl.lwjgl:lwjgl_util:${lwjglVersion}")
+			}
+			substitute module('org.lwjgl.lwjgl:lwjgl:2.9.1-nightly-20130708-debug3') with {
+				module("org.lwjgl.lwjgl:lwjgl:${lwjglVersion}")
+			}
+		}
+		force "org.lwjgl.lwjgl:lwjgl-platform:${lwjglVersion}"
+	}
 }
 
 processResources {
-    inputs.property "version", project.version
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version
-    }
+	inputs.property "version", project.version
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.encoding = "UTF-8"
-    if (JavaVersion.current().isJava9Compatible()) it.options.release = 8
+	it.options.encoding = "UTF-8"
 }
 
 java {
-    withSourcesJar()
-}
-
-task processSource(type: Sync) {
-    from sourceSets.main.java
-    inputs.property 'version', project.version
-    inputs.property 'name', project.name
-    inputs.property 'prefix', project.prefix
-    filter(ReplaceTokens, tokens: [VERSION: project.version, NAME: project.name, PREFIX: project.prefix])
-    into "$buildDir/src"
-}
-
-compileJava {
-    dependsOn('btwJar')
-    source = processSource.outputs
-}
-
-task devPackMod(type:Copy) {
-    dependsOn('jar')
-    from sourceSets.main.output.classesDirs
-    into file("$buildDir/classes/java/btw")
-}
-
-task devPackBTW(type:Copy) {
-    dependsOn('devPackMod')
-    dependsOn('btwJar')
-}
-
-task devPackRun(type:Jar) {
-    dependsOn('devPackBTW')
-    from fileTree("$buildDir/classes/java/btw")
-    from fileTree("$projectDir/BTW_dev/")
-    from sourceSets.btw.output.resourcesDir
-    destinationDirectory = file("$buildDir/dev_run")
-    archiveFileName = "dev.jar"
+	withSourcesJar()
 }
 
 jar {
-    from sourceSets.main.output.resourcesDir
-    from sourceSets.main.output.classesDirs
-    from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}"}
-    }
+	from sourceSets.main.output.resourcesDir
+	from sourceSets.main.output.classesDirs
+	from("LICENSE") {
+		rename { "${it}_${project.archivesBaseName}"}
+	}
 }
 
-task btwJar(type:Jar) {
-    from fileTree("$projectDir/BTW_dev/")
-    from sourceSets.btw.output.resourcesDir
-    from sourceSets.btw.output.classesDirs
-    destinationDirectory = file("$buildDir/BTW_dev")
-    archiveFileName = "BTW_dev.jar"
-}
-
-remapJar {
-    dependsOn(jar)
-    input.set jar.archiveFile.get()
-    destinationDirectory = file("$rootDir/release")
-}
-
-reobfuscateJar {
-    dependsOn(jar)
-    input.set jar.archiveFile.get()
-    destinationDirectory = file("$rootDir/reobfuscated")
-}
-
-task safeRunClient(type:RunClientTask) {
-    mustRunAfter('clean')
-    dependsOn('clean')
-    dependsOn('devPackRun')
-}
-
-task safeRunServer(type:RunServerTask) {
-    mustRunAfter('clean')
-    dependsOn('clean')
-    dependsOn('devPackRun')
+loom {
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
 }
 
 runClient {
-    dependsOn('devPackRun')
+	dependsOn(jar)
 }
 
 runServer {
-    dependsOn('devPackRun')
+	dependsOn(jar)
 }
 
-clean.doFirst {
-    delete "$buildDir/dev_run"
-    delete "$buildDir/BTW_dev"
+class BTWJarReplacer implements MinecraftJarProcessor<Spec> {
+	String name
+	String path
+
+	@javax.inject.Inject
+	BTWJarReplacer(String name, String path) {
+		this.name = name
+		this.path = path
+	}
+
+	@Override
+	Spec buildSpec(SpecContext context) {
+		return new Spec(path)
+	}
+
+	@Override
+	void processJar(java.nio.file.Path jar, Spec spec, ProcessorContext context) throws IOException {
+		// Replace the Minecraft jar with the custom one from BTW_dev.
+		// This is just a straight up file replacement, no remapping or anything.
+		if (!Files.exists(Paths.get(path, "build_BTW/BTW_dev/BTW_dev.zip"))) {
+			// Print a warning if the BTW_dev zip doesn't exist.
+			System.err.println("BTW_dev zip not found, skipping BTWJarReplacer")
+		} else {
+			System.out.println("BTW_dev zip found, replacing Minecraft jar with BTW_dev jar.")
+			Files.copy(Paths.get(path, "build_BTW/BTW_dev/BTW_dev.zip"), jar, StandardCopyOption.REPLACE_EXISTING)
+			// Add Javadocs
+			Files.copy(Paths.get(path, "build_BTW/BTW_dev/BTW_dev-javadoc.jar"), jar.resolveSibling(jar.getFileName().toString().replace(".jar", "-javadoc.jar")), StandardCopyOption.REPLACE_EXISTING)
+		}
+	}
+
+	@Override
+	String getName() {
+		return name
+	}
+
+	class Spec implements MinecraftJarProcessor.Spec {
+		String path
+
+		Spec(String path) {
+			this.path = path
+		}
+
+		@Override
+		int hashCode() {
+			if (!Files.exists(Paths.get(path, "build_BTW/BTW_dev/BTW_dev.zip"))) {
+				return name.hashCode()
+			} else {
+				return Files.getLastModifiedTime(Paths.get(path, "build_BTW/BTW_dev/BTW_dev.zip")).hashCode() ^ name.hashCode()
+			}
+		}
+	}
 }
