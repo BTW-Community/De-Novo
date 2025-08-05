@@ -196,6 +196,7 @@ public class SieveBlock extends BlockContainer {
             world.setBlockToAir(x, y, z);
         }
     }
+
     @Override
     public boolean canPlaceBlockAt(World world, int x, int y, int z) {
         return canBlockStay(world, x, y, z) && super.canPlaceBlockAt(world, x, y, z);
@@ -234,6 +235,7 @@ public class SieveBlock extends BlockContainer {
         compostIcon = register.registerIcon("DNBlock_composter_compost");
     }
 
+    @Environment(EnvType.CLIENT)
     public static Icon getCompostIcon() {
         return compostIcon;
     }
@@ -287,7 +289,7 @@ public class SieveBlock extends BlockContainer {
             RenderUtils.renderStandardBlockWithTexture(renderer, this, i, j, k, contentsIcon);
 
             //added
-            if (aboveMax > 0D){
+            if (aboveMax > 0D) {
                 renderer.setRenderBounds(
                         2 / 16D,
                         0D,

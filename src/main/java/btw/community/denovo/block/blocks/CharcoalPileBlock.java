@@ -19,13 +19,13 @@ public class CharcoalPileBlock extends Block {
 
         setHardness(0.25F);
 
-        setTickRandomly( true );
+        setTickRandomly(true);
 
         setUnlocalizedName("DNBlock_charcoal");
     }
 
-    public int idDropped(int iMetadata, Random rand, int iFortuneModifier )
-    {
+    @Override
+    public int idDropped(int iMetadata, Random rand, int iFortuneModifier) {
         return 0;
     }
 
@@ -44,13 +44,11 @@ public class CharcoalPileBlock extends Block {
         int oldMetadata = world.getBlockMetadata(x, y, z);
         int newMetadata = 0;
 
-        if (oldMetadata > 0)
-        {
+        if (oldMetadata > 0) {
             newMetadata = oldMetadata - 1;
             world.setBlockAndMetadataWithNotify(x, y, z, this.blockID, newMetadata);
-        }
-        else {
-            world.setBlockToAir(x,y,z);
+        } else {
+            world.setBlockToAir(x, y, z);
         }
 
         if (!world.isRemote) {
@@ -60,41 +58,13 @@ public class CharcoalPileBlock extends Block {
         return true;
     }
 
-/*    @Override
-    public void onNeighborBlockChange(World world, int i, int j, int k, int iNeighborBlockID) {
-
-        if (world.getBlockId(i,j-1,k) == DNBlocks.charcoalPile.blockID)
-        {
-            int metaAbove = world.getBlockMetadata(i,j-1,k);
-            int amountcombined = world.getBlockMetadata(i,j,k) + metaAbove + 2;
-            int remaining = 16 - amountcombined;
-
-            System.out.println("thisMeta: " + world.getBlockMetadata(i,j,k) );
-            System.out.println("metaAbove: " + metaAbove);
-            System.out.println("amountcombined: " + amountcombined);
-            System.out.println("remaining: " + remaining);
-
-            if (amountcombined > 16)
-            {
-                world.setBlockMetadata( i, j-1, k, 15 );
-                world.setBlockMetadata( i, j, k,  remaining - 1);
-            }
-            else{
-                world.setBlockMetadata( i, j -1, k, amountcombined - 1);
-                world.setBlockToAir(i,j,k);
-            }
-        }
-
-    }*/
-
     //CHATGPT rewrite
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int iNeighborBlockID) {
-        if (!this.canBlockStay(world, x, y, z))
-        {
+        if (!this.canBlockStay(world, x, y, z)) {
             //this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
-            world.playAuxSFX( 2001, x, y, z, this.blockID ); //break sfx
-            ItemUtils.ejectSingleItemWithRandomOffset(world, x,y, z, DNItems.charcoalDust.itemID, 0);
+            world.playAuxSFX(2001, x, y, z, this.blockID); //break sfx
+            ItemUtils.ejectSingleItemWithRandomOffset(world, x, y, z, DNItems.charcoalDust.itemID, 0);
             world.setBlockToAir(x, y, z);
             return;
         }
@@ -144,16 +114,14 @@ public class CharcoalPileBlock extends Block {
 
     @Override
     public AxisAlignedBB getBlockBoundsFromPoolBasedOnState(
-            IBlockAccess blockAccess, int x, int y, int z)
-    {
+            IBlockAccess blockAccess, int x, int y, int z) {
         int metadata = blockAccess.getBlockMetadata(x, y, z);
-        return  getBlockBoundsFromPoolBasedOnState(metadata);
+        return getBlockBoundsFromPoolBasedOnState(metadata);
     }
 
-    public AxisAlignedBB getBlockBoundsFromPoolBasedOnState(int metadata)
-    {
-        double minY = 0/16D;
-        double maxY = 1/16D + metadata/16D;
+    private AxisAlignedBB getBlockBoundsFromPoolBasedOnState(int metadata) {
+        double minY = 0 / 16D;
+        double maxY = 1 / 16D + metadata / 16D;
 
         return new AxisAlignedBB(
                 0D, minY, 0D,
@@ -172,15 +140,13 @@ public class CharcoalPileBlock extends Block {
     }
 
     @Override
-    public boolean hasCenterHardPointToFacing(IBlockAccess blockAccess, int i, int j, int k, int iFacing, boolean bIgnoreTransparency )
-    {
-        return hasLargeCenterHardPointToFacing( blockAccess, i, j, k, iFacing );
+    public boolean hasCenterHardPointToFacing(IBlockAccess blockAccess, int i, int j, int k, int iFacing, boolean bIgnoreTransparency) {
+        return hasLargeCenterHardPointToFacing(blockAccess, i, j, k, iFacing);
     }
 
     @Override
     public boolean hasLargeCenterHardPointToFacing(IBlockAccess blockAccess, int i, int j, int k, int iFacing) {
-        if (blockAccess.getBlockMetadata(i, j, k) == 15)
-        {
+        if (blockAccess.getBlockMetadata(i, j, k) == 15) {
             return iFacing == 1;
         }
 
@@ -197,16 +163,16 @@ public class CharcoalPileBlock extends Block {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void registerIcons( IconRegister register )
-    {
+    public void registerIcons(IconRegister register) {
         this.blockIcon = register.registerIcon("DNBlock_charcoal");
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public boolean renderBlock(RenderBlocks renderer, int i, int j, int k) {
         renderer.setRenderBounds(getBlockBoundsFromPoolBasedOnState(
-                renderer.blockAccess, i, j, k) );
+                renderer.blockAccess, i, j, k));
 
-        return renderer.renderStandardBlock( this, i, j, k );
+        return renderer.renderStandardBlock(this, i, j, k);
     }
 }

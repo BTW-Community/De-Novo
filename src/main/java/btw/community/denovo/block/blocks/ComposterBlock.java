@@ -55,8 +55,7 @@ public class ComposterBlock extends CisternBaseBlock {
 
         if (cisternBase.isEmptyOrHasCompost()) {
             return handleContentsEmptyOrCompost(world, x, y, z, facing, player, cisternBase);
-        }
-        else if (cisternBase.isFullWithCompostOrMaggots()) {
+        } else if (cisternBase.isFullWithCompostOrMaggots()) {
             return handleContentsCompostOrMaggots(world, x, y, z, facing, cisternBase);
         }
 
@@ -89,15 +88,15 @@ public class ComposterBlock extends CisternBaseBlock {
             if (!world.isRemote) {
                 returnItemsWhenFullWithCompost(world, x, y, z, facing);
 
-                CisternUtils.playSound(world, x, y, z, Block.dirt.stepSound.getStepSound(), 1/4F, 1F);
+                CisternUtils.playSound(world, x, y, z, Block.dirt.stepSound.getStepSound(), 1 / 4F, 1F);
             }
         } else if (cisternBase.getFillType() == CisternUtils.CONTENTS_MAGGOTS) {
             if (!world.isRemote) {
 
                 returnItemsWhenFullWithMaggots(world, x, y, z, facing);
 
-                CisternUtils.playSound(world, x, y, z, Block.dirt.stepSound.getStepSound(), 1/4F, 1F);
-                CisternUtils.playSound(world, x, y, z, Block.blockClay.stepSound.getStepSound(), 1/8F, 1F);
+                CisternUtils.playSound(world, x, y, z, Block.dirt.stepSound.getStepSound(), 1 / 4F, 1F);
+                CisternUtils.playSound(world, x, y, z, Block.blockClay.stepSound.getStepSound(), 1 / 8F, 1F);
             }
         }
 
@@ -126,7 +125,8 @@ public class ComposterBlock extends CisternBaseBlock {
             world.markBlockForRenderUpdate(x, y, z);
 
             if (!player.capabilities.isCreativeMode) heldStack.stackSize--;
-            if (world.isRemote) CisternUtils.playSound(world, x, y, z, Block.leaves.stepSound.getStepSound(), 0.25F, 1F);
+            if (world.isRemote)
+                CisternUtils.playSound(world, x, y, z, Block.leaves.stepSound.getStepSound(), 0.25F, 1F);
             return true;
         }
 

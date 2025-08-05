@@ -25,7 +25,7 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
     public SmolderingPlacedSticksBlock(int iBlockID) {
         super(iBlockID, Material.wood);
 
-        setHardness( 2F );
+        setHardness(2F);
 
         setAxesEffectiveOn();
         setChiselsEffectiveOn();
@@ -34,9 +34,9 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
 
         setBuoyant();
 
-        setTickRandomly( true );
+        setTickRandomly(true);
 
-        setStepSound( soundWoodFootstep );
+        setStepSound(soundWoodFootstep);
 
         setUnlocalizedName("DNBlock_smoldering_placed_sticks");
     }
@@ -47,19 +47,17 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
     }
 
     @Override
-    public int idDropped( int iMetadata, Random rand, int iFortuneModifier )
-    {
+    public int idDropped(int iMetadata, Random rand, int iFortuneModifier) {
         return 0;
     }
 
     @Override
-    public boolean getCanBlockBeIncinerated(World world, int i, int j, int k)
-    {
+    public boolean getCanBlockBeIncinerated(World world, int i, int j, int k) {
         return true;
     }
 
     @Override
-    public void updateTick( World world, int i, int j, int k, Random rand ) {
+    public void updateTick(World world, int i, int j, int k, Random rand) {
         //System.out.println("tick");
 
         if (hasWaterToSidesOrTop(world, i, j, k)) {
@@ -68,30 +66,26 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
             convertToCinders(world, i, j, k);
 
             world.playAuxSFX(BTWEffectManager.FIRE_FIZZ_EFFECT_ID, i, j, k, 0);
-        }
-        else if (getNeighboringAirBlock(world, i,j,k) != null)
-        {
-            BlockPos targetPos = getNeighboringAirBlock(world, i,j,k);
-            world.setBlock(targetPos.x,targetPos.y,targetPos.z,Block.fire.blockID);
+        } else if (getNeighboringAirBlock(world, i, j, k) != null) {
+            BlockPos targetPos = getNeighboringAirBlock(world, i, j, k);
+            world.setBlock(targetPos.x, targetPos.y, targetPos.z, Block.fire.blockID);
         }
     }
 
     @Override
-    public void randomUpdateTick(World world, int i, int j, int k, Random rand)
-    {
+    public void randomUpdateTick(World world, int i, int j, int k, Random rand) {
 //        if (!world.isRemote) System.out.println("//------------- Rand tick ------------//");
 
         if (world.getGameRules().getGameRuleBooleanValue("doFireTick")) {
-            if ( !checkForGoOutInRain(world, i, j, k) )
-            {
-                SmolderingPlacedSticksTileEntity tileEntity = (SmolderingPlacedSticksTileEntity) world.getBlockTileEntity(i,j,k);
+            if (!checkForGoOutInRain(world, i, j, k)) {
+                SmolderingPlacedSticksTileEntity tileEntity = (SmolderingPlacedSticksTileEntity) world.getBlockTileEntity(i, j, k);
 
                 FireBlock.checkForSmoulderingSpreadFromLocation(world, i, j, k);
 
                 int iBurnLevel = tileEntity.getBurnLevel();
 //                if (!world.isRemote) System.out.println("burn level: " + iBurnLevel);
 
-                convertNeighborBlock(world, i,j,k, rand);
+                convertNeighborBlock(world, i, j, k, rand);
 
                 int chanceOfDecay = CHANCE_OF_DECAY;
 
@@ -100,56 +94,45 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
 
                 chanceOfDecay -= neighborBonus;
 
-                int pileSize = world.getBlockMetadata(i,j,k) + 1;
+                int pileSize = world.getBlockMetadata(i, j, k) + 1;
                 int reduceChangeByPileSize = Math.max(pileSize / 4, 2);
 
                 chanceOfDecay -= reduceChangeByPileSize;
 
 //                if (!world.isRemote) System.out.println("chanceOfDecay: " + chanceOfDecay);
 
-                if ( iBurnLevel < 1 )
-                {
-                    if ( !FireBlock.hasFlammableNeighborsWithinSmoulderRange(world, i, j, k) || hasNeighborSmolderingSticksInContact(world, i, j, k) > 0)
-                    {
+                if (iBurnLevel < 1) {
+                    if (!FireBlock.hasFlammableNeighborsWithinSmoulderRange(world, i, j, k) || hasNeighborSmolderingSticksInContact(world, i, j, k) > 0) {
 //                        if (!world.isRemote) System.out.println("NOThasFlammableNeighborsWithinSmoulderRange");
 
-                        tileEntity.setBurnLevel( 1 );
+                        tileEntity.setBurnLevel(1);
                     }
-                }
-                else if ( rand.nextInt(chanceOfDecay) == 0 )
-                {
-                    if ( iBurnLevel < 3 )
-                    {
+                } else if (rand.nextInt(chanceOfDecay) == 0) {
+                    if (iBurnLevel < 3) {
 //                        if (!world.isRemote) System.out.println("increasing burn level by chance");
 
-                        tileEntity.increaseBurnLevelBy( 1 );
-                    }
-                    else
-                    {
-                        Block blockAbove = Block.blocksList[world.getBlockId(i,j + 1,k)];
-                        Block blockBelow = Block.blocksList[world.getBlockId(i,j - 1,k)];
+                        tileEntity.increaseBurnLevelBy(1);
+                    } else {
+                        Block blockAbove = Block.blocksList[world.getBlockId(i, j + 1, k)];
+                        Block blockBelow = Block.blocksList[world.getBlockId(i, j - 1, k)];
 
                         boolean hasSmolderingAbove = blockAbove != null && blockAbove.blockID == DNBlocks.smolderingPlacedSticks.blockID;
 
-                        if (blockBelow != null)
-                        {
+                        if (blockBelow != null) {
 
-                            if (!hasSmolderingAbove){
+                            if (!hasSmolderingAbove) {
 //                                if (!world.isRemote) System.out.println("convertToCharcoal");
                                 convertToCharcoal(world, i, j, k);
-                            }
-                            else {
+                            } else {
 //                                if (!world.isRemote) System.out.println("hasSmolderingAbove");
                             }
 
-                        }
-                        else {
+                        } else {
 //                            if (!world.isRemote) System.out.println("CANT CONVERT");
                         }
 
                     }
-                }
-                else {
+                } else {
 //                    if (!world.isRemote) System.out.println("FAILED TO BURN");
                 }
             }
@@ -158,16 +141,13 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
 
     @Override
     public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5) {
-        this.updateTick(par1World,par2, par3,par4, par1World.rand);
+        this.updateTick(par1World, par2, par3, par4, par1World.rand);
     }
 
-    public int hasNeighborSmolderingSticksInContact(World world, int i, int j, int k)
-    {
+    public int hasNeighborSmolderingSticksInContact(World world, int i, int j, int k) {
         int count = 0;
-        for ( int iTempFacing = 0; iTempFacing < 6; iTempFacing++ )
-        {
-            if ( hasNeighborSmolderingSticksToFacing(world, i, j, k, iTempFacing) )
-            {
+        for (int iTempFacing = 0; iTempFacing < 6; iTempFacing++) {
+            if (hasNeighborSmolderingSticksToFacing(world, i, j, k, iTempFacing)) {
                 count += 1;
             }
         }
@@ -176,82 +156,69 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
     }
 
 
-    public boolean hasNeighborSmolderingSticksToFacing(World world, int i, int j, int k, int iFacing)
-    {
-        BlockPos tempBlockPos = new BlockPos( i, j, k, iFacing );
+    public boolean hasNeighborSmolderingSticksToFacing(World world, int i, int j, int k, int iFacing) {
+        BlockPos tempBlockPos = new BlockPos(i, j, k, iFacing);
 
         int iTempBlockID = world.getBlockId(tempBlockPos.x, tempBlockPos.y, tempBlockPos.z);
 
         Block tempBlock = Block.blocksList[iTempBlockID];
 
-        if ( tempBlock != null )
-        {
-            if ( tempBlock.blockID == this.blockID )
-            {
-                return true;
-            }
+        if (tempBlock != null) {
+            return tempBlock.blockID == this.blockID;
         }
 
         return false;
     }
 
 
-
     private static BlockPos getNeighboringAirBlock(World world, int i, int j, int k) {
         BlockPos targetPos = new BlockPos(i, j, k);
 
-        if (world.getBlockId(targetPos.x, targetPos.y-1, targetPos.z) == 0){
-            targetPos.y = targetPos.y -1;
+        if (world.getBlockId(targetPos.x, targetPos.y - 1, targetPos.z) == 0) {
+            targetPos.y = targetPos.y - 1;
             return targetPos;
-        }
-        else if (world.getBlockId(targetPos.x, targetPos.y+1, targetPos.z) == 0) {
-            targetPos.y = targetPos.y +1;
+        } else if (world.getBlockId(targetPos.x, targetPos.y + 1, targetPos.z) == 0) {
+            targetPos.y = targetPos.y + 1;
             return targetPos;
-        }
-        else if (world.getBlockId(targetPos.x-1, targetPos.y, targetPos.z) == 0) {
-            targetPos.x = targetPos.x -1;
+        } else if (world.getBlockId(targetPos.x - 1, targetPos.y, targetPos.z) == 0) {
+            targetPos.x = targetPos.x - 1;
             return targetPos;
-        }
-        else if (world.getBlockId(targetPos.x+1, targetPos.y, targetPos.z) == 0) {
-            targetPos.x = targetPos.x +1;
+        } else if (world.getBlockId(targetPos.x + 1, targetPos.y, targetPos.z) == 0) {
+            targetPos.x = targetPos.x + 1;
             return targetPos;
-        }
-        else if (world.getBlockId(targetPos.x, targetPos.y, targetPos.z-1) == 0) {
-            targetPos.z = targetPos.z -1;
+        } else if (world.getBlockId(targetPos.x, targetPos.y, targetPos.z - 1) == 0) {
+            targetPos.z = targetPos.z - 1;
             return targetPos;
-        }
-        else if (world.getBlockId(targetPos.x, targetPos.y, targetPos.z+1) == 0) {
-            targetPos.z = targetPos.z +1;
+        } else if (world.getBlockId(targetPos.x, targetPos.y, targetPos.z + 1) == 0) {
+            targetPos.z = targetPos.z + 1;
             return targetPos;
-        }
-
-        else return null;
+        } else return null;
     }
 
     private void convertNeighborBlock(World world, int i, int j, int k, Random rand) {
-        if (world.getBlockId(i, j-1, k) == DNBlocks.placedSticks.blockID) {
-            int meta = world.getBlockMetadata(i, j-1, k);
-            world.setBlockAndMetadataWithNotify(i, j-1, k, DNBlocks.smolderingPlacedSticks.blockID, meta);
+        if (world.getBlockId(i, j - 1, k) == DNBlocks.placedSticks.blockID) {
+            int meta = world.getBlockMetadata(i, j - 1, k);
+            world.setBlockAndMetadataWithNotify(i, j - 1, k, DNBlocks.smolderingPlacedSticks.blockID, meta);
         }
-        if (world.getBlockId(i, j+1, k) == DNBlocks.placedSticks.blockID) {
-            int meta = world.getBlockMetadata(i, j+1, k);
-            world.setBlockAndMetadataWithNotify(i, j+1, k, DNBlocks.smolderingPlacedSticks.blockID, meta);
+        if (world.getBlockId(i, j + 1, k) == DNBlocks.placedSticks.blockID) {
+            int meta = world.getBlockMetadata(i, j + 1, k);
+            world.setBlockAndMetadataWithNotify(i, j + 1, k, DNBlocks.smolderingPlacedSticks.blockID, meta);
         }
-        if (world.getBlockId(i-1, j, k) == DNBlocks.placedSticks.blockID) {
-            int meta = world.getBlockMetadata(i-1, j, k);
-            world.setBlockAndMetadataWithNotify(i-1, j, k, DNBlocks.smolderingPlacedSticks.blockID, meta);
+        if (world.getBlockId(i - 1, j, k) == DNBlocks.placedSticks.blockID) {
+            int meta = world.getBlockMetadata(i - 1, j, k);
+            world.setBlockAndMetadataWithNotify(i - 1, j, k, DNBlocks.smolderingPlacedSticks.blockID, meta);
         }
-        if (world.getBlockId(i+1, j, k) == DNBlocks.placedSticks.blockID) {
-            int meta = world.getBlockMetadata(i+1, j, k);
-            world.setBlockAndMetadataWithNotify(i+1, j, k, DNBlocks.smolderingPlacedSticks.blockID, meta);
+        if (world.getBlockId(i + 1, j, k) == DNBlocks.placedSticks.blockID) {
+            int meta = world.getBlockMetadata(i + 1, j, k);
+            world.setBlockAndMetadataWithNotify(i + 1, j, k, DNBlocks.smolderingPlacedSticks.blockID, meta);
         }
-        if (world.getBlockId(i, j, k-1) == DNBlocks.placedSticks.blockID) {
-            int meta = world.getBlockMetadata(i, j, k-1);
-            world.setBlockAndMetadataWithNotify(i, j, k-1, DNBlocks.smolderingPlacedSticks.blockID, meta);
+        if (world.getBlockId(i, j, k - 1) == DNBlocks.placedSticks.blockID) {
+            int meta = world.getBlockMetadata(i, j, k - 1);
+            world.setBlockAndMetadataWithNotify(i, j, k - 1, DNBlocks.smolderingPlacedSticks.blockID, meta);
         }
-        if (world.getBlockId(i, j, k+1) == DNBlocks.placedSticks.blockID) {
-            int meta = world.getBlockMetadata(i, j, k+1);
-            world.setBlockAndMetadataWithNotify(i, j, k+1, DNBlocks.smolderingPlacedSticks.blockID, meta);
+        if (world.getBlockId(i, j, k + 1) == DNBlocks.placedSticks.blockID) {
+            int meta = world.getBlockMetadata(i, j, k + 1);
+            world.setBlockAndMetadataWithNotify(i, j, k + 1, DNBlocks.smolderingPlacedSticks.blockID, meta);
         }
     }
 
@@ -273,44 +240,35 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
 
                     break;
                 }
-            }
-            else if (world.getBlockId(i, iTempJ, k) != Block.fire.blockID) {
+            } else if (world.getBlockId(i, iTempJ, k) != Block.fire.blockID) {
                 break;
             }
         }
     }
 
     @Override
-    public boolean getIsBlockWarm(IBlockAccess blockAccess, int i, int j, int k)
-    {
+    public boolean getIsBlockWarm(IBlockAccess blockAccess, int i, int j, int k) {
         return true;
     }
 
     @Override
-    public boolean getCanBlockLightItemOnFire(IBlockAccess blockAccess, int i, int j, int k)
-    {
+    public boolean getCanBlockLightItemOnFire(IBlockAccess blockAccess, int i, int j, int k) {
         return true;
     }
 
 
     @Override
-    public void onBlockDestroyedWithImproperTool(World world, EntityPlayer player, int i, int j, int k, int iMetadata)
-    {
-        explode(world, (double)i + 0.5D, (double)j + 0.5D, (double)k + 0.5D);
+    public void onBlockDestroyedWithImproperTool(World world, EntityPlayer player, int i, int j, int k, int iMetadata) {
+        explode(world, (double) i + 0.5D, (double) j + 0.5D, (double) k + 0.5D);
     }
-
-
 
 
     //------------- Class Specific Methods ------------//
 
-    private boolean checkForGoOutInRain(World world, int i, int j, int k)
-    {
-        if (world.rand.nextInt(CHANCE_OF_EXTINGUISH_IN_RAIN) == 0 )
-        {
-            if ( world.isRainingAtPos(i, j + 1, k) )
-            {
-                world.playAuxSFX( BTWEffectManager.FIRE_FIZZ_EFFECT_ID, i, j, k, 0 );
+    private boolean checkForGoOutInRain(World world, int i, int j, int k) {
+        if (world.rand.nextInt(CHANCE_OF_EXTINGUISH_IN_RAIN) == 0) {
+            if (world.isRainingAtPos(i, j + 1, k)) {
+                world.playAuxSFX(BTWEffectManager.FIRE_FIZZ_EFFECT_ID, i, j, k, 0);
 
                 convertToCinders(world, i, j, k);
 
@@ -321,15 +279,13 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
         return false;
     }
 
-    private void convertToCinders(World world, int i, int j, int k)
-    {
+    private void convertToCinders(World world, int i, int j, int k) {
 //        world.setBlockWithNotify( i, j, k, BTWBlocks.woodCinders.blockID );
-        world.setBlockWithNotify( i, j, k, BTWBlocks.ashCoverBlock.blockID );
+        world.setBlockWithNotify(i, j, k, BTWBlocks.ashCoverBlock.blockID);
     }
 
-    private void convertToCharcoal(World world, int i, int j, int k)
-    {
-        int  pileSize = world.getBlockMetadata(i, j, k) + 1;
+    private void convertToCharcoal(World world, int i, int j, int k) {
+        int pileSize = world.getBlockMetadata(i, j, k) + 1;
 
         float guaranteedAmount = 0.25F;
         float remainingAmount = 0.5F;
@@ -337,8 +293,8 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
         int newMeta = MathHelper.floor_float(pileSize * amount);
 
 
-        world.removeBlockTileEntity(i,j,k);
-        world.setBlockAndMetadataWithNotify( i, j, k, DNBlocks.charcoalPile.blockID, newMeta );
+        world.removeBlockTileEntity(i, j, k);
+        world.setBlockAndMetadataWithNotify(i, j, k, DNBlocks.charcoalPile.blockID, newMeta);
 
 
 /*        SmolderingPlacedSticksTileEntity tileEntity = (SmolderingPlacedSticksTileEntity) world.getBlockTileEntity(i,j,k);
@@ -353,34 +309,29 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
     }
 
 
-
     @Override
-    public void onBlockDestroyedByExplosion( World world, int i, int j, int k, Explosion explosion )
-    {
-        if ( !world.isRemote )
-        {
+    public void onBlockDestroyedByExplosion(World world, int i, int j, int k, Explosion explosion) {
+        if (!world.isRemote) {
             // explode without audio/visual effects to cut down on overhead
 
-            explosion.addSecondaryExplosionNoFX((double)i + 0.5D, (double)j + 0.5D, (double)k + 0.5D, EXPLOSION_STRENGTH, true, false);
+            explosion.addSecondaryExplosionNoFX((double) i + 0.5D, (double) j + 0.5D, (double) k + 0.5D, EXPLOSION_STRENGTH, true, false);
         }
     }
 
-    private void explode(World world, double posX, double posY, double posZ)
-    {
-        world.newExplosionNoFX((Entity)null, posX, posY, posZ, EXPLOSION_STRENGTH, true, false);
+    private void explode(World world, double posX, double posY, double posZ) {
+        world.newExplosionNoFX(null, posX, posY, posZ, EXPLOSION_STRENGTH, true, false);
 
         notifyNearbyAnimalsFinishedFalling(world, MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ));
 
-        world.playAuxSFX( BTWEffectManager.SMOLDERING_LOG_EXPLOSION_EFFECT_ID,
-                MathHelper.floor_double( posX ), MathHelper.floor_double( posY ), MathHelper.floor_double( posZ ),
-                0 );
+        world.playAuxSFX(BTWEffectManager.SMOLDERING_LOG_EXPLOSION_EFFECT_ID,
+                MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ),
+                0);
     }
 
-    protected boolean isSupportedBySolidBlocks(World world, int i, int j, int k)
-    {
-        Block blockBelow = Block.blocksList[world.getBlockId( i, j - 1, k )];
+    protected boolean isSupportedBySolidBlocks(World world, int i, int j, int k) {
+        Block blockBelow = Block.blocksList[world.getBlockId(i, j - 1, k)];
 
-        return blockBelow != null && blockBelow.hasLargeCenterHardPointToFacing( world, i, j - 1, k, 1, false );
+        return blockBelow != null && blockBelow.hasLargeCenterHardPointToFacing(world, i, j - 1, k, 1, false);
     }
 
     @Override
@@ -405,12 +356,12 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
 
     @Override
     public boolean canPlaceBlockAt(World world, int x, int y, int z) {
-        return !canBlockStay(world, x, y, z) ? false : super.canPlaceBlockAt(world, x, y, z);
+        return canBlockStay(world, x, y, z) && super.canPlaceBlockAt(world, x, y, z);
     }
 
     @Override
     public boolean canBlockStay(World world, int x, int y, int z) {
-        return !world.doesBlockHaveSolidTopSurface(x, y - 1, z) ? false : super.canBlockStay(world, x, y, z);
+        return world.doesBlockHaveSolidTopSurface(x, y - 1, z) && super.canBlockStay(world, x, y, z);
     }
 
     @Override
@@ -430,17 +381,17 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
     private Icon iconEmbers;
 
     @Environment(EnvType.CLIENT)
-    private Icon[] top = new Icon[4];
-
-    private Icon[] top_alt = new Icon[4];
+    private final Icon[] top = new Icon[4];
 
     @Environment(EnvType.CLIENT)
-    private Icon[] side = new Icon[2];
+    private final Icon[] top_alt = new Icon[4];
+
+    @Environment(EnvType.CLIENT)
+    private final Icon[] side = new Icon[2];
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void registerIcons( IconRegister register )
-    {
+    public void registerIcons(IconRegister register) {
         top[0] = register.registerIcon("DNBlock_smoldering_placed_shafts_top_0");
         top[1] = register.registerIcon("DNBlock_smoldering_placed_shafts_top_1");
         top[2] = register.registerIcon("DNBlock_smoldering_placed_shafts_top_2");
@@ -459,6 +410,7 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int face) {
         int meta = blockAccess.getBlockMetadata(x, y, z);
         int layer = meta / 4;
@@ -486,42 +438,36 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
     @Environment(EnvType.CLIENT)
     public boolean renderBlock(RenderBlocks renderer, int x, int y, int z) {
 
-        int metadata = renderer.blockAccess.getBlockMetadata(x,y,z); // Implement this method to extract the correct value from metadata
-        int numberOfLayers = (int) Math.floor(metadata/4D);
+        int metadata = renderer.blockAccess.getBlockMetadata(x, y, z); // Implement this method to extract the correct value from metadata
+        int numberOfLayers = (int) Math.floor(metadata / 4D);
 
         for (int layer = 0; layer < numberOfLayers + 1; layer++) {
 
-            double xMin = 0/16D;
-            double xMax = 4/16D + (metadata%4)*4/16D;
+            double xMin = 0 / 16D;
+            double xMax = 4 / 16D + (metadata % 4) * 4 / 16D;
 
             if (layer < numberOfLayers) {
                 xMax = 1D;  // If the layer is full, set xMax to the full width of the block
             }
 
-            double yMin = layer * 4/16D;
-            double yMax = yMin + 4/16D;
+            double yMin = layer * 4 / 16D;
+            double yMax = yMin + 4 / 16D;
 
             double zMin = 0D;
             double zMax = 1D;
 
-            if (isEven(x,y,z))
-            {
-                if (layer%2 == 0)
-                {
+            if (isEven(x, y, z)) {
+                if (layer % 2 == 0) {
                     // x and z swapped
                     renderer.setRenderBounds(zMin, yMin, xMin, zMax, yMax, xMax);
-                }
-                else {
+                } else {
                     renderer.setRenderBounds(xMin, yMin, zMin, xMax, yMax, zMax);
                 }
-            }
-            else {
-                if (layer%2 == 1)
-                {
+            } else {
+                if (layer % 2 == 1) {
                     // x and z swapped
                     renderer.setRenderBounds(zMin, yMin, xMin, zMax, yMax, xMax);
-                }
-                else {
+                } else {
                     renderer.setRenderBounds(xMin, yMin, zMin, xMax, yMax, zMax);
                 }
             }
@@ -531,57 +477,46 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
         return true;
     }
 
+    @Environment(EnvType.CLIENT)
     private boolean isEven(int x, int y, int z) {
-        if ((x + z) % 2 == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return (x + z) % 2 == 0;
     }
 
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void renderBlockSecondPass(RenderBlocks renderer, int x, int y, int z, boolean bFirstPassResult)
-    {
-        if ( bFirstPassResult )
-        {
-            int metadata = renderer.blockAccess.getBlockMetadata(x,y,z); // Implement this method to extract the correct value from metadata
-            int numberOfLayers = (int) Math.floor(metadata/4D);
+    public void renderBlockSecondPass(RenderBlocks renderer, int x, int y, int z, boolean bFirstPassResult) {
+        if (bFirstPassResult) {
+            int metadata = renderer.blockAccess.getBlockMetadata(x, y, z); // Implement this method to extract the correct value from metadata
+            int numberOfLayers = (int) Math.floor(metadata / 4D);
 
             for (int layer = 0; layer < numberOfLayers + 1; layer++) {
 
-                double xMin = 0/16D;
-                double xMax = 4/16D + (metadata%4)*4/16D;
+                double xMin = 0 / 16D;
+                double xMax = 4 / 16D + (metadata % 4) * 4 / 16D;
 
                 if (layer < numberOfLayers) {
                     xMax = 1D;  // If the layer is full, set xMax to the full width of the block
                 }
 
-                double yMin = layer * 4/16D;
-                double yMax = yMin + 4/16D;
+                double yMin = layer * 4 / 16D;
+                double yMax = yMin + 4 / 16D;
 
                 double zMin = 0D;
                 double zMax = 1D;
 
-                if (isEven(x,y,z))
-                {
-                    if (layer%2 == 0)
-                    {
+                if (isEven(x, y, z)) {
+                    if (layer % 2 == 0) {
                         // x and z swapped
                         renderer.setRenderBounds(zMin, yMin, xMin, zMax, yMax, xMax);
-                    }
-                    else {
+                    } else {
                         renderer.setRenderBounds(xMin, yMin, zMin, xMax, yMax, zMax);
                     }
-                }
-                else {
-                    if (layer%2 == 1)
-                    {
+                } else {
+                    if (layer % 2 == 1) {
                         // x and z swapped
                         renderer.setRenderBounds(zMin, yMin, xMin, zMax, yMax, xMax);
-                    }
-                    else {
+                    } else {
                         renderer.setRenderBounds(xMin, yMin, zMin, xMax, yMax, zMax);
                     }
                 }
@@ -593,49 +528,42 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void renderBlockAsItem(RenderBlocks renderBlocks, int iItemDamage, float fBrightness)
-    {
-        renderBlocks.renderBlockAsItemVanilla( this, iItemDamage, fBrightness );
+    public void renderBlockAsItem(RenderBlocks renderBlocks, int iItemDamage, float fBrightness) {
+        renderBlocks.renderBlockAsItemVanilla(this, iItemDamage, fBrightness);
 
         RenderUtils.renderInvBlockFullBrightWithTexture(renderBlocks, this, -0.5F, -0.5F, -0.5F, iconEmbers);
     }
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void randomDisplayTick( World world, int i, int j, int k, Random rand )
-    {
-        SmolderingPlacedSticksTileEntity tileEntity = (SmolderingPlacedSticksTileEntity) world.getBlockTileEntity(i,j,k);
+    public void randomDisplayTick(World world, int i, int j, int k, Random rand) {
+        SmolderingPlacedSticksTileEntity tileEntity = (SmolderingPlacedSticksTileEntity) world.getBlockTileEntity(i, j, k);
         int metadata = tileEntity.getBurnLevel();
 
         //System.out.println("burnLevel: " + metadata);
 
-        emitSmokeParticles(world, (double)i + 0.5D, (double)j + 0.5D, (double)k + 0.5D, rand, metadata); // getBurnLevel(world, i, j, k));
+        emitSmokeParticles(world, (double) i + 0.5D, (double) j + 0.5D, (double) k + 0.5D, rand, metadata); // getBurnLevel(world, i, j, k));
 
-        if ( rand.nextInt( 24 ) == 0 )
-        {
+        if (rand.nextInt(24) == 0) {
             float fVolume = 0.1F + rand.nextFloat() * 0.1F;
 
-            world.playSound( i + 0.5D, j + 0.5D, k + 0.5D, "fire.fire",
-                    fVolume, rand.nextFloat() * 0.7F + 0.3F, false );
+            world.playSound(i + 0.5D, j + 0.5D, k + 0.5D, "fire.fire",
+                    fVolume, rand.nextFloat() * 0.7F + 0.3F, false);
         }
     }
 
-    private void emitSmokeParticles(World world, double dCenterX, double dCenterY, double dCenterZ, Random rand, int iBurnLevel)
-    {
-        for ( int iTempCount = 0; iTempCount < 5; ++iTempCount )
-        {
+    @Environment(EnvType.CLIENT)
+    private void emitSmokeParticles(World world, double dCenterX, double dCenterY, double dCenterZ, Random rand, int iBurnLevel) {
+        for (int iTempCount = 0; iTempCount < 5; ++iTempCount) {
             double xPos = dCenterX - 0.60D + rand.nextDouble() * 1.2D;
             double yPos = dCenterY + 0.25D + rand.nextDouble() * 0.25D;
             double zPos = dCenterZ - 0.60D + rand.nextDouble() * 1.2D;
 
-            if ( iBurnLevel > 0 )
-            {
-                world.spawnParticle( "fcwhitesmoke", xPos, yPos, zPos, 0D, 0D, 0D );
+            if (iBurnLevel > 0) {
+                world.spawnParticle("fcwhitesmoke", xPos, yPos, zPos, 0D, 0D, 0D);
                 //System.out.println("Particles fcwhitesmoke");
-            }
-            else
-            {
-                world.spawnParticle( "largesmoke", xPos, yPos, zPos, 0D, 0D, 0D );
+            } else {
+                world.spawnParticle("largesmoke", xPos, yPos, zPos, 0D, 0D, 0D);
                 //System.out.println("Particles largesmoke");
             }
         }

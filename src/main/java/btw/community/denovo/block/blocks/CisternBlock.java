@@ -14,6 +14,7 @@ import java.util.Random;
 
 public class CisternBlock extends CisternBaseBlock {
     private final CisternModel model = new CisternModel();
+
     public CisternBlock(int blockID) {
         super(blockID, Material.iron);
 
@@ -78,6 +79,7 @@ public class CisternBlock extends CisternBaseBlock {
     public Icon getIcon(int par1, int par2) {
         return par1 == 1 ? this.top : (par1 == 0 ? this.bottom : this.blockIcon);
     }
+
     @Environment(EnvType.CLIENT)
     private Icon inner;
 
@@ -101,6 +103,7 @@ public class CisternBlock extends CisternBaseBlock {
     }
 
     //Sock: copy from RenderBlocks
+    @Environment(EnvType.CLIENT)
     public boolean renderBlockCauldron(RenderBlocks renderer, CisternBlock cistern, int par2, int par3, int par4) {
         renderer.renderStandardBlock(cistern, par2, par3, par4);
         Tessellator var5 = Tessellator.instance;

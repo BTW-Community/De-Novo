@@ -13,7 +13,7 @@ public class PlacedSticksBlock extends Block {
     public PlacedSticksBlock(int blockID) {
         super(blockID, Material.wood);
 
-        setHardness( 2F );
+        setHardness(2F);
 
         setAxesEffectiveOn();
 
@@ -21,9 +21,9 @@ public class PlacedSticksBlock extends Block {
 
         setBuoyant();
 
-        setTickRandomly( true );
+        setTickRandomly(true);
 
-        setStepSound( soundWoodFootstep );
+        setStepSound(soundWoodFootstep);
 
         setUnlocalizedName("DNBlock_placed_sticks");
     }
@@ -31,39 +31,30 @@ public class PlacedSticksBlock extends Block {
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int facing, float clickX, float clickY, float clickZ) {
         ItemStack heldStack = player.getHeldItem();
-        int metadata = world.getBlockMetadata(x,y,z);
-        if (heldStack == null)
-        {
-            if (player.isSneaking())
-            {
-                if (metadata > 0)
-                {
+        int metadata = world.getBlockMetadata(x, y, z);
+        if (heldStack == null) {
+            if (player.isSneaking()) {
+                if (metadata > 0) {
                     metadata--;
-                    world.setBlockMetadataWithNotify(x,y,z, metadata);
-                    ItemUtils.givePlayerStackOrEject(player, new ItemStack(Item.stick, 1), x,y,z);
+                    world.setBlockMetadataWithNotify(x, y, z, metadata);
+                    ItemUtils.givePlayerStackOrEject(player, new ItemStack(Item.stick, 1), x, y, z);
                     return true;
-                }
-                else {
-                    world.setBlockToAir(x,y,z);
-                    ItemUtils.givePlayerStackOrEject(player, new ItemStack(Item.stick, 1), x,y,z);
+                } else {
+                    world.setBlockToAir(x, y, z);
+                    ItemUtils.givePlayerStackOrEject(player, new ItemStack(Item.stick, 1), x, y, z);
                     return true;
                 }
             }
-        }
-        else if (heldStack != null)
-        {
-            if (heldStack.itemID == Item.stick.itemID )
-            {
-                if (hasPlaceToStore(metadata))
-                {
-                    if (!world.isRemote) addSticksToPile(world, x,y,z);
+        } else if (heldStack != null) {
+            if (heldStack.itemID == Item.stick.itemID) {
+                if (hasPlaceToStore(metadata)) {
+                    if (!world.isRemote) addSticksToPile(world, x, y, z);
                     if (!player.capabilities.isCreativeMode) heldStack.stackSize--;
                     return true;
-                }
-                else {
-                    if (facing == 1 && world.getBlockId(x, y + 1, z) == 0)
-                    {
-                        if (!world.isRemote) world.setBlockAndMetadataWithNotify(x,y + 1,z, DNBlocks.placedSticks.blockID, 0);
+                } else {
+                    if (facing == 1 && world.getBlockId(x, y + 1, z) == 0) {
+                        if (!world.isRemote)
+                            world.setBlockAndMetadataWithNotify(x, y + 1, z, DNBlocks.placedSticks.blockID, 0);
                         if (!player.capabilities.isCreativeMode) heldStack.stackSize--;
                         return true;
                     }
@@ -78,17 +69,12 @@ public class PlacedSticksBlock extends Block {
 
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int par5) {
-
-
-        if (!this.canBlockStay(world, x, y, z))
-        {
+        if (!this.canBlockStay(world, x, y, z)) {
             this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
             world.setBlockToAir(x, y, z);
-        }
-        else {
-            if (world.getBlockId(x, y + 1, z) == Block.fire.blockID)
-            {
-                int meta = world.getBlockMetadata(x,y,z);
+        } else {
+            if (world.getBlockId(x, y + 1, z) == Block.fire.blockID) {
+                int meta = world.getBlockMetadata(x, y, z);
                 world.setBlockAndMetadataWithNotify(x, y, z, DNBlocks.smolderingPlacedSticks.blockID, meta);
             }
         }
@@ -96,12 +82,12 @@ public class PlacedSticksBlock extends Block {
 
     @Override
     public boolean canPlaceBlockAt(World world, int x, int y, int z) {
-        return !canBlockStay(world, x, y, z) ? false : super.canPlaceBlockAt(world, x, y, z);
+        return canBlockStay(world, x, y, z) && super.canPlaceBlockAt(world, x, y, z);
     }
 
     @Override
     public boolean canBlockStay(World world, int x, int y, int z) {
-        return !world.doesBlockHaveSolidTopSurface(x, y - 1, z) ? false : super.canBlockStay(world, x, y, z);
+        return world.doesBlockHaveSolidTopSurface(x, y - 1, z) && super.canBlockStay(world, x, y, z);
     }
 
     @Override
@@ -111,14 +97,13 @@ public class PlacedSticksBlock extends Block {
 
     @Override
     public boolean hasLargeCenterHardPointToFacing(IBlockAccess blockAccess, int x, int y, int z, int iFacing) {
-        int meta = blockAccess.getBlockMetadata(x,y,z);
+        int meta = blockAccess.getBlockMetadata(x, y, z);
         return iFacing == 1 && meta == 15;
     }
 
     @Override
-    public boolean hasLargeCenterHardPointToFacing(IBlockAccess blockAccess, int x, int y, int z, int iFacing, boolean bIgnoreTransparency )
-    {
-        return hasLargeCenterHardPointToFacing(blockAccess, x,y,z,iFacing);
+    public boolean hasLargeCenterHardPointToFacing(IBlockAccess blockAccess, int x, int y, int z, int iFacing, boolean bIgnoreTransparency) {
+        return hasLargeCenterHardPointToFacing(blockAccess, x, y, z, iFacing);
     }
 
     @Override
@@ -137,8 +122,7 @@ public class PlacedSticksBlock extends Block {
     }
 
     @Override
-    public void dropBlockAsItemWithChance( World world, int i, int j, int k, int iMetadata, float fChance, int iFortuneModifier )
-    {
+    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int iMetadata, float fChance, int iFortuneModifier) {
         if (!world.isRemote) {
             dropItemsIndividually(world, i, j, k, Item.stick.itemID, iMetadata + 1, 0, 1);
         }
@@ -151,17 +135,16 @@ public class PlacedSticksBlock extends Block {
     }
 
     private void addSticksToPile(World world, int x, int y, int z) {
-        int metadata = world.getBlockMetadata(x,y,z);
-        world.setBlockMetadataWithNotify(x,y,z,metadata + 1);
+        int metadata = world.getBlockMetadata(x, y, z);
+        world.setBlockMetadataWithNotify(x, y, z, metadata + 1);
     }
 
     @Override
     public AxisAlignedBB getBlockBoundsFromPoolBasedOnState(
-            IBlockAccess blockAccess, int x, int y, int z)
-    {
+            IBlockAccess blockAccess, int x, int y, int z) {
         int metadata = blockAccess.getBlockMetadata(x, y, z) / 4;
-        double minY = 0/16D;
-        double maxY = 4/16D + 4/16D * metadata;
+        double minY = 0 / 16D;
+        double maxY = 4 / 16D + 4 / 16D * metadata;
 
         return new AxisAlignedBB(
                 0D, minY, 0D,
@@ -182,12 +165,12 @@ public class PlacedSticksBlock extends Block {
     //----------- Client Side Functionality -----------//
 
     @Environment(EnvType.CLIENT)
-    private Icon[] top = new Icon[4];
+    private final Icon[] top = new Icon[4];
 
-    private Icon[] top_alt = new Icon[4];
+    private final Icon[] top_alt = new Icon[4];
 
     @Environment(EnvType.CLIENT)
-    private Icon[] side = new Icon[2];
+    private final Icon[] side = new Icon[2];
 
     @Override
     @Environment(EnvType.CLIENT)
@@ -196,6 +179,7 @@ public class PlacedSticksBlock extends Block {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int face) {
         int meta = blockAccess.getBlockMetadata(x, y, z);
         int layer = meta / 4;
@@ -244,42 +228,36 @@ public class PlacedSticksBlock extends Block {
     @Environment(EnvType.CLIENT)
     public boolean renderBlock(RenderBlocks renderer, int x, int y, int z) {
 
-        int metadata = renderer.blockAccess.getBlockMetadata(x,y,z); // Implement this method to extract the correct value from metadata
-        int numberOfLayers = (int) Math.floor(metadata/4D);
+        int metadata = renderer.blockAccess.getBlockMetadata(x, y, z); // Implement this method to extract the correct value from metadata
+        int numberOfLayers = (int) Math.floor(metadata / 4D);
 
         for (int layer = 0; layer < numberOfLayers + 1; layer++) {
 
-            double xMin = 0/16D;
-            double xMax = 4/16D + (metadata%4)*4/16D;
+            double xMin = 0 / 16D;
+            double xMax = 4 / 16D + (metadata % 4) * 4 / 16D;
 
             if (layer < numberOfLayers) {
                 xMax = 1D;  // If the layer is full, set xMax to the full width of the block
             }
 
-            double yMin = layer * 4/16D;
-            double yMax = yMin + 4/16D;
+            double yMin = layer * 4 / 16D;
+            double yMax = yMin + 4 / 16D;
 
             double zMin = 0D;
             double zMax = 1D;
 
-            if (isEven(x,y,z))
-            {
-                if (layer%2 == 0)
-                {
+            if (isEven(x, y, z)) {
+                if (layer % 2 == 0) {
                     // x and z swapped
                     renderer.setRenderBounds(zMin, yMin, xMin, zMax, yMax, xMax);
-                }
-                else {
+                } else {
                     renderer.setRenderBounds(xMin, yMin, zMin, xMax, yMax, zMax);
                 }
-            }
-            else {
-                if (layer%2 == 1)
-                {
+            } else {
+                if (layer % 2 == 1) {
                     // x and z swapped
                     renderer.setRenderBounds(zMin, yMin, xMin, zMax, yMax, xMax);
-                }
-                else {
+                } else {
                     renderer.setRenderBounds(xMin, yMin, zMin, xMax, yMax, zMax);
                 }
             }
@@ -289,12 +267,9 @@ public class PlacedSticksBlock extends Block {
         return true;
     }
 
+    @Environment(EnvType.CLIENT)
     private boolean isEven(int x, int y, int z) {
-        if ((x + z) % 2 == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return (x + z) % 2 == 0;
     }
 
 }
