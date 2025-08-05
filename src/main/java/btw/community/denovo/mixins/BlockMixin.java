@@ -23,12 +23,10 @@ public abstract class BlockMixin {
             locals = LocalCapture.CAPTURE_FAILHARD,
             cancellable = true)
     public void isConsideredNeighbouringWaterForReedGrowthOn(World world, int i, int j, int k, CallbackInfoReturnable<Boolean> cir, int iTempI, int iTempK) {
-        if ( world.getBlockId( iTempI, j, iTempK ) == DNBlocks.cistern.blockID || world.getBlockId( iTempI, j, iTempK ) == DNBlocks.composter.blockID)
-        {
+        if (world.getBlockId(iTempI, j, iTempK) == DNBlocks.cistern.blockID || world.getBlockId(iTempI, j, iTempK) == DNBlocks.composter.blockID) {
             TileEntity tileEntity = world.getBlockTileEntity(iTempI, j, iTempK);
             CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) tileEntity;
-            if (cisternBase.isFullWithWater())
-            {
+            if (cisternBase.isFullWithWater()) {
                 cir.setReturnValue(true);
             }
 

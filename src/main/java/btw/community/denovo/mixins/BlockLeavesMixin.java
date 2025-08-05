@@ -16,8 +16,7 @@ public abstract class BlockLeavesMixin extends BlockLeavesBase {
     @Inject(method = "harvestBlock", at = @At(value = "HEAD"), cancellable = true)
     public void canGrowOnBlock(World world, EntityPlayer player, int x, int y, int z, int metadata, CallbackInfo ci) {
 
-        if (!world.isRemote && player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() instanceof SickleItem)
-        {
+        if (!world.isRemote && player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() instanceof SickleItem) {
             this.dropBlockAsItem_do(world, x, y, z, new ItemStack(Block.leaves.blockID, 1, metadata & 3));
         }
     }

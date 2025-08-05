@@ -27,8 +27,7 @@ public abstract class GrassBlockMixin extends BlockGrass {
             cancellable = true)
     public void disableDroppingHempSeeds(ItemStack heldStack, World world, int x, int y, int z, int fromSide, CallbackInfoReturnable<Boolean> cir) {
 
-        if (heldStack != null && heldStack.itemID == Item.hoeStone.itemID)
-        {
+        if (heldStack != null && heldStack.itemID == Item.hoeStone.itemID) {
             cir.setReturnValue(true);
         }
     }
@@ -48,8 +47,8 @@ public abstract class GrassBlockMixin extends BlockGrass {
             if (world.isRemote) {
                 //spawnParticles(world, player, xCoord, yCoord + 1, zCoord);
 
-                world.playAuxSFX( 2001, xCoord, yCoord, zCoord, Block.dirt.blockID ); //break sfx
-                world.playSound((double)xCoord + 0.5D, (double)yCoord, (double)zCoord + 0.5D, Block.dirt.stepSound.getStepSound(),
+                world.playAuxSFX(2001, xCoord, yCoord, zCoord, Block.dirt.blockID); //break sfx
+                world.playSound((double) xCoord + 0.5D, yCoord, (double) zCoord + 0.5D, Block.dirt.stepSound.getStepSound(),
                         0.5F, //Volume
                         1.0F); //Pitch
             }

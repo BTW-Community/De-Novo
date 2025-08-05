@@ -20,11 +20,10 @@ public abstract class StoneBlockMixin extends FullBlock {
         super(iBlockID, material);
     }
 
-    @Inject(method = "getConversionLevelForTool", at = @At(value = "HEAD"), cancellable = true )
+    @Inject(method = "getConversionLevelForTool", at = @At(value = "HEAD"), cancellable = true)
     public void getConversionLevelForTool(ItemStack heldStack, World world, int i, int j, int k, CallbackInfoReturnable<Integer> cir) {
         //hammer
-        if (heldStack != null && heldStack.getItem() instanceof HammerItem)
-        {
+        if (heldStack != null && heldStack.getItem() instanceof HammerItem) {
             cir.setReturnValue(-1);
         }
     }
@@ -40,19 +39,17 @@ public abstract class StoneBlockMixin extends FullBlock {
             locals = LocalCapture.CAPTURE_FAILHARD)
     public void convertBlock(ItemStack heldStack, World world, int x, int y, int z, int fromSide, CallbackInfoReturnable<Boolean> cir, int iMetadata, int iStrata) {
         //Hammer
-        if (heldStack != null && heldStack.getItem() instanceof HammerItem)
-        {
-            if (iStrata == 0){
-                world.setBlockToAir(x,y,z);
+        if (heldStack != null && heldStack.getItem() instanceof HammerItem) {
+            if (iStrata == 0) {
+                world.setBlockToAir(x, y, z);
 
-                if ( !world.isRemote )
-                {
+                if (!world.isRemote) {
                     int numberOfPiles = 4;
 
-                    if ( getIsCracked(iMetadata) ) numberOfPiles = 2;
+                    if (getIsCracked(iMetadata)) numberOfPiles = 2;
 
                     ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z,
-                            new ItemStack( BTWItems.gravelPile, numberOfPiles), fromSide);
+                            new ItemStack(BTWItems.gravelPile, numberOfPiles), fromSide);
                 }
 
                 cir.setReturnValue(true);
@@ -61,8 +58,7 @@ public abstract class StoneBlockMixin extends FullBlock {
         }
     }
 
-    public boolean getIsCracked(int iMetadata)
-    {
-        return ( iMetadata & 4 ) != 0;
+    public boolean getIsCracked(int iMetadata) {
+        return (iMetadata & 4) != 0;
     }
 }

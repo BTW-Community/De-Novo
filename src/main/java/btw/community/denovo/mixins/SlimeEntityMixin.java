@@ -15,22 +15,20 @@ public class SlimeEntityMixin {
 
     @Inject(method = "getCanSpawnHere", at = @At(value = "HEAD"), cancellable = true)
     public void canSlimesSpawnInFlatWorlds(CallbackInfoReturnable<Boolean> cir) {
-        Entity thisObject = (Entity)(Object)this;
+        Entity thisObject = (Entity) (Object) this;
 
-        if (thisObject.worldObj.getWorldInfo().getTerrainType() == WorldType.FLAT)
-        {
+        if (thisObject.worldObj.getWorldInfo().getTerrainType() == WorldType.FLAT) {
             if (DeNovoAddon.disableSlimeSpawningInFlatWorlds) cir.setReturnValue(false);
         }
     }
 
     @Inject(method = "canSpawnOnBlockInSlimeChunk", at = @At(value = "HEAD"), remap = false, cancellable = true)
     public void limitSlimeSpawningInSlimeChunk(int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
-        Entity thisObject = (Entity)(Object)this;
+        Entity thisObject = (Entity) (Object) this;
 
-        int iBlockID = thisObject.worldObj.getBlockId( x, y, z );
+        int iBlockID = thisObject.worldObj.getBlockId(x, y, z);
 
-        if (thisObject.worldObj.getWorldInfo().getTerrainType() == WorldType.FLAT && iBlockID == Block.grass.blockID)
-        {
+        if (thisObject.worldObj.getWorldInfo().getTerrainType() == WorldType.FLAT && iBlockID == Block.grass.blockID) {
             if (DeNovoAddon.limitSlimeSpawningInFlatWorlds) cir.setReturnValue(false);
         }
     }

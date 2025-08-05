@@ -27,11 +27,10 @@ public abstract class CampfireBlockMixin extends BlockContainer {
                     shift = At.Shift.AFTER
             ))
     public void placeFire(World world, int i, int j, int k, CallbackInfoReturnable<Boolean> cir) {
-        int iBlockBelowID = world.getBlockId( i, j - 1, k );
+        int iBlockBelowID = world.getBlockId(i, j - 1, k);
 
-        if ( iBlockBelowID == DNBlocks.placedSticks.blockID )
-        {
-            world.setBlockWithNotify( i, j, k, Block.fire.blockID );
+        if (iBlockBelowID == DNBlocks.placedSticks.blockID) {
+            world.setBlockWithNotify(i, j, k, Block.fire.blockID);
         }
     }
 

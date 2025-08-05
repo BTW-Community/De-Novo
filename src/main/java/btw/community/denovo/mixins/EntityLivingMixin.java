@@ -17,16 +17,15 @@ public abstract class EntityLivingMixin extends Entity {
     }
 
     @Inject(method = "getCanSpawnHere", at = @At(value = "HEAD"), cancellable = true)
-    public void getCanSpawnHere(CallbackInfoReturnable<Boolean> cir){
-        boolean canBlockSeeTheSky = this.worldObj.canBlockSeeTheSky((int)this.posX, (int)this.posY, (int)this.posZ);
+    public void getCanSpawnHere(CallbackInfoReturnable<Boolean> cir) {
+        boolean canBlockSeeTheSky = this.worldObj.canBlockSeeTheSky((int) this.posX, (int) this.posY, (int) this.posZ);
 
-        int blockAboveMaxNaturalLight = worldObj.getBlockNaturalLightValueMaximum((int)posX, (int)posY + 1, (int)posZ);
+        int blockAboveMaxNaturalLight = worldObj.getBlockNaturalLightValueMaximum((int) posX, (int) posY + 1, (int) posZ);
         int blockAboveCurrentNaturalLight = blockAboveMaxNaturalLight - worldObj.skylightSubtracted;
-        boolean isUnderground = blockAboveCurrentNaturalLight <= 0 && worldObj.getBlockNaturalLightValue( (int)posX, (int)posY + 1, (int)posZ ) == 0;
+        boolean isUnderground = blockAboveCurrentNaturalLight <= 0 && worldObj.getBlockNaturalLightValue((int) posX, (int) posY + 1, (int) posZ) == 0;
 
         //prevents spawns if we can see the sky or we are not underground
-        if (DeNovoAddon.disableMobSpawnsOnSurface && (canBlockSeeTheSky || !isUnderground))
-        {
+        if (DeNovoAddon.disableMobSpawnsOnSurface && (canBlockSeeTheSky || !isUnderground)) {
             cir.setReturnValue(false);
         }
     }

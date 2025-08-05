@@ -17,8 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public class HardcoreSpawnUtilsMixin {
     @Inject(method = "assignNewHardcoreSpawnLocation", at = @At(value = "TAIL"), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
     private static void givePlayerGoldenDung(World world, MinecraftServer server, EntityPlayerMP player, CallbackInfoReturnable<Boolean> cir, boolean locationFound) {
-        if (locationFound && DeNovoAddon.allowGoldenDungOnHCS)
-        {
+        if (locationFound && DeNovoAddon.allowGoldenDungOnHCS) {
             player.inventory.addItemStackToInventory(new ItemStack(BTWItems.goldenDung));
         }
 
