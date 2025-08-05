@@ -39,7 +39,7 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
         if (progressCounter < CisternUtils.MUDDY_WATER_SETTLE_TIME) {
             setProgressCounter(getProgressCounter() + 1);
         } else {
-            ItemUtils.ejectStackFromBlockTowardsFacing(worldObj, xCoord, yCoord, zCoord, new ItemStack(Item.clay), 1);
+            dropClayBall();
             worldObj.playSoundEffect(
                     (double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D,
                     Block.blockClay.stepSound.getStepSound(),
@@ -48,6 +48,10 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
             setFillType(CisternUtils.CONTENTS_WATER);
             setProgressCounter(0);
         }
+    }
+
+    private void dropClayBall() {
+        ItemUtils.ejectStackFromBlockTowardsFacing(worldObj, xCoord, yCoord, zCoord, new ItemStack(Item.clay), 1);
     }
 
     protected void handleClayWater() {
@@ -135,6 +139,10 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
 
     public boolean isFullWithCompost() {
         return this.solidFillLevel == CisternUtils.MAX_SOLID_FILL_LEVEL && this.fillType == CisternUtils.CONTENTS_COMPOST;
+    }
+
+    public boolean isEmptyOrHasCompost() {
+        return this.isEmpty() || (!this.isFull() && this.getFillType() == CisternUtils.CONTENTS_COMPOST);
     }
 
     public boolean isFull() {

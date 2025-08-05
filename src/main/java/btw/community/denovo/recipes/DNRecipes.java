@@ -19,6 +19,8 @@ public class DNRecipes {
         CisternUtils.addLiquidContainers(new ItemStack(Item.bucketWater), new ItemStack(Item.bucketEmpty), 15, 45);
         CisternUtils.addLiquidContainers(new ItemStack(Item.potion), new ItemStack(Item.glassBottle), 5, 15);
         CisternUtils.addLiquidContainers(new ItemStack(DNItems.waterBowl), new ItemStack(Item.bowlEmpty), 5, 15);
+
+        CisternUtils.addRustWaterContainer(new ItemStack(DNItems.rustWaterBowl, 1, DNItems.rustWaterBowl.getMaxDamage()), new ItemStack(Item.bowlEmpty), 5, 15);
     }
 
     public static void addRecipes() {

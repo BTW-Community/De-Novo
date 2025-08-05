@@ -20,6 +20,7 @@ public class CisternUtils {
     private static final Map<ItemStack, ItemStack> liquidContainers = new HashMap<>();
     private static final Map<ItemStack, Integer> cisternFillValues = new HashMap<>();
     private static final Map<ItemStack, Integer> composterFillValues = new HashMap<>();
+    public static final Map<ItemStack, ItemStack> rustWaterContainers = new HashMap<>();
 
     public static final int MAX_SOLID_FILL_LEVEL = 16;
     public static final int MAX_LIQUID_FILL_LEVEL = 15;
@@ -63,6 +64,16 @@ public class CisternUtils {
         composterFillValues.put(emptyStack, composterFillValue);
     }
 
+    public static void addRustWaterContainer(ItemStack fullStack, ItemStack emptyStack, int cisternFillValue, int composterFillValue){
+        rustWaterContainers.put(fullStack, emptyStack);
+
+        cisternFillValues.put(fullStack, cisternFillValue);
+        composterFillValues.put(fullStack, composterFillValue);
+
+        cisternFillValues.put(emptyStack, cisternFillValue);
+        composterFillValues.put(emptyStack, composterFillValue);
+    }
+
     public static int getFillValue(ItemStack stack, CisternBaseTileEntity cisterBase){
         if (stack == null) return 0;
 
@@ -87,6 +98,24 @@ public class CisternUtils {
             if (stack.isItemEqual(entry.getValue())) return true;
         }
         return false;
+    }
+
+    public static boolean isValidEmptyRustContainer(ItemStack stack) {
+        if (stack == null) return false;
+
+        for (Map.Entry<ItemStack, ItemStack> entry : rustWaterContainers.entrySet()) {
+            if (stack.isItemEqual(entry.getValue())) return true;
+        }
+        return false;
+    }
+
+    public static ItemStack getFullRustWaterContainerForEmptyContainer(ItemStack stack) {
+        if (stack == null) return null;
+
+        for (Map.Entry<ItemStack, ItemStack> entry : rustWaterContainers.entrySet()) {
+            if (stack.isItemEqual(entry.getValue())) return entry.getKey().copy();
+        }
+        return null;
     }
 
     public static boolean isValidWaterContainer(ItemStack stack) {

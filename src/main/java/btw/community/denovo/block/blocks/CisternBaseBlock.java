@@ -47,7 +47,37 @@ public abstract class CisternBaseBlock extends BlockContainer {
         return false;
     }
 
-    private boolean handleContentsEmpty(World world, int x, int y, int z, int facing, EntityPlayer player, CisternBaseTileEntity cisternBase) {
+    @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, int par5) {
+        if (!this.canBlockStay(world, x, y, z)) {
+            this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+            world.setBlockToAir(x, y, z);
+        }
+    }
+    @Override
+    public boolean canPlaceBlockAt(World world, int x, int y, int z) {
+        return canBlockStay(world, x, y, z) && super.canPlaceBlockAt(world, x, y, z);
+    }
+
+    @Override
+    public boolean canBlockStay(World world, int x, int y, int z) {
+        return world.doesBlockHaveSolidTopSurface(x, y - 1, z) && super.canBlockStay(world, x, y, z);
+    }
+
+    @Override
+    public boolean isOpaqueCube() {
+        return false;
+    }
+
+    @Override
+    public boolean renderAsNormalBlock() {
+        return false;
+    }
+
+
+    //----------- Class Specific Methods -----------//
+
+    protected boolean handleContentsEmpty(World world, int x, int y, int z, int facing, EntityPlayer player, CisternBaseTileEntity cisternBase) {
         if (CisternUtils.isValidWaterContainer(player.getHeldItem())) {
             return CisternUtils.addWaterAndReturnContainer(world, x,y,z, facing, player, cisternBase);
         }
@@ -55,7 +85,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
         return false;
     }
 
-    private boolean handleContentsWater(World world, int x, int y, int z, int facing, EntityPlayer player, CisternBaseTileEntity cisternBase){
+    protected boolean handleContentsWater(World world, int x, int y, int z, int facing, EntityPlayer player, CisternBaseTileEntity cisternBase){
         ItemStack heldStack = player.getHeldItem();
         if (heldStack == null) return false;
 
@@ -81,7 +111,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
     }
 
 
-    private boolean handleContentsInfectedWater(World world, int x, int y, int z, int facing, EntityPlayer player, CisternBaseTileEntity cisternBase) {
+    protected boolean handleContentsInfectedWater(World world, int x, int y, int z, int facing, EntityPlayer player, CisternBaseTileEntity cisternBase) {
         ItemStack heldStack = player.getHeldItem();
         if (heldStack == null) return false;
 
@@ -96,36 +126,48 @@ public abstract class CisternBaseBlock extends BlockContainer {
     }
 
 
-    private boolean handleContentsRustWater(World world, int x, int y, int z, int facing, EntityPlayer player, CisternBaseTileEntity cisternBase) {
+    protected boolean handleContentsRustWater(World world, int x, int y, int z, int facing, EntityPlayer player, CisternBaseTileEntity cisternBase) {
         ItemStack heldStack = player.getHeldItem();
         if (heldStack == null) return false;
 
-        if (heldStack.isItemEqual(new ItemStack(Item.bowlEmpty))) {
+        if (CisternUtils.isValidEmptyRustContainer(heldStack)) {
 
-            if (!world.isRemote && cisternBase.getLiquidFillLevel() > 0 )
-            {
-                if (cisternBase instanceof ComposterTileEntity) cisternBase.removeLiquid(15);
-                else cisternBase.removeLiquid(5);
+            if (!world.isRemote && cisternBase.getLiquidFillLevel() <= 0 ) return false;
+
+            if (!world.isRemote) {
+                cisternBase.removeLiquid(CisternUtils.getFillValue(heldStack, cisternBase));
+                if (!player.capabilities.isCreativeMode) player.getHeldItem().stackSize--;
             }
+
+            ItemUtils.givePlayerStackOrEjectFromTowardsFacing(player, CisternUtils.getFullRustWaterContainerForEmptyContainer(heldStack), x, y, z, facing);
 
             int type = CisternUtils.CONTENTS_RUST_WATER;
             if (cisternBase.getLiquidFillLevel() <= 0) type = CisternUtils.CONTENTS_EMPTY;
 
-            if (!world.isRemote && !player.capabilities.isCreativeMode) player.getHeldItem().stackSize--;
-
-            ItemUtils.givePlayerStackOrEjectFromTowardsFacing(player, new ItemStack(DNItems.rustWaterBowl, 1, DNItems.rustWaterBowl.getMaxDamage()), x, y, z, facing);
             return setContentsType(world, x, y, z, player, cisternBase, type);
         }
 
         return false;
     }
 
-
     private boolean setContentsType(World world, int x, int y, int z, EntityPlayer player, CisternBaseTileEntity cisternBase, int type) {
         spawnParticlesAndPlaySound(world,x,y,z,world.rand);
         if (!world.isRemote) cisternBase.setFillType(type);
         return true;
     }
+
+    protected void playSound(World world, int x, int y, int z, String soundName, float volume, float pitch) {
+        if (!world.isRemote) {
+            world.playSoundEffect(
+                    (double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D,
+                    soundName,
+                    volume,
+                    pitch);
+        }
+    }
+
+
+    //----------- Client Side Functionality -----------//
 
     @Environment(EnvType.CLIENT)
     protected void spawnParticlesAndPlaySound(World world, int x, int y, int z, Random rand) {
@@ -140,46 +182,6 @@ public abstract class CisternBaseBlock extends BlockContainer {
         playSound(world, x, y, z, "random.splash", 1/8F, 1F);
     }
 
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
-    }
-
-    //----------- Class Specific Methods -----------//
-
-    protected void playSound(World world, int x, int y, int z, String soundName, float volume, float pitch) {
-        if (!world.isRemote) {
-            world.playSoundEffect(
-                    (double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D,
-                    soundName,
-                    volume,
-                    pitch);
-        }
-    }
-
-    @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, int par5) {
-        if (!this.canBlockStay(world, x, y, z)) {
-            this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
-            world.setBlockToAir(x, y, z);
-        }
-    }
-    @Override
-    public boolean canPlaceBlockAt(World world, int x, int y, int z) {
-        return canBlockStay(world, x, y, z) && super.canPlaceBlockAt(world, x, y, z);
-    }
-
-    @Override
-    public boolean canBlockStay(World world, int x, int y, int z) {
-        return world.doesBlockHaveSolidTopSurface(x, y - 1, z) && super.canBlockStay(world, x, y, z);
-    }
-
-    //----------- Client Side Functionality -----------//
 
     @Override
     @Environment(EnvType.CLIENT)
@@ -332,7 +334,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
         mudColorPass = true;
         //Liquids
         if (cisternBase.getLiquidFillLevel() > 0 ) {
-            renderer.setRenderBounds(2 / 16D, 4 / 16D, 2 / 16D, 14 / 16D, cisternBase.getLiquidFillLevel() / 16D, 14 / 16D);
+            renderer.setRenderBounds(2 / 16D, 5 / 32D, 2 / 16D, 14 / 16D, cisternBase.getLiquidFillLevel() / 16D, 14 / 16D);
             RenderUtils.renderStandardBlockWithTexture(renderer, this, x, y, z,  getLiquidContentsIcon(cisternBase));
         }
         mudColorPass = false;
@@ -340,11 +342,11 @@ public abstract class CisternBaseBlock extends BlockContainer {
         if (cisternBase.getSolidFillLevel() > 0 ) {
             if (cisternBase.getFillType() == CisternUtils.CONTENTS_INFECTED_WATER)
             {
-                renderer.setRenderBounds(3 / 16D, 4 / 16D, 3 / 16D, 13 / 16D, getMaxY(cisternBase), 13 / 16D);
+                renderer.setRenderBounds(3 / 16D, 1 / 16D, 3 / 16D, 13 / 16D, getMaxY(cisternBase), 13 / 16D);
                 RenderUtils.renderStandardBlockWithTexture(renderer, this, x, y, z, getSolidContentsIcon(cisternBase));
             }
             else{
-                renderer.setRenderBounds(2 / 16D, 4 / 16D, 2 / 16D, 14 / 16D, cisternBase.getSolidFillLevel() / 16D, 14 / 16D);
+                renderer.setRenderBounds(2 / 16D, 1 / 16D, 2 / 16D, 14 / 16D, cisternBase.getSolidFillLevel() / 16D, 14 / 16D);
                 RenderUtils.renderStandardBlockWithTexture(renderer, this, x, y, z,  getSolidContentsIcon(cisternBase));
             }
 
