@@ -57,9 +57,9 @@ public class DNItems {
                 .setUnlocalizedName("denovo.iron_dust")
                 .setTextureName("denovo:iron_dust");
 
-        cistern = new PlaceAsBlockItem(DeNovoAddon.instance.parseID("DNItemCisternID") - 256, DNBlocks.cistern.blockID)
-                .setUnlocalizedName("denovo.cauldron"); //.setCreativeTab(CreativeTabs.tabBrewing);
-        Item.cauldron.setCreativeTab(null);
+//        cistern = new PlaceAsBlockItem(DeNovoAddon.instance.parseID("DNItemCisternID") - 256, DNBlocks.cistern.blockID)
+//                .setUnlocalizedName("denovo.cauldron"); //.setCreativeTab(CreativeTabs.tabBrewing);
+//        Item.cauldron.setCreativeTab(null);
 
         charcoalDust = new Item(DeNovoAddon.instance.parseID("DNItemCharcoalDustID") - 256)
                 .setUnlocalizedName("denovo.charcoal_dust")
