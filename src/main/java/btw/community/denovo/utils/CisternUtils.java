@@ -39,8 +39,8 @@ public class CisternUtils {
     public static final int CONTENTS_RUST_WATER = 7;
 
     //
-    public static final float RAIN_FILL_CHANCE = 1/8F;
-    public static final float MORNING_FILL_CHANCE = 1/16F;
+    public static final float RAIN_FILL_CHANCE = 1 / 8F;
+    public static final float MORNING_FILL_CHANCE = 1 / 16F;
 
     // --- Max time values --- //
     // 24000 is 20min
@@ -57,7 +57,7 @@ public class CisternUtils {
     public static final Color COLOR_INFECTED_WATER = new Color(248, 133, 117);
     public static final Color COLOR_RUST_WATER = new Color(252, 69, 0);
 
-    public static void addLiquidContainers(ItemStack fullStack, ItemStack emptyStack, int cisternFillValue, int composterFillValue){
+    public static void addLiquidContainers(ItemStack fullStack, ItemStack emptyStack, int cisternFillValue, int composterFillValue) {
         liquidContainers.put(fullStack, emptyStack);
 
         cisternFillValues.put(fullStack, cisternFillValue);
@@ -67,7 +67,7 @@ public class CisternUtils {
         composterFillValues.put(emptyStack, composterFillValue);
     }
 
-    public static void addRustWaterContainer(ItemStack fullStack, ItemStack emptyStack, int cisternFillValue, int composterFillValue){
+    public static void addRustWaterContainer(ItemStack fullStack, ItemStack emptyStack, int cisternFillValue, int composterFillValue) {
         rustWaterContainers.put(fullStack, emptyStack);
 
         cisternFillValues.put(fullStack, cisternFillValue);
@@ -77,15 +77,14 @@ public class CisternUtils {
         composterFillValues.put(emptyStack, composterFillValue);
     }
 
-    public static int getFillValue(ItemStack stack, CisternBaseTileEntity cisterBase){
+    public static int getFillValue(ItemStack stack, CisternBaseTileEntity cisterBase) {
         if (stack == null) return 0;
 
-        if (cisterBase instanceof ComposterTileEntity){
+        if (cisterBase instanceof ComposterTileEntity) {
             for (Map.Entry<ItemStack, Integer> entry : composterFillValues.entrySet()) {
                 if (stack.isItemEqual(entry.getKey())) return entry.getValue();
             }
-        }
-        else if (cisterBase instanceof CisternTileEntity){
+        } else if (cisterBase instanceof CisternTileEntity) {
             for (Map.Entry<ItemStack, Integer> entry : cisternFillValues.entrySet()) {
                 if (stack.isItemEqual(entry.getKey())) return entry.getValue();
             }
@@ -148,7 +147,7 @@ public class CisternUtils {
         return null;
     }
 
-    public static boolean reduceWaterAndReturnContainer(World world, int x, int y, int z, int facing, EntityPlayer player, CisternBaseTileEntity cisternBase){
+    public static boolean reduceWaterAndReturnContainer(World world, int x, int y, int z, int facing, EntityPlayer player, CisternBaseTileEntity cisternBase) {
         ItemStack heldStack = player.getHeldItem();
         if (heldStack == null) return false;
 
@@ -157,7 +156,7 @@ public class CisternUtils {
             int containerSize = getFillValue(heldStack, cisternBase);
 
             if (remainingLiquidAmount >= containerSize) {
-                if (!world.isRemote) cisternBase.removeLiquid( containerSize );
+                if (!world.isRemote) cisternBase.removeLiquid(containerSize);
 
                 return exchangeContainers(world, x, y, z, facing, player, heldStack, getFullWaterContainerForEmptyContainer(heldStack));
             }
@@ -168,7 +167,7 @@ public class CisternUtils {
         return false;
     }
 
-    public static boolean addWaterAndReturnContainer(World world, int x, int y, int z, int facing, EntityPlayer player, CisternBaseTileEntity cisternBase){
+    public static boolean addWaterAndReturnContainer(World world, int x, int y, int z, int facing, EntityPlayer player, CisternBaseTileEntity cisternBase) {
         ItemStack heldStack = player.getHeldItem();
         if (heldStack == null) return false;
 
@@ -177,8 +176,8 @@ public class CisternUtils {
             int containerSize = getFillValue(heldStack, cisternBase);
 
             if (currentLiquidAmount + containerSize <= MAX_LIQUID_FILL_LEVEL) {
-                if (!world.isRemote) cisternBase.addLiquid( containerSize );
-                if (!world.isRemote) cisternBase.setFillType( CONTENTS_WATER );
+                if (!world.isRemote) cisternBase.addLiquid(containerSize);
+                if (!world.isRemote) cisternBase.setFillType(CONTENTS_WATER);
                 return exchangeContainers(world, x, y, z, facing, player, heldStack, getEmptyContainerForFullWaterContainer(heldStack));
             }
 
@@ -191,7 +190,7 @@ public class CisternUtils {
     private static boolean exchangeContainers(World world, int x, int y, int z, int facing, EntityPlayer player, ItemStack heldStack, ItemStack returnStack) {
         if (returnStack == null || heldStack == null) return false;
 
-        spawnParticlesAndPlaySound(world,x,y,z,world.rand, (CisternBaseTileEntity)world.getBlockTileEntity(x,y,z));
+        spawnParticlesAndPlaySound(world, x, y, z, world.rand, (CisternBaseTileEntity) world.getBlockTileEntity(x, y, z));
 
         if (!world.isRemote && !player.capabilities.isCreativeMode) heldStack.stackSize--;
         ItemUtils.givePlayerStackOrEjectFromTowardsFacing(player, new ItemStack(returnStack.itemID, 1, returnStack.getItemDamage()), x, y, z, facing);
@@ -244,7 +243,7 @@ public class CisternUtils {
         if (!world.isRemote) return;
 
         CisternBaseBlock.mudColorPass = true;
-        Color color = new Color(Block.blocksList[world.getBlockId(x,y,z)].colorMultiplier(world, x, y, z) );
+        Color color = new Color(Block.blocksList[world.getBlockId(x, y, z)].colorMultiplier(world, x, y, z));
         CisternBaseBlock.mudColorPass = false;
 
         int red = color.getRed();
@@ -256,16 +255,16 @@ public class CisternUtils {
             double yPos = y + 1.0F;
             double zPos = z + 0.25F + rand.nextFloat() * 0.5F;
 
-            world.spawnParticle("DNSplash_" + red + "_" + green + "_" + blue , xPos, yPos, zPos, 0.0D, 0.0D, 0.0D);
+            world.spawnParticle("DNSplash_" + red + "_" + green + "_" + blue, xPos, yPos, zPos, 0.0D, 0.0D, 0.0D);
         }
 
-        playSound(world, x, y, z, "random.splash", 1/8F, 1F);
+        playSound(world, x, y, z, "random.splash", 1 / 8F, 1F);
     }
 
     public static void playSound(World world, int x, int y, int z, String soundName, float volume, float pitch) {
         if (!world.isRemote) {
             world.playSoundEffect(
-                    (double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D,
+                    (double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D,
                     soundName,
                     volume,
                     pitch);
