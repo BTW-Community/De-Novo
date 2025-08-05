@@ -1,13 +1,16 @@
 package btw.community.denovo.item.items;
 
 import btw.community.denovo.item.DNItems;
-import btw.item.BTWItems;
 import btw.item.items.ProgressiveCraftingItem;
 import btw.item.util.ItemUtils;
-import net.minecraft.src.*;
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.Item;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.World;
 
 public class RustWaterBowlItem extends ProgressiveCraftingItem {
     public static final int TIME_TO_CRAFT = DEFAULT_MAX_DAMAGE;
+
     public RustWaterBowlItem(int itemID, String name) {
         super(itemID);
 
@@ -20,14 +23,13 @@ public class RustWaterBowlItem extends ProgressiveCraftingItem {
         return new ItemStack(DNItems.ironDust, 1, 0);
     }
 
-    protected int getProgressiveCraftingMaxDamage()
-    {
-        return this.TIME_TO_CRAFT;
+    protected int getProgressiveCraftingMaxDamage() {
+        return TIME_TO_CRAFT;
     }
 
     @Override
     protected void playCraftingFX(ItemStack stack, World world, EntityPlayer player) {
-        player.playSound("step.gravel", 0.125F, (world.rand.nextFloat() * 0.1F + 0.9F)/20);
+        player.playSound("step.gravel", 0.125F, (world.rand.nextFloat() * 0.1F + 0.9F) / 20);
         //player.playSound("mob.slime.attack", 0.125F, (world.rand.nextFloat() * 0.1F + 0.9F)/20);
         //player.playSound("step.grass", 0.25F + 0.25F * (float) world.rand.nextInt(2), (world.rand.nextFloat() - world.rand.nextFloat()) * 0.25F + 1.75F);
     }

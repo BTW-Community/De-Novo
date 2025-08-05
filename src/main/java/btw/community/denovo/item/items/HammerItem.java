@@ -6,10 +6,10 @@ import net.minecraft.src.EnumToolMaterial;
 
 public class HammerItem extends PickaxeItem {
     public HammerItem(int itemID, EnumToolMaterial material, int maxUses) {
-        super( itemID, material, maxUses);
+        super(itemID, material, maxUses);
 
         setMaxStackSize(1);
-        setMaxDamage( maxUses );
+        setMaxDamage(maxUses);
 
         setUnlocalizedName("DNItem_flint_hammer");
         setCreativeTab(CreativeTabs.tabTools);

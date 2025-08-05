@@ -8,6 +8,7 @@ import net.minecraft.src.World;
 
 public class MaggotsSilkExtractionItem extends ProgressiveCraftingItem {
     public static final int TIME_TO_CRAFT = DEFAULT_MAX_DAMAGE / 2;
+
     public MaggotsSilkExtractionItem(int itemID, String name) {
         super(itemID);
 
@@ -20,15 +21,14 @@ public class MaggotsSilkExtractionItem extends ProgressiveCraftingItem {
         return new ItemStack(Item.silk, 1, 0);
     }
 
-    protected int getProgressiveCraftingMaxDamage()
-    {
+    protected int getProgressiveCraftingMaxDamage() {
         //Sock: default (120s) seemed to take way too long
-        return this.TIME_TO_CRAFT;
+        return TIME_TO_CRAFT;
     }
 
     @Override
     protected void playCraftingFX(ItemStack stack, World world, EntityPlayer player) {
-        player.playSound("mob.slime.attack", 0.125F, (world.rand.nextFloat() * 0.1F + 0.9F)/20);
+        player.playSound("mob.slime.attack", 0.125F, (world.rand.nextFloat() * 0.1F + 0.9F) / 20);
         //player.playSound("mob.slime.attack", 0.125F, (world.rand.nextFloat() * 0.1F + 0.9F)/20);
         //player.playSound("step.grass", 0.25F + 0.25F * (float) world.rand.nextInt(2), (world.rand.nextFloat() - world.rand.nextFloat()) * 0.25F + 1.75F);
     }
