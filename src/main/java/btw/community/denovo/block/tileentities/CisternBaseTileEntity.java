@@ -16,125 +16,109 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
     @Override
     public void updateEntity() {
 
-        if (getProgressCounter() > 0)
-        {
-            if (worldObj.isRemote)
-            {
-                System.out.println("CLIENT: fillType= " + getFillType());
-            }
-            else System.out.println("SERVER: fillType= " + getFillType());
-        }
+        if (worldObj.isRemote) return;
 
-        if (fillType == CisternUtils.CONTENTS_EMPTY){
-            setProgressCounter(0);
-            setSolidFillLevel(0);
-            setLiquidFillLevel(0);
-        }
-
+        //Try to fill with water
         if (fillType == CisternUtils.CONTENTS_EMPTY || (fillType == CisternUtils.CONTENTS_WATER && !isFullWithWater())) {
-            if (worldObj.canBlockSeeTheSky(xCoord, yCoord, zCoord) && !worldObj.isRemote) {
-                attemptToFillWithWater();
-            }
+            attemptToFillWithWater();
         }
 
+        //handle other contents states
         if (fillType == CisternUtils.CONTENTS_MUDDY_WATER) {
             handleMuddyWater();
-        }else if (fillType == CisternUtils.CONTENTS_CLAY_WATER) {
+        } else if (fillType == CisternUtils.CONTENTS_CLAY_WATER) {
             handleClayWater();
         } else if (fillType == CisternUtils.CONTENTS_INFECTED_WATER) {
             handleInfectedWater();
         }
+
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
-    private void handleMuddyWater() {
+    protected void handleMuddyWater() {
         if (progressCounter < CisternUtils.MUDDY_WATER_SETTLE_TIME) {
-            progressCounter += 1;
-            worldObj.markBlockRangeForRenderUpdate(xCoord,yCoord,zCoord,xCoord,yCoord,zCoord);
+            setProgressCounter(getProgressCounter() + 1);
         } else {
-            if (!worldObj.isRemote) {
-                ItemUtils.ejectStackFromBlockTowardsFacing(worldObj, xCoord, yCoord, zCoord, new ItemStack(Item.clay), 1);
-                worldObj.playSoundEffect(
-                        (double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D,
-                        Block.blockClay.stepSound.getStepSound(),
-                        1/8F,
-                        1F);
-            }
-            if (!worldObj.isRemote) setFillType(CisternUtils.CONTENTS_WATER);
-            if (!worldObj.isRemote) setProgressCounter(0);
-            worldObj.markBlockRangeForRenderUpdate(xCoord,yCoord,zCoord,xCoord,yCoord,zCoord);
+            dropClayBall();
+            worldObj.playSoundEffect(
+                    (double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D,
+                    Block.blockClay.stepSound.getStepSound(),
+                    1/8F,
+                    1F);
+            setFillType(CisternUtils.CONTENTS_WATER);
+            setProgressCounter(0);
         }
     }
 
-    private void handleClayWater() {
-        if (progressCounter < CisternUtils.CLAY_WATER_CONVERSION_TIME) {
-            progressCounter += 1;
+    private void dropClayBall() {
+        ItemUtils.ejectStackFromBlockTowardsFacing(worldObj, xCoord, yCoord, zCoord, new ItemStack(Item.clay), 1);
+    }
 
-            if (progressCounter == CisternUtils.CLAY_WATER_CONVERSION_TIME / 2)
-            {
-                if (worldObj.rand.nextFloat() > 0.1F)
-                {
-                    if (!worldObj.isRemote) setFillType(CisternUtils.CONTENTS_WATER);
-                    if (!worldObj.isRemote) setProgressCounter(0);
+    protected void handleClayWater() {
+        if (progressCounter < CisternUtils.CLAY_WATER_CONVERSION_TIME) {
+            setProgressCounter(getProgressCounter() + 1);
+
+            if (progressCounter == CisternUtils.CLAY_WATER_CONVERSION_TIME / 2) {
+                if (worldObj.rand.nextFloat() > 0.1F) {
+                    setFillType(CisternUtils.CONTENTS_WATER);
+                    setProgressCounter(0);
                 }
             }
-
-            worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
         } else {
-            if (!worldObj.isRemote) setFillType(CisternUtils.CONTENTS_INFECTED_WATER);
-            if (!worldObj.isRemote) setProgressCounter(0);
-            worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+            setFillType(CisternUtils.CONTENTS_INFECTED_WATER);
+            setProgressCounter(0);
         }
     }
 
-    private void handleInfectedWater() {
+    protected void handleInfectedWater() {
         if (solidFillLevel == CisternUtils.MAX_SOLID_FILL_LEVEL) {
-            if (progressCounter < CisternUtils.MUDDY_WATER_SETTLE_TIME)
-            {
-                progressCounter += 1;
-                worldObj.markBlockRangeForRenderUpdate(xCoord,yCoord,zCoord,xCoord,yCoord,zCoord);
+            if (progressCounter < CisternUtils.MUDDY_WATER_SETTLE_TIME) {
+                setProgressCounter(getProgressCounter() + 1);
             } else {
-                if (!worldObj.isRemote) setFillType(CisternUtils.CONTENTS_RUST_WATER);
-                if (!worldObj.isRemote) setSolidFillLevel(0);
-                if (!worldObj.isRemote) setProgressCounter(0);
-                worldObj.markBlockRangeForRenderUpdate(xCoord,yCoord,zCoord,xCoord,yCoord,zCoord);
+                setFillType(CisternUtils.CONTENTS_RUST_WATER);
+                setSolidFillLevel(0);
+                setProgressCounter(0);
             }
         }
     }
 
-    protected void attemptToFillWithWater() {
-        int timeOfDay = (int) (worldObj.worldInfo.getWorldTime() % 24000L);
-        boolean isMorning = timeOfDay < 500 || timeOfDay > 23500;
-        boolean isNight = timeOfDay > 16000 && timeOfDay < 20000;
-        boolean isRaining = worldObj.isRainingAtPos(xCoord, yCoord + 1, zCoord);
+    protected boolean attemptToFillWithWater() {
+        if (worldObj.canBlockSeeTheSky(xCoord, yCoord, zCoord)) {
+            int timeOfDay = (int) (worldObj.worldInfo.getWorldTime() % 24000L);
+            boolean isMorning = timeOfDay < 500 || timeOfDay > 23500;
+            boolean isNight = timeOfDay > 16000 && timeOfDay < 20000;
+            boolean isRaining = worldObj.isRainingAtPos(xCoord, yCoord + 1, zCoord);
 
-        if (isRaining) {
-            if (worldObj.rand.nextFloat() <= 0.25F) {
-                if (!worldObj.isRemote) addLiquid(1);
-                if (!worldObj.isRemote) setFillType(CisternUtils.CONTENTS_WATER);
-                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            if (isRaining) {
+                if (worldObj.rand.nextFloat() < CisternUtils.RAIN_FILL_CHANCE) {
+                    setFillType(CisternUtils.CONTENTS_WATER);
+                    addLiquid(5);
+                }
+            } else {
+                if (worldObj.getWorldTime() % 20 > 0) return false; //limit this to once a second
+                if (isMorning && !getHasCollectedWaterToday() && worldObj.rand.nextFloat() < CisternUtils.MORNING_FILL_CHANCE) {
+                    setFillType(CisternUtils.CONTENTS_WATER);
+                    addLiquid(5);
+                    setHasCollectedWaterToday(true);
+                } else if (isNight && getHasCollectedWaterToday()) {
+                    setHasCollectedWaterToday(false);
+                }
             }
-        } else {
-            if (isMorning && !getHasCollectedWaterToday() && worldObj.rand.nextFloat() <= 0.125F) {
-                if (!worldObj.isRemote) addLiquid(1);
-                if (!worldObj.isRemote)setFillType(CisternUtils.CONTENTS_WATER);
-                if (!worldObj.isRemote) setHasCollectedWaterToday(true);
-                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-            } else if (isNight && getHasCollectedWaterToday()) {
-                if (!worldObj.isRemote) setHasCollectedWaterToday(false);
-            }
+            return true;
         }
-
+        return false;
     }
 
     public void removeLiquid(int amount) {
-        this.liquidFillLevel -= 5 * amount;
-        if (this.liquidFillLevel == 0) setFillType(CisternUtils.CONTENTS_EMPTY);
-        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+        setLiquidFillLevel(getLiquidFillLevel() - amount);
+        if (getLiquidFillLevel() <= 0) {
+            setFillType(CisternUtils.CONTENTS_EMPTY);
+            setLiquidFillLevel(0);
+        }
     }
 
     public void addLiquid(int amount) {
-        this.liquidFillLevel += 5 * amount;
-        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+        setLiquidFillLevel(getLiquidFillLevel() + amount);
     }
 
     public boolean isFullWithWater() {
@@ -157,6 +141,10 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
         return this.solidFillLevel == CisternUtils.MAX_SOLID_FILL_LEVEL && this.fillType == CisternUtils.CONTENTS_COMPOST;
     }
 
+    public boolean isEmptyOrHasCompost() {
+        return this.isEmpty() || (!this.isFull() && this.getFillType() == CisternUtils.CONTENTS_COMPOST);
+    }
+
     public boolean isFull() {
         if ( getLiquidFillLevel() == CisternUtils.MAX_LIQUID_FILL_LEVEL) {
             return true;
@@ -170,7 +158,7 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
         return (this.solidFillLevel == 0 || this.liquidFillLevel == 0 ) && this.fillType == CisternUtils.CONTENTS_EMPTY;
     }
 
-    public void addCompost(int amount) {
+    public void addSolid(int amount) {
         this.solidFillLevel += amount;
         worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
     }
@@ -229,6 +217,14 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
 
     public void setFillType(int fillType) {
         this.fillType = fillType;
+
+        if (this.fillType == CisternUtils.CONTENTS_EMPTY) {
+            setProgressCounter(0);
+            setSolidFillLevel(0);
+            setLiquidFillLevel(0);
+        }
+
+        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
     }
 
     public int getSolidFillLevel() {
@@ -237,6 +233,7 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
 
     public void setSolidFillLevel(int solidFillLevel) {
         this.solidFillLevel = solidFillLevel;
+        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
     }
 
     public int getLiquidFillLevel() {
@@ -245,6 +242,7 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
 
     public void setLiquidFillLevel(int liquidFillLevel) {
         this.liquidFillLevel = liquidFillLevel;
+        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
     }
 
     public int getProgressCounter() {
@@ -253,6 +251,7 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
 
     public void setProgressCounter(int progressCounter) {
         this.progressCounter = progressCounter;
+        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
     }
 
     public boolean getHasCollectedWaterToday() {

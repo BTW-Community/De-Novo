@@ -33,7 +33,7 @@ public class ComposterBlock extends CisternBaseBlock {
 
         setStepSound(soundWoodFootstep);
 
-        setUnlocalizedName("DNBlock_composter");
+        setUnlocalizedName("DNComposter");
 
         setCreativeTab(CreativeTabs.tabRedstone);
 
@@ -47,46 +47,20 @@ public class ComposterBlock extends CisternBaseBlock {
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int facing, float clickX, float clickY, float clickZ) {
+        //since we want the base functionality of the cistern as well
+        super.onBlockActivated(world, x, y, z, player, facing, clickX, clickY, clickZ);
+
         TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
         CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) tileEntity;
-        ItemStack heldStack = player.getHeldItem();
 
-        if (cisternBase.getProgressCounter() > 0) return false;
-
-        if (CisternUtils.isValidCompostable(heldStack)) {
-            if (cisternBase.isEmpty() || (!cisternBase.isFull() && cisternBase.getFillType() == CisternUtils.CONTENTS_COMPOST)) {
-                if ( !world.isRemote ) cisternBase.addCompost(1);
-                if ( !world.isRemote ) cisternBase.setFillType(CisternUtils.CONTENTS_COMPOST);
-                world.markBlockForRenderUpdate(x, y, z);
-
-                heldStack.stackSize--;
-                if ( world.isRemote ) playSound(world, x, y, z, Block.leaves.stepSound.getStepSound(), 0.25F, 1F);
-                return true;
-            }
-        } else if (cisternBase.isFullWithCompostOrMaggots()) {
-            if (cisternBase.getFillType() == CisternUtils.CONTENTS_COMPOST) {
-                if (!world.isRemote) {
-                    ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(BTWItems.dirtPile), facing);
-
-                    playSound(world, x, y, z, Block.dirt.stepSound.getStepSound(), 1/4F, 1F);
-                }
-            } else if (cisternBase.getFillType() == CisternUtils.CONTENTS_MAGGOTS) {
-                if (!world.isRemote) {
-                    ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(DNItems.rawMaggots), facing);
-                    ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(BTWItems.dirtPile), facing);
-
-                    playSound(world, x, y, z, Block.dirt.stepSound.getStepSound(), 1/4F, 1F);
-                    playSound(world, x, y, z, Block.blockClay.stepSound.getStepSound(), 1/8F, 1F);
-                }
-            }
-
-            if (!world.isRemote) cisternBase.setFillType(CisternUtils.CONTENTS_EMPTY);
-            world.markBlockForRenderUpdate(x, y, z);
-
-            return true;
+        if (cisternBase.isEmptyOrHasCompost()) {
+            return handleContentsEmptyOrCompost(world, x, y, z, facing, player, cisternBase);
+        }
+        else if (cisternBase.isFullWithCompostOrMaggots()) {
+            return handleContentsCompostOrMaggots(world, x, y, z, facing, cisternBase);
         }
 
-        return super.onBlockActivated(world, x, y, z, player, facing, clickX, clickY, clickZ);
+        return false;
     }
 
     @Override
@@ -109,6 +83,55 @@ public class ComposterBlock extends CisternBaseBlock {
         return true;
     }
     //----------- Class Specific Methods -----------//
+
+    protected boolean handleContentsCompostOrMaggots(World world, int x, int y, int z, int facing, CisternBaseTileEntity cisternBase) {
+        if (cisternBase.getFillType() == CisternUtils.CONTENTS_COMPOST) {
+            if (!world.isRemote) {
+                returnItemsWhenFullWithCompost(world, x, y, z, facing);
+
+                CisternUtils.playSound(world, x, y, z, Block.dirt.stepSound.getStepSound(), 1/4F, 1F);
+            }
+        } else if (cisternBase.getFillType() == CisternUtils.CONTENTS_MAGGOTS) {
+            if (!world.isRemote) {
+
+                returnItemsWhenFullWithMaggots(world, x, y, z, facing);
+
+                CisternUtils.playSound(world, x, y, z, Block.dirt.stepSound.getStepSound(), 1/4F, 1F);
+                CisternUtils.playSound(world, x, y, z, Block.blockClay.stepSound.getStepSound(), 1/8F, 1F);
+            }
+        }
+
+        cisternBase.setFillType(CisternUtils.CONTENTS_EMPTY);
+        world.markBlockForRenderUpdate(x, y, z);
+
+        return true;
+    }
+
+    protected static void returnItemsWhenFullWithCompost(World world, int x, int y, int z, int facing) {
+        ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(BTWItems.dirtPile), facing);
+    }
+
+    protected static void returnItemsWhenFullWithMaggots(World world, int x, int y, int z, int facing) {
+        ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(BTWItems.dirtPile), facing);
+        ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(DNItems.rawMaggots), facing);
+    }
+
+    protected boolean handleContentsEmptyOrCompost(World world, int x, int y, int z, int facing, EntityPlayer player, CisternBaseTileEntity cisternBase) {
+        ItemStack heldStack = player.getHeldItem();
+        if (heldStack == null) return false;
+
+        if (CisternUtils.isValidCompostable(heldStack)) {
+            cisternBase.addSolid(1);
+            cisternBase.setFillType(CisternUtils.CONTENTS_COMPOST);
+            world.markBlockForRenderUpdate(x, y, z);
+
+            if (!player.capabilities.isCreativeMode) heldStack.stackSize--;
+            if (world.isRemote) CisternUtils.playSound(world, x, y, z, Block.leaves.stepSound.getStepSound(), 0.25F, 1F);
+            return true;
+        }
+
+        return false;
+    }
 
     //----------- Mushroom Related Methods -----------//
 

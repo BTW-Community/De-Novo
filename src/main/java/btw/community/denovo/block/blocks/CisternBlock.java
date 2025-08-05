@@ -40,6 +40,12 @@ public class CisternBlock extends CisternBaseBlock {
     }
 
     @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int facing, float clickX, float clickY, float clickZ) {
+        //No other capabilities than base
+        return super.onBlockActivated(world, x, y, z, player, facing, clickX, clickY, clickZ);
+    }
+
+    @Override
     public int idDropped(int par1, Random par2Random, int par3) {
         return this.blockID;
         //return DNItems.cistern.itemID;

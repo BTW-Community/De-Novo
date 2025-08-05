@@ -14,8 +14,8 @@ public class ComposterTileEntity extends CisternBaseTileEntity {
     }
 
     private void handleCompost() {
-        if (progressCounter < CisternUtils.MAGGOT_CREATION_TIME) {
-            progressCounter += 1;
+        if (getProgressCounter() < CisternUtils.MAGGOT_CREATION_TIME) {
+            setProgressCounter(getProgressCounter() + 1);
             worldObj.markBlockRangeForRenderUpdate(xCoord,yCoord,zCoord,xCoord,yCoord,zCoord);
 
         } else {
