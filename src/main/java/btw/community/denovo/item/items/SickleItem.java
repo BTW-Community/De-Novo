@@ -11,7 +11,8 @@ public class SickleItem extends ToolItem {
         setMaxStackSize(1);
         setMaxDamage(maxUses);
 
-        setUnlocalizedName("DNItem_wood_sickle");
+        setUnlocalizedName("denovo.wood_sickle");
+        setTextureName("denovo:wood_sickle");
         setCreativeTab(CreativeTabs.tabTools);
     }
 

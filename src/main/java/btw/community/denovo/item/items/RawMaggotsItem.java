@@ -8,6 +8,9 @@ public class RawMaggotsItem extends FoodItem {
     public RawMaggotsItem(int iItemID, int hunger, float sat, boolean wolf, String name) {
         super(iItemID, hunger, sat, wolf, name, true);
 
+        setUnlocalizedName("denovo." + name);
+        setTextureName("denovo:" + name);
+
         setStandardFoodPoisoningEffect();
     }
 }

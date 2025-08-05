@@ -16,7 +16,8 @@ public class RustWaterBowlItem extends ProgressiveCraftingItem {
 
         setBuoyant();
 
-        setUnlocalizedName(name);
+        setUnlocalizedName("denovo." + name);
+        setTextureName("denovo:" + name);
     }
 
     private ItemStack getReturnStack() {

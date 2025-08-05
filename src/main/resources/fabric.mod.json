@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "denovoaddon",
+  "id": "denovo",
   "version": "${version}",
 
   "name": "De Novo",
@@ -15,7 +15,7 @@
   },
 
   "license": "MIT",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/denovo/icon.png",
 
   "environment": "*",
   "entrypoints": {
@@ -27,7 +27,7 @@
     "btw:addon_prefix": "DN"
   },
   "mixins": [
-    "denovoaddon.mixins.json"
+    "denovo.mixins.json"
   ],
 
   "depends": {

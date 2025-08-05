@@ -11,7 +11,8 @@ public class MeshItem extends Item {
     public MeshItem(int id) {
         super(id);
 
-        setUnlocalizedName("DNItem_mesh");
+        setUnlocalizedName("denovo.mesh");
+        setTextureName("denovo:mesh");
 
         setBuoyant();
 

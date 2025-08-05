@@ -11,7 +11,8 @@ public class HammerItem extends PickaxeItem {
         setMaxStackSize(1);
         setMaxDamage(maxUses);
 
-        setUnlocalizedName("DNItem_flint_hammer");
+        setUnlocalizedName("denovo.flint_hammer");
+        setTextureName("denovo:flint_hammer");
         setCreativeTab(CreativeTabs.tabTools);
     }
 }
