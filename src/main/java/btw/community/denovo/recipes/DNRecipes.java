@@ -33,7 +33,7 @@ public class DNRecipes {
     }
 
     private static void addCharcoalRecipes() {
-        RecipeManager.addShapelessRecipe(new ItemStack(Item.coal,1, 1), new Object[]{
+        RecipeManager.addShapelessRecipe(new ItemStack(Item.coal, 1, 1), new Object[]{
                 new ItemStack(DNItems.charcoalDust),
                 new ItemStack(DNItems.charcoalDust),
                 new ItemStack(DNItems.charcoalDust),
@@ -45,7 +45,7 @@ public class DNRecipes {
     }
 
     private static void addHammerRecipes() {
-        RecipeManager.addShapelessRecipe(new ItemStack( DNItems.flintHammer ), new Object[] {
+        RecipeManager.addShapelessRecipe(new ItemStack(DNItems.flintHammer), new Object[]{
                 new ItemStack(Item.silk),
                 new ItemStack(Item.stick),
                 new ItemStack(Item.flint),
@@ -54,7 +54,7 @@ public class DNRecipes {
     }
 
     private static void addHoeRecipes() {
-        RecipeManager.addShapelessRecipe(new ItemStack( Item.hoeStone ), new Object[] {
+        RecipeManager.addShapelessRecipe(new ItemStack(Item.hoeStone), new Object[]{
                 new ItemStack(Item.silk),
                 new ItemStack(Item.stick),
                 new ItemStack(BTWItems.sharpStone),
@@ -104,7 +104,7 @@ public class DNRecipes {
          */
 
         //Maggots progressively to String
-        RecipeManager.addShapelessRecipe(new ItemStack(DNItems.maggotsSilkExtraction, 1, RustWaterBowlItem.TIME_TO_CRAFT), new Object[] {
+        RecipeManager.addShapelessRecipe(new ItemStack(DNItems.maggotsSilkExtraction, 1, RustWaterBowlItem.TIME_TO_CRAFT), new Object[]{
                 new ItemStack(DNItems.rawMaggots)
         });
 
@@ -122,7 +122,7 @@ public class DNRecipes {
         });
 
         //
-        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.ironOrePile), new Object[] {
+        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.ironOrePile), new Object[]{
                 new ItemStack(DNItems.ironDust),
                 new ItemStack(DNItems.ironDust),
                 new ItemStack(DNItems.ironDust),
