@@ -201,8 +201,11 @@ public class DNRecipes {
         SiftingCraftingManager.addSiftingRecipe(
                 new LootEntry[]{
                         new LootEntry(1.0D / 2, 1, new ItemStack(BTWItems.stone)),
-                        new LootEntry(1.0D / 5, 1, new ItemStack(Block.sapling)),
-                        new LootEntry(1.0D / 10, 1, new ItemStack(BTWItems.sugarCaneRoots))
+                        new LootEntry(1.0D / 10, 1, new ItemStack(BTWItems.sugarCaneRoots)),
+                        new LootEntry(1.0D / 20, 1, new ItemStack(BTWBlocks.oakSapling)),
+                        new LootEntry(1.0D / 20, 1, new ItemStack(BTWBlocks.birchSapling)),
+                        new LootEntry(1.0D / 20, 1, new ItemStack(BTWBlocks.spruceSapling)),
+                        new LootEntry(1.0D / 20, 1, new ItemStack(BTWBlocks.jungleSapling)),
                 },
                 new ItemStack(BTWItems.dirtPile),
                 new ItemStack(DNItems.mesh)
@@ -210,9 +213,25 @@ public class DNRecipes {
 
         SiftingCraftingManager.addSiftingRecipe(
                 new LootEntry[]{
+                        new LootEntry(1.0D / 2, 4, new ItemStack(BTWItems.stone)),
+                        new LootEntry(1.0D / 10, 4, new ItemStack(BTWItems.sugarCaneRoots)),
+                        new LootEntry(1.0D / 20, 4, new ItemStack(BTWBlocks.oakSapling)),
+                        new LootEntry(1.0D / 20, 4, new ItemStack(BTWBlocks.birchSapling)),
+                        new LootEntry(1.0D / 20, 4, new ItemStack(BTWBlocks.spruceSapling)),
+                        new LootEntry(1.0D / 20, 4, new ItemStack(BTWBlocks.jungleSapling)),
+                },
+                new ItemStack(BTWBlocks.looseDirtSlab),
+                new ItemStack(DNItems.mesh)
+        );
+
+        SiftingCraftingManager.addSiftingRecipe(
+                new LootEntry[]{
                         new LootEntry(1.0D / 2, 8, new ItemStack(BTWItems.stone)),
-                        new LootEntry(1.0D / 5, 8, new ItemStack(Block.sapling)),
-                        new LootEntry(1.0D / 10, 8, new ItemStack(BTWItems.sugarCaneRoots))
+                        new LootEntry(1.0D / 10, 8, new ItemStack(BTWItems.sugarCaneRoots)),
+                        new LootEntry(1.0D / 20, 8, new ItemStack(BTWBlocks.oakSapling)),
+                        new LootEntry(1.0D / 20, 8, new ItemStack(BTWBlocks.birchSapling)),
+                        new LootEntry(1.0D / 20, 8, new ItemStack(BTWBlocks.spruceSapling)),
+                        new LootEntry(1.0D / 20, 8, new ItemStack(BTWBlocks.jungleSapling)),
                 },
                 new ItemStack(BTWBlocks.looseDirt),
                 new ItemStack(DNItems.mesh)
@@ -234,6 +253,14 @@ public class DNRecipes {
                         new LootEntry(1.0D / 8, 1, new ItemStack(Item.flint))
                 },
                 new ItemStack(BTWItems.gravelPile),
+                new ItemStack(DNItems.mesh)
+        );
+
+        SiftingCraftingManager.addSiftingRecipe(
+                new LootEntry[]{
+                        new LootEntry(1.0D / 4, 1, new ItemStack(Item.flint))
+                },
+                new ItemStack(BTWBlocks.sandAndGravelSlab, 1, 0), //0 is gravel
                 new ItemStack(DNItems.mesh)
         );
 

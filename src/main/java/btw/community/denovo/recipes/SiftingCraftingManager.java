@@ -1,6 +1,7 @@
 package btw.community.denovo.recipes;
 
 import btw.AddonHandler;
+import btw.crafting.manager.HopperFilteringCraftingManager;
 import net.minecraft.src.Block;
 import net.minecraft.src.ItemStack;
 
@@ -38,5 +39,9 @@ public class SiftingCraftingManager {
         }
 
         return null;
+    }
+
+    public static ArrayList<SiftingRecipe> getRecipes() {
+        return recipes;
     }
 }

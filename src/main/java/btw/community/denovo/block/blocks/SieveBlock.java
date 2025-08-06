@@ -3,8 +3,10 @@ package btw.community.denovo.block.blocks;
 import btw.block.util.Flammability;
 import btw.client.fx.BTWEffectManager;
 import btw.client.render.util.RenderUtils;
+import btw.community.denovo.block.DNBlocks;
 import btw.community.denovo.block.models.SieveModel;
 import btw.community.denovo.block.tileentities.SieveTileEntity;
+import btw.community.denovo.item.DNItems;
 import btw.community.denovo.recipes.LootEntry;
 import btw.community.denovo.recipes.SiftingCraftingManager;
 import btw.community.denovo.recipes.SiftingRecipe;
@@ -323,6 +325,23 @@ public class SieveBlock extends BlockContainer {
     @Override
     @Environment(EnvType.CLIENT)
     public void renderBlockAsItem(RenderBlocks renderBlocks, int iItemDamage, float fBrightness) {
+
+        Icon icon = iItemDamage == 1 ? filterIcon : iItemDamage == 2 ? BTWItems.wickerPane.getHopperFilterIcon() : null;
+
+        if (iItemDamage > 0 && icon != null) {
+            renderBlocks.setRenderBounds(
+                    2 / 16D,
+                    1 - (5 / 16D),
+                    2 / 16D,
+
+                    1 - (2 / 16D),
+                    1 - (4 / 16D),
+                    1 - (2 / 16D)
+            );
+
+            RenderUtils.renderInvBlockWithTexture(renderBlocks, this, -0.5F, -0.5F, -0.5F, icon);
+        }
+
         SieveBlock.model.renderAsItemBlock(renderBlocks, this, iItemDamage);
     }
 }

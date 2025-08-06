@@ -28,3 +28,6 @@ tile.denovo.deadbush.mature.name=Dead Bush
 
 #Items
 item.hoeStone.name=Primitive Stone Hoe
+
+### EMI ###
+emi.category.denovo.sieve=Sifting
