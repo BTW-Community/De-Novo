@@ -90,7 +90,7 @@ public class CisternBlock extends CisternBaseBlock {
         this.inner = par1IconRegister.registerIcon("cauldron_inner");
         this.top = par1IconRegister.registerIcon("cauldron_top");
         this.bottom = par1IconRegister.registerIcon("cauldron_bottom");
-        this.blockIcon = this.side = par1IconRegister.registerIcon("cauldron_side");
+        this.blockIcon = this.side = par1IconRegister.registerIcon("denovo:cauldron_side");
     }
 
     @Override
@@ -124,7 +124,7 @@ public class CisternBlock extends CisternBaseBlock {
         renderer.renderFaceXNeg(cistern, (float) par2 + 1.0F - var12, par3, par4, var16);
         renderer.renderFaceZPos(cistern, par2, par3, (float) par4 - 1.0F + var12, var16);
         renderer.renderFaceZNeg(cistern, par2, par3, (float) par4 + 1.0F - var12, var16);
-        Icon var17 = BlockCauldron.getCauldronIcon("cauldron_inner");
+        Icon var17 = this.inner;
         renderer.renderFaceYPos(cistern, par2, (float) par3 - 1.0F + 0.25F, par4, var17);
         renderer.renderFaceYNeg(cistern, par2, (float) par3 + 1.0F - 0.75F, par4, var17);
         int var14 = renderer.blockAccess.getBlockMetadata(par2, par3, par4);

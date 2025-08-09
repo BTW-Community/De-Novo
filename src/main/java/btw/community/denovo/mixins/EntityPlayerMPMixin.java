@@ -16,7 +16,7 @@ public abstract class EntityPlayerMPMixin {
                     target = "Lnet/minecraft/src/EntityPlayerMP;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z",
                     ordinal = 0,
                     shift = At.Shift.AFTER
-            ), remap = false)
+            ))
     public void makePlayerPoop(CallbackInfo ci) {
         EntityPlayerMP thisPlayer = (EntityPlayerMP) (Object) this;
 
