@@ -6,7 +6,9 @@ import btw.community.denovo.item.DNItems;
 import btw.community.denovo.recipes.LootEntry;
 import btw.community.denovo.recipes.SiftingCraftingManager;
 import btw.community.denovo.recipes.SiftingRecipe;
+import btw.community.denovo.utils.CisternUtils;
 import btw.crafting.recipe.types.HopperFilterRecipe;
+import btw.item.BTWItems;
 import emi.dev.emi.emi.EmiRenderHelper;
 import emi.dev.emi.emi.api.EmiPlugin;
 import emi.dev.emi.emi.api.EmiRegistry;
@@ -25,18 +27,62 @@ import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ResourceLocation;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class DeNovoEmiPlugin implements EmiPlugin {
 
+    static {
+        DeNovoEmiRecipeCategories.SIEVE = DeNovoEmiPlugin.category("sieve",  EmiStack.of(DNBlocks.sieve));
+        DeNovoEmiRecipeCategories.CISTERN = DeNovoEmiPlugin.category("cistern",  EmiStack.of(DNBlocks.cistern));
+    }
 
     @Override
     public void register(EmiRegistry reg) {
-        // Categories
+        addCategories(reg);
+
+        addProgressiveCraftingRecipes(reg);
+        addSiftingRecipes(reg);
+        addCisternRecipes(reg);
+    }
+
+    private static void addCategories(EmiRegistry reg) {
         reg.addCategory(DeNovoEmiRecipeCategories.SIEVE);
         reg.addWorkstation(DeNovoEmiRecipeCategories.SIEVE, EmiStack.of(new ItemStack(DNBlocks.sieve, 1, 0)));
 
+        reg.addCategory(DeNovoEmiRecipeCategories.CISTERN);
+        reg.addWorkstation(DeNovoEmiRecipeCategories.CISTERN, EmiStack.of(new ItemStack(DNBlocks.cistern, 1, 0)));
+    }
+
+    private static void addCisternRecipes(EmiRegistry reg) {
+        ItemStack input;
+        int fillType;
+        ItemStack[] outputs;
+
+
+        input = new ItemStack(DNItems.waterBowl);
+
+        fillType = 0;
+        outputs =new ItemStack[] {
+                new ItemStack(DNBlocks.cistern),
+                new ItemStack(DNBlocks.cistern)
+        };
+
+        addRecipeSafe(reg, () -> new EmiCisternRecipe((new SyntheticIdentifier("denovo:/cistern")),
+                (ItemStack[]) outputs, (ItemStack)input,  (int)fillType));
+    }
+
+    private static void addProgressiveCraftingRecipes(EmiRegistry reg) {
+        // Progressive Crafting
+        addRecipeSafe(reg, () -> new EmiProgressiveRecipe(new ResourceLocation("denovo", "maggots_silk_extraction"),
+                new ItemStack(DNItems.maggotsSilkExtraction), new ItemStack(Item.silk)));
+        addRecipeSafe(reg, () -> new EmiProgressiveRecipe(new ResourceLocation("denovo", "rust_water_bowl"),
+                new ItemStack(DNItems.rustWaterBowl), new ItemStack(DNItems.ironDust)));
+    }
+
+    private static void addSiftingRecipes(EmiRegistry reg) {
         // Sieve
         for (SiftingRecipe siftingRecipe : SiftingCraftingManager.getRecipes()){
             LootEntry[] output = siftingRecipe.getLootTable();
@@ -47,12 +93,6 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                 (LootEntry[]) output, (ItemStack) input, (ItemStack)filterUsed, false));
 
         }
-
-        // Progressive Crafting
-        addRecipeSafe(reg, () -> new EmiProgressiveRecipe(new ResourceLocation("denovo", "maggots_silk_extraction"),
-                new ItemStack(DNItems.maggotsSilkExtraction), new ItemStack(Item.silk)));
-        addRecipeSafe(reg, () -> new EmiProgressiveRecipe(new ResourceLocation("denovo", "rust_water_bowl"),
-                new ItemStack(DNItems.rustWaterBowl), new ItemStack(DNItems.ironDust)));
     }
 
     public static EmiRecipeCategory category(String id, EmiStack icon) {
@@ -75,9 +115,5 @@ public class DeNovoEmiPlugin implements EmiPlugin {
             EmiReloadLog.warn("Exception when parsing DeNovo recipe " + recipe);
             EmiReloadLog.error(e);
         }
-    }
-
-    static {
-        DeNovoEmiRecipeCategories.SIEVE = DeNovoEmiPlugin.category("sieve",  EmiStack.of(DNBlocks.sieve));
     }
 }

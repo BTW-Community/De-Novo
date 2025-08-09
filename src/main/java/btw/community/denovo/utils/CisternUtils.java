@@ -308,4 +308,75 @@ public class CisternUtils {
         return interpolateColor(color1, color2, ratio);
     }
 
+    public static int getColorMultiplier(int fillType, int progress) {
+        if (fillType == CisternUtils.CONTENTS_MUDDY_WATER) {
+            Color color = CisternUtils.getInterpolatedColor(
+                    CisternUtils.COLOR_MUDDY_WATER,
+                    CisternUtils.COLOR_WATER,
+                    progress,
+                    CisternUtils.MUDDY_WATER_SETTLE_TIME);
+            return color.getRGB() & 0x00FFFFFF;
+
+        } else if (fillType == CisternUtils.CONTENTS_CLAY_WATER) {
+            Color color = CisternUtils.getInterpolatedColor(
+                    CisternUtils.COLOR_CLAY_WATER,
+                    CisternUtils.COLOR_WATER,
+                    CisternUtils.COLOR_INFECTED_WATER,
+                    progress,
+                    CisternUtils.CLAY_WATER_CONVERSION_TIME);
+            return color.getRGB() & 0x00FFFFFF;
+
+        } else if (fillType == CisternUtils.CONTENTS_INFECTED_WATER) {
+            Color color = CisternUtils.getInterpolatedColor(
+                    CisternUtils.COLOR_INFECTED_WATER,
+                    CisternUtils.COLOR_RUST_WATER,
+                    progress,
+                    CisternUtils.INFECTED_WATER_CONVERSION_TIME);
+            return color.getRGB() & 0x00FFFFFF;
+
+        } else if (fillType == CisternUtils.CONTENTS_RUST_WATER) {
+            return CisternUtils.COLOR_RUST_WATER.getRGB() & 0x00FFFFFF;
+        }
+
+        return 0xFFFFFF; // default white
+    }
+
+    //Cistern Item Block Helper
+
+    // Masks and bit widths
+    private static final int LIQUID_MASK = 0xF;        // 4 bits
+    private static final int SOLID_MASK = 0xF;         // 4 bits
+    private static final int FILL_TYPE_MASK = 0xFF;    // 8 bits
+    private static final int PROGRESS_MASK = 0xFFFF;   // 16 bits
+
+    // Bit shifts
+    private static final int LIQUID_SHIFT = 0;
+    private static final int SOLID_SHIFT = 4;
+    private static final int FILL_TYPE_SHIFT = 8;
+    private static final int PROGRESS_SHIFT = 16;
+
+    // Packing method
+    public static int pack(int liquidFillLevel, int solidFillLevel, int fillType, int progress) {
+        return ((liquidFillLevel & LIQUID_MASK) << LIQUID_SHIFT)
+                | ((solidFillLevel & SOLID_MASK) << SOLID_SHIFT)
+                | ((fillType & FILL_TYPE_MASK) << FILL_TYPE_SHIFT)
+                | ((progress & PROGRESS_MASK) << PROGRESS_SHIFT);
+    }
+
+    // Unpacking methods
+    public static int getLiquidFillLevel(int packed) {
+        return (packed >> LIQUID_SHIFT) & LIQUID_MASK;
+    }
+
+    public static int getSolidFillLevel(int packed) {
+        return (packed >> SOLID_SHIFT) & SOLID_MASK;
+    }
+
+    public static int getFillType(int packed) {
+        return (packed >> FILL_TYPE_SHIFT) & FILL_TYPE_MASK;
+    }
+
+    public static int getProgress(int packed) {
+        return (packed >> PROGRESS_SHIFT) & PROGRESS_MASK;
+    }
 }

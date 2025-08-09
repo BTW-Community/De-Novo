@@ -45,8 +45,8 @@ public class EmiSieveRecipe
 
     public EmiSieveRecipe(ResourceLocation hopperId, LootEntry[] lootTable, ItemStack input, ItemStack filterItem, boolean containsSouls) {
         this.id = hopperId;
-        this.inputs = EmiSieveRecipe.convertInput(input, filterItem, containsSouls);
-        this.outputs = EmiSieveRecipe.convertOutput(lootTable);
+        this.inputs = convertInput(input, filterItem, containsSouls);
+        this.outputs = convertOutput(lootTable);
         this.containsSouls = containsSouls;
     }
 

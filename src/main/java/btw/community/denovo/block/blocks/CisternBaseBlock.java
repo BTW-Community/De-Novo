@@ -241,38 +241,8 @@ public abstract class CisternBaseBlock extends BlockContainer {
         if (mudColorPass) {
             CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) blockAccess.getBlockTileEntity(x, y, z);
             int fillType = cisternBase.getFillType();
-
-            if (fillType == CisternUtils.CONTENTS_MUDDY_WATER) {
-
-                Color color = CisternUtils.getInterpolatedColor(
-                        CisternUtils.COLOR_MUDDY_WATER,
-                        CisternUtils.COLOR_WATER,
-                        cisternBase.getProgressCounter(),
-                        CisternUtils.MUDDY_WATER_SETTLE_TIME);
-
-                return color.getRGB() & 0x00FFFFFF;
-            } else if (fillType == CisternUtils.CONTENTS_CLAY_WATER) {
-
-                Color color = CisternUtils.getInterpolatedColor(
-                        CisternUtils.COLOR_CLAY_WATER,
-                        CisternUtils.COLOR_WATER,
-                        CisternUtils.COLOR_INFECTED_WATER,
-                        cisternBase.getProgressCounter(),
-                        CisternUtils.CLAY_WATER_CONVERSION_TIME);
-
-                return color.getRGB() & 0x00FFFFFF;
-            } else if (fillType == CisternUtils.CONTENTS_INFECTED_WATER) {
-                Color color = CisternUtils.getInterpolatedColor(
-                        CisternUtils.COLOR_INFECTED_WATER,
-                        CisternUtils.COLOR_RUST_WATER,
-                        cisternBase.getProgressCounter(),
-                        CisternUtils.INFECTED_WATER_CONVERSION_TIME);
-
-                return color.getRGB() & 0x00FFFFFF;
-            } else if (fillType == CisternUtils.CONTENTS_RUST_WATER) {
-
-                return CisternUtils.COLOR_RUST_WATER.getRGB() & 0x00FFFFFF;
-            }
+            int progress = cisternBase.getProgressCounter();
+            return CisternUtils.getColorMultiplier(fillType, progress);
         }
 
         return super.colorMultiplier(blockAccess, x, y, z);
