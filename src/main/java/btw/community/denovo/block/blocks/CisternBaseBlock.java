@@ -8,6 +8,7 @@ import btw.item.util.ItemUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Random;
@@ -166,18 +167,18 @@ public abstract class CisternBaseBlock extends BlockContainer {
     @Environment(EnvType.CLIENT)
     protected Icon bottom;
     @Environment(EnvType.CLIENT)
-    protected Icon water;
+    protected static Icon water;
     @Environment(EnvType.CLIENT)
-    protected Icon compost;
+    protected static Icon compost;
     @Environment(EnvType.CLIENT)
-    protected Icon maggotsDone;
+    protected static Icon maggotsDone;
     @Environment(EnvType.CLIENT)
-    private final Icon[] maggotsGrowing = new Icon[8];
+    private static final Icon[] maggotsGrowing = new Icon[8];
 
     @Environment(EnvType.CLIENT)
     private final Icon[] compostBreaking = new Icon[8];
     @Environment(EnvType.CLIENT)
-    private final Icon[] dirtBreaking = new Icon[8];
+    private static final Icon[] dirtBreaking = new Icon[8];
     @Environment(EnvType.CLIENT)
     private final Icon[] gravelBreaking = new Icon[8];
 
@@ -213,20 +214,26 @@ public abstract class CisternBaseBlock extends BlockContainer {
     public Icon getSolidContentsIcon(CisternBaseTileEntity cisternBase) {
         int fillType = cisternBase.getFillType();
         int counter = cisternBase.getProgressCounter();
+        return getContentsIcon(fillType, counter);
+    }
 
+    public static Icon getContentsIcon(int fillType, int progress) {
         if (fillType != CisternUtils.CONTENTS_EMPTY) {
             if (fillType == CisternUtils.CONTENTS_COMPOST) {
-                if (counter > 0 && counter < CisternUtils.MAGGOT_CREATION_TIME) {
-                    int iconIndex = CisternUtils.getIconIndex(cisternBase, 8, CisternUtils.MAGGOT_CREATION_TIME);
+                if (progress > 0 && progress < CisternUtils.MAGGOT_CREATION_TIME) {
+                    int iconIndex = CisternUtils.getIconIndex(progress, 8, CisternUtils.MAGGOT_CREATION_TIME);
                     return maggotsGrowing[iconIndex];
                 } else return compost;
             } else if (fillType == CisternUtils.CONTENTS_MAGGOTS) {
                 return maggotsDone;
             } else if (fillType == CisternUtils.CONTENTS_INFECTED_WATER) {
-                int iconIndex = CisternUtils.getIconIndex(cisternBase, 8, CisternUtils.INFECTED_WATER_CONVERSION_TIME);
+                int iconIndex = CisternUtils.getIconIndex(progress, 8, CisternUtils.INFECTED_WATER_CONVERSION_TIME);
                 return dirtBreaking[iconIndex];
-            } else return null;
-        } else return null;
+            }
+            else return water;
+        }
+
+        return water;
     }
 
 

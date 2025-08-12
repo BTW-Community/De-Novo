@@ -198,8 +198,8 @@ public class CisternUtils {
         return true;
     }
 
-    public static int getIconIndex(CisternBaseTileEntity cisternBase, int totalStages, int maxTime) {
-        float progressRatio = (float) cisternBase.getProgressCounter() / maxTime;
+    public static int getIconIndex(int progressCounter, int totalStages, int maxTime) {
+        float progressRatio = (float) progressCounter / maxTime;
 
         int iconIndex = (int) (progressRatio * totalStages);
         iconIndex = Math.min(iconIndex, totalStages - 1);
@@ -344,16 +344,16 @@ public class CisternUtils {
     //Cistern Item Block Helper
 
     // Masks and bit widths
-    private static final int LIQUID_MASK = 0xF;        // 4 bits
-    private static final int SOLID_MASK = 0xF;         // 4 bits
+    private static final int LIQUID_MASK = 0xF;        // 4 bits (0–15)
+    private static final int SOLID_MASK = 0x1F;        // 5 bits (0–31, supports 16)
     private static final int FILL_TYPE_MASK = 0xFF;    // 8 bits
     private static final int PROGRESS_MASK = 0xFFFF;   // 16 bits
 
     // Bit shifts
     private static final int LIQUID_SHIFT = 0;
-    private static final int SOLID_SHIFT = 4;
-    private static final int FILL_TYPE_SHIFT = 8;
-    private static final int PROGRESS_SHIFT = 16;
+    private static final int SOLID_SHIFT = 4;          // after 4 bits of liquid
+    private static final int FILL_TYPE_SHIFT = 9;      // after 4 + 5 bits
+    private static final int PROGRESS_SHIFT = 17;      // after 4 + 5 + 8 bits
 
     // Packing method
     public static int pack(int liquidFillLevel, int solidFillLevel, int fillType, int progress) {

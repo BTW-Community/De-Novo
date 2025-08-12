@@ -31,3 +31,19 @@ item.hoeStone.name=Primitive Stone Hoe
 
 ### EMI ###
 emi.category.denovo.sieve=Sifting
+emi.category.denovo.cistern=Cistern Processing
+emi.category.denovo.composter=Composter Processing
+
+denovo.emi.rain=Rain
+
+denovo.emi.arrow.rain=Fills up with water while it's raining
+denovo.emi.composter.composting=Fills by 1/16 per item
+
+denovo.emi.compost=Compost
+denovo.emi.maggots=Maggots
+denovo.emi.water=Water
+denovo.emi.water.muddy=Muddy Water
+denovo.emi.water.clay=Clay Water
+denovo.emi.water.infected=Infected Water
+denovo.emi.water.infected.dirt=Infected Water with Dirt
+denovo.emi.water.rust=Rust Water

@@ -162,7 +162,7 @@ public class CisternBlock extends CisternBaseBlock {
         model.renderAsItemBlock(renderer, this, damage);
     }
 
-    private void renderBlockContentsAsItem(RenderBlocks renderer, Block block, int damage) {
+    protected void renderBlockContentsAsItem(RenderBlocks renderer, Block block, int damage) {
         if (damage > 0){
             mudColorPass = true;
             GL11.glPushMatrix();
