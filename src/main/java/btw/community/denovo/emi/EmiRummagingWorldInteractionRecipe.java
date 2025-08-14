@@ -28,12 +28,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
+public class EmiRummagingWorldInteractionRecipe implements EmiRecipe {
 
     protected final ResourceLocation id;
-    protected final List<EmiCustomWorldInteractionRecipe.WorldIngredient> left;
-    protected final List<EmiCustomWorldInteractionRecipe.WorldIngredient> right;
-    protected final List<EmiCustomWorldInteractionRecipe.WorldIngredient> outputIngredients;
+    protected final List<EmiRummagingWorldInteractionRecipe.WorldIngredient> left;
+    protected final List<EmiRummagingWorldInteractionRecipe.WorldIngredient> right;
+    protected final List<EmiRummagingWorldInteractionRecipe.WorldIngredient> outputIngredients;
     protected final List<EmiIngredient> inputs;
     protected final List<EmiIngredient> catalysts;
     protected final List<EmiStack> outputs;
@@ -57,7 +57,7 @@ public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
     protected boolean renderOutputBack;
 
 
-    protected EmiCustomWorldInteractionRecipe(Builder builder) {
+    protected EmiRummagingWorldInteractionRecipe(Builder builder) {
         this.id = builder.id;
         this.left = builder.left;
         this.right = builder.right;
@@ -107,14 +107,14 @@ public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
         this.rightHeight = (this.right.size() - 1) / this.rightSize + 1;
         this.outputHeight = (this.outputs.size() - 1) / this.outputSize + 1;
         this.slotHeight = Math.max(this.leftHeight, Math.max(this.rightHeight, this.outputHeight));
-        this.height = this.slotHeight * 18;
+        this.height = (this.slotHeight * 18) + 12;
         if (this.totalSize > 4) {
             this.width = 134;
         }
     }
 
-    public static EmiCustomWorldInteractionRecipe.Builder builder() {
-        return new EmiCustomWorldInteractionRecipe.Builder();
+    public static EmiRummagingWorldInteractionRecipe.Builder builder() {
+        return new EmiRummagingWorldInteractionRecipe.Builder();
     }
 
     @Override
@@ -166,12 +166,13 @@ public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
         int ol = this.width - this.outputSize * 18;
         int rl = (lr + ol) / 2 - this.rightSize * 9 - 4;
         int rr = rl + this.rightSize * 18;
-        widgets.addTexture(EmiTexture.PLUS, (lr + rl) / 2 - 16 / 2, -6 + this.slotHeight * 9);
+        widgets.addTexture(EmiTexture.PLUS, (lr + rl) / 2 - 16 / 2, (-6 + this.slotHeight * 9)+6);
         if (this.arrowToolTip != null) {
-            widgets.addTexture(EmiTexture.EMPTY_ARROW, (rr + ol) / 2 - EmiTexture.EMPTY_ARROW.width / 2, -8 + this.slotHeight * 9)
+            widgets.addTexture(EmiTexture.EMPTY_ARROW, (rr + ol) / 2 - EmiTexture.EMPTY_ARROW.width / 2, (-8 + this.slotHeight * 9) + 6)
                     .tooltip((mx, my) -> List.of(TooltipComponent.of(EmiPort.ordered(EmiPort.translatable(this.arrowToolTip)))));
+//            widgets.addTexture(this.TEXTURE, 10 * i + 25, 5, 9, 9, 16, 27);
         }
-        else widgets.addTexture(EmiTexture.EMPTY_ARROW, (rr + ol) / 2 - EmiTexture.EMPTY_ARROW.width / 2, -8 + this.slotHeight * 9);
+        else widgets.addTexture(EmiTexture.EMPTY_ARROW, (rr + ol) / 2 - EmiTexture.EMPTY_ARROW.width / 2, (-8 + this.slotHeight * 9) + 6);
         int yo = (this.slotHeight - this.leftHeight) * 9;
         for (i = 0; i < this.left.size(); ++i) {
             wi = this.left.get(i);
@@ -183,10 +184,11 @@ public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
                         .drawBack(this.renderInputBack);
             }
             else if (wi.stack.getEmiStacks().get(0).isEmpty()){
-                if (this.renderPlusOverlay != null) widgets.addTexture(this.renderPlusOverlay, i % this.leftSize * 18, yo + i / this.leftSize * 18);
+                if (this.renderPlusOverlay != null) widgets.addTexture(this.renderPlusOverlay, i % this.leftSize * 18, (yo + i / this.leftSize * 18) + 6)
+                        .tooltip((mx, my) -> List.of(TooltipComponent.of(EmiPort.ordered(EmiPort.translatable("denovo.emi.shift_right_click")))));;
             }
-            else widgets.add(wi.mutator.apply(new SlotWidget(wi.stack, i % this.leftSize * 18, yo + i / this.leftSize * 18)))
-                    .drawBack(this.renderInputBack);
+            else widgets.add(wi.mutator.apply(new SlotWidget(wi.stack, i % this.leftSize * 18, (yo + i / this.leftSize * 18) + 6)))
+                        .drawBack(this.renderInputBack);
 
         }
         yo = (this.slotHeight - this.rightHeight) * 9;
@@ -195,26 +197,32 @@ public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
             ItemStack item = wi.stack.getEmiStacks().get(0).getItemStack();
             if (item != null && (item.itemID == DNBlocks.cistern.blockID || item.itemID == DNBlocks.composter.blockID)){
                 int fillType = CisternUtils.getFillType(wi.stack.getEmiStacks().get(0).getItemStack().getItemDamage());
-                widgets.add(wi.mutator.apply(new SlotWidget(wi.stack, rl + i % this.rightSize * 18, yo + i / this.rightSize * 18).catalyst(wi.catalyst)))
+                widgets.add(wi.mutator.apply(new SlotWidget(wi.stack, rl + i % this.rightSize * 18, (yo + i / this.rightSize * 18) + 6).catalyst(wi.catalyst)))
                         .appendTooltip(getFillTypeString(fillType))
                         .drawBack(this.renderInput2Back);
             }
-            else widgets.add(wi.mutator.apply(new SlotWidget(wi.stack, rl + i % this.rightSize * 18, yo + i / this.rightSize * 18).catalyst(wi.catalyst)))
+            else widgets.add(wi.mutator.apply(new SlotWidget(wi.stack, rl + i % this.rightSize * 18, (yo + i / this.rightSize * 18) + 6).catalyst(wi.catalyst)))
                     .drawBack(this.renderInput2Back);
         }
         yo = (this.slotHeight - this.outputHeight) * 9;
         for (i = 0; i < this.outputIngredients.size(); ++i) {
             wi = this.outputIngredients.get(i);
 
-            ItemStack item = wi.stack.getEmiStacks().get(0).getItemStack();
-            if (item != null && (item.itemID == DNBlocks.cistern.blockID || item.itemID == DNBlocks.composter.blockID)){
-                int fillType = CisternUtils.getFillType(wi.stack.getEmiStacks().get(0).getItemStack().getItemDamage());
-                widgets.add(wi.mutator.apply(this.getWidget(wi.stack, ol + i % this.outputSize * 18, yo + i / this.outputSize * 18)).recipeContext(this))
-                        .appendTooltip(getFillTypeString(fillType))
-                        .drawBack(this.renderOutputBack);
-            }
-            else widgets.add(wi.mutator.apply(this.getWidget(wi.stack, ol + i % this.outputSize * 18, yo + i / this.outputSize * 18)).recipeContext(this))
+//            ItemStack item = wi.stack.getEmiStacks().get(0).getItemStack();
+//            if (item != null && (item.itemID == DNBlocks.cistern.blockID || item.itemID == DNBlocks.composter.blockID)){
+//                int fillType = CisternUtils.getFillType(wi.stack.getEmiStacks().get(0).getItemStack().getItemDamage());
+//                widgets.add(wi.mutator.apply(this.getWidget(wi.stack, ol + i % this.outputSize * 18, yo + i / this.outputSize * 18)).recipeContext(this))
+//                        .appendTooltip(getFillTypeString(fillType))
+//                        .drawBack(this.renderOutputBack);
+//            }
+//            else widgets.add(wi.mutator.apply(this.getWidget(wi.stack, ol + i % this.outputSize * 18, yo + i / this.outputSize * 18)).recipeContext(this))
+//                    .drawBack(this.renderOutputBack);
+
+            widgets.add(wi.mutator.apply(this.getWidget(EmiStack.of(Block.grass), ol + i % this.outputSize * 18, (yo + i / this.outputSize * 18) + 8 + 4)))
                     .drawBack(this.renderOutputBack);
+            widgets.add(wi.mutator.apply(this.getWidget(EmiStack.of(new ItemStack(Block.deadBush, 1, 3)).setChance(0.25F), ol + i % this.outputSize * 18, (yo + i / this.outputSize * 18) - 8 + 4)))
+                    .drawBack(this.renderOutputBack);
+
         }
     }
 
@@ -281,9 +289,9 @@ public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
     }
 
     public static class Builder {
-        protected final List<EmiCustomWorldInteractionRecipe.WorldIngredient> left = Lists.newArrayList();
-        protected final List<EmiCustomWorldInteractionRecipe.WorldIngredient> right = Lists.newArrayList();
-        protected final List<EmiCustomWorldInteractionRecipe.WorldIngredient> output = Lists.newArrayList();
+        protected final List<EmiRummagingWorldInteractionRecipe.WorldIngredient> left = Lists.newArrayList();
+        protected final List<EmiRummagingWorldInteractionRecipe.WorldIngredient> right = Lists.newArrayList();
+        protected final List<EmiRummagingWorldInteractionRecipe.WorldIngredient> output = Lists.newArrayList();
         protected final List<Integer> liquidSteps = Lists.newArrayList();
         protected final List<Integer> solidSteps = Lists.newArrayList();
         protected boolean renderInputBack;
@@ -297,7 +305,7 @@ public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
         private Builder() {
         }
 
-        public EmiCustomWorldInteractionRecipe build() {
+        public EmiRummagingWorldInteractionRecipe build() {
             if (this.left.isEmpty()) {
                 throw new IllegalStateException("Cannot create a world interaction recipe without a left input");
             }
@@ -307,50 +315,50 @@ public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
             if (this.output.isEmpty()) {
                 throw new IllegalStateException("Cannot create a world interaction recipe without an output");
             }
-            return new EmiCustomWorldInteractionRecipe(this);
+            return new EmiRummagingWorldInteractionRecipe(this);
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder id(ResourceLocation id) {
+        public EmiRummagingWorldInteractionRecipe.Builder id(ResourceLocation id) {
             this.id = id;
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder leftInput(EmiIngredient stack) {
-            this.left.add(new EmiCustomWorldInteractionRecipe.WorldIngredient(stack, false, s -> s));
+        public EmiRummagingWorldInteractionRecipe.Builder leftInput(EmiIngredient stack) {
+            this.left.add(new EmiRummagingWorldInteractionRecipe.WorldIngredient(stack, false, s -> s));
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder leftInput(EmiIngredient stack, Function<SlotWidget, SlotWidget> mutator) {
-            this.left.add(new EmiCustomWorldInteractionRecipe.WorldIngredient(stack, false, mutator));
+        public EmiRummagingWorldInteractionRecipe.Builder leftInput(EmiIngredient stack, Function<SlotWidget, SlotWidget> mutator) {
+            this.left.add(new EmiRummagingWorldInteractionRecipe.WorldIngredient(stack, false, mutator));
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder rightInput(EmiIngredient stack, boolean catalyst) {
-            this.right.add(new EmiCustomWorldInteractionRecipe.WorldIngredient(stack, catalyst, s -> s));
+        public EmiRummagingWorldInteractionRecipe.Builder rightInput(EmiIngredient stack, boolean catalyst) {
+            this.right.add(new EmiRummagingWorldInteractionRecipe.WorldIngredient(stack, catalyst, s -> s));
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder rightInput(EmiIngredient stack, boolean catalyst, Function<SlotWidget, SlotWidget> mutator) {
-            this.right.add(new EmiCustomWorldInteractionRecipe.WorldIngredient(stack, catalyst, mutator));
+        public EmiRummagingWorldInteractionRecipe.Builder rightInput(EmiIngredient stack, boolean catalyst, Function<SlotWidget, SlotWidget> mutator) {
+            this.right.add(new EmiRummagingWorldInteractionRecipe.WorldIngredient(stack, catalyst, mutator));
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder output(EmiStack stack) {
-            this.output.add(new EmiCustomWorldInteractionRecipe.WorldIngredient(stack, false, s -> s));
+        public EmiRummagingWorldInteractionRecipe.Builder output(EmiStack stack) {
+            this.output.add(new EmiRummagingWorldInteractionRecipe.WorldIngredient(stack, false, s -> s));
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder output(EmiStack stack, Function<SlotWidget, SlotWidget> mutator) {
-            this.output.add(new EmiCustomWorldInteractionRecipe.WorldIngredient(stack, false, mutator));
+        public EmiRummagingWorldInteractionRecipe.Builder output(EmiStack stack, Function<SlotWidget, SlotWidget> mutator) {
+            this.output.add(new EmiRummagingWorldInteractionRecipe.WorldIngredient(stack, false, mutator));
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder supportsRecipeTree(boolean supportsRecipeTree) {
+        public EmiRummagingWorldInteractionRecipe.Builder supportsRecipeTree(boolean supportsRecipeTree) {
             this.supportsRecipeTree = supportsRecipeTree;
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder animateOutputContents(int[] liquidsteps, int[] solidsteps) {
+        public EmiRummagingWorldInteractionRecipe.Builder animateOutputContents(int[] liquidsteps, int[] solidsteps) {
             if (liquidsteps != null) {
                 for (int step : liquidsteps){
                     this.liquidSteps.add(step);
@@ -365,19 +373,19 @@ public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder setArrowToolTip(String s) {
+        public EmiRummagingWorldInteractionRecipe.Builder setArrowToolTip(String s) {
             this.arrowToolTip = s;
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder setRenderBack(boolean renderInputBack, boolean renderInput2Back,boolean renderOutputBack) {
+        public EmiRummagingWorldInteractionRecipe.Builder setRenderBack(boolean renderInputBack, boolean renderInput2Back,boolean renderOutputBack) {
             this.renderInputBack = renderInputBack;
             this.renderInput2Back = renderInput2Back;
             this.renderOutputBack = renderOutputBack;
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder renderPlusOverlay(EmiTexture emiTexture) {
+        public EmiRummagingWorldInteractionRecipe.Builder renderPlusOverlay(EmiTexture emiTexture) {
             this.renderPlusOverlay = emiTexture;
             return this;
         }

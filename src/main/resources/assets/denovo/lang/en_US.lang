@@ -21,15 +21,17 @@ item.denovo.iron_dust.name=Iron Dust
 
 ### Vanilla Overwrites ###
 #Blocks
-tile.denovo.deadbush.tiny.name=Tiny Dead Bush
-tile.denovo.deadbush.small.name=Small Dead Bush
-tile.denovo.deadbush.medium.name=Medium Dead Bush
-tile.denovo.deadbush.mature.name=Dead Bush
+tile.deadbush.tiny.name=Tiny Dead Bush
+tile.deadbush.small.name=Small Dead Bush
+tile.deadbush.medium.name=Medium Dead Bush
+tile.deadbush.mature.name=Dead Bush
 
 #Items
 item.hoeStone.name=Primitive Stone Hoe
 
 ### EMI ###
+denovo.emi.shift_right_click=Hold Shift and Right Click
+
 emi.category.denovo.sieve=Sifting
 emi.category.denovo.cistern=Cistern Processing
 emi.category.denovo.composter=Composter Processing

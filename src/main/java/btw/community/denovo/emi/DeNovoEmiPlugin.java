@@ -24,6 +24,9 @@ import java.util.function.Supplier;
 
 public class DeNovoEmiPlugin implements EmiPlugin {
 
+    private static final EmiTexture SHIFT_RIGHT_CLICK_TEXTURE = new EmiTexture(new ResourceLocation("denovo", "textures/emi/shift_right_click.png"), 0, 0, 20, 20, 20, 20, 20, 20);
+
+
     static {
         DeNovoEmiRecipeCategories.SIEVE = DeNovoEmiPlugin.category("sieve",  EmiStack.of(DNBlocks.sieve));
         DeNovoEmiRecipeCategories.CISTERN = DeNovoEmiPlugin.category("cistern",  EmiStack.of(DNBlocks.cistern));
@@ -51,6 +54,7 @@ public class DeNovoEmiPlugin implements EmiPlugin {
     }
 
     private static void addInWorldRecipes(EmiRegistry reg){
+        addRummagingInteractionRecipes(reg);
         addComposterInteractionRecipes(reg);
         addCisternInteractionRecipes(reg);
 
@@ -87,6 +91,18 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                 CisternUtils.CONTENTS_INFECTED_WATER, CisternUtils.CONTENTS_RUST_WATER,
                 CisternUtils.INFECTED_WATER_CONVERSION_TIME,
                 "denovo.emi.water.infected.dirt", "denovo.emi.water.rust");
+    }
+
+    private static void addRummagingInteractionRecipes(EmiRegistry reg) {
+        reg.addRecipe(EmiRummagingWorldInteractionRecipe.builder().id(
+                        new ResourceLocation("denovo", "/world/block_interaction/denovo/rummaging_dead_bush"))
+                .leftInput(EmiStack.EMPTY)
+                .renderPlusOverlay(SHIFT_RIGHT_CLICK_TEXTURE)
+                .rightInput(EmiStack.of(Block.grass), false)
+                .output(EmiStack.of(new ItemStack(Block.deadBush, 1, 0)))
+                .setArrowToolTip("denovo.emi.hunger.rummaging")
+                .setRenderBack(true, false,false)
+                .supportsRecipeTree(true).build());
     }
 
     private static void addCisternProcessingRecipe(EmiRegistry reg, String id, int inputType, int outputType, int processingTime, String inputString, String outputString) {
