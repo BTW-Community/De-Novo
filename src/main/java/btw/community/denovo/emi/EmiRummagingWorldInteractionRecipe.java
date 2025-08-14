@@ -184,8 +184,12 @@ public class EmiRummagingWorldInteractionRecipe implements EmiRecipe {
                         .drawBack(this.renderInputBack);
             }
             else if (wi.stack.getEmiStacks().get(0).isEmpty()){
-                if (this.renderPlusOverlay != null) widgets.addTexture(this.renderPlusOverlay, i % this.leftSize * 18, (yo + i / this.leftSize * 18) + 6)
-                        .tooltip((mx, my) -> List.of(TooltipComponent.of(EmiPort.ordered(EmiPort.translatable("denovo.emi.shift_right_click")))));;
+                if (this.renderPlusOverlay != null) {
+                    widgets.addTexture(this.renderPlusOverlay, (i % this.leftSize * 18) + 22, (yo + i / this.leftSize * 18) + 6)
+                            .tooltip((mx, my) -> List.of(TooltipComponent.of(EmiPort.ordered(EmiPort.translatable("denovo.emi.shift_right_click")))));
+                };
+                widgets.add(wi.mutator.apply(new SlotWidget(wi.stack, i % this.leftSize * 18, (yo + i / this.leftSize * 18) + 6)))
+                        .drawBack(this.renderInputBack);
             }
             else widgets.add(wi.mutator.apply(new SlotWidget(wi.stack, i % this.leftSize * 18, (yo + i / this.leftSize * 18) + 6)))
                         .drawBack(this.renderInputBack);

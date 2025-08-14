@@ -127,7 +127,7 @@ public class DeNovoEmiPlugin implements EmiPlugin {
         reg.addRecipe(EmiGoldenDungWorldInteractionRecipe.builder().id(
                         new ResourceLocation("denovo", "/world/block_interaction/denovo/golden_dung"))
                 .leftInput(EmiStack.of(BTWItems.goldenDung))
-                .rightInput(EmiStack.of(Block.grass), false)
+                .rightInput(EmiIngredient.of(validBlocks.stream().toList()), false)
                 .output(EmiIngredient.of(validBlocks.stream().toList()))
                 .setRenderBack(true, false,false)
                 .supportsRecipeTree(true).build());
