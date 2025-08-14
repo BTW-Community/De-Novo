@@ -1,12 +1,9 @@
 package btw.community.denovo.emi;
 
 import btw.community.denovo.block.DNBlocks;
-import btw.community.denovo.block.blocks.CisternBaseBlock;
-import btw.community.denovo.item.DNItems;
 import btw.community.denovo.utils.CisternUtils;
 import com.google.common.collect.Lists;
 import emi.dev.emi.emi.EmiPort;
-import emi.dev.emi.emi.EmiRenderHelper;
 import emi.dev.emi.emi.api.recipe.EmiRecipe;
 import emi.dev.emi.emi.api.recipe.EmiRecipeCategory;
 import emi.dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
@@ -23,20 +20,21 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
+public class EmiGoldenDungWorldInteractionRecipe implements EmiRecipe {
 
     protected final ResourceLocation id;
-    protected final List<EmiCustomWorldInteractionRecipe.WorldIngredient> left;
-    protected final List<EmiCustomWorldInteractionRecipe.WorldIngredient> right;
-    protected final List<EmiCustomWorldInteractionRecipe.WorldIngredient> outputIngredients;
+    protected final List<EmiGoldenDungWorldInteractionRecipe.WorldIngredient> left;
+    protected final List<EmiGoldenDungWorldInteractionRecipe.WorldIngredient> right;
+    protected final List<EmiGoldenDungWorldInteractionRecipe.WorldIngredient> outputIngredients;
     protected final List<EmiIngredient> inputs;
     protected final List<EmiIngredient> catalysts;
-    protected final List<EmiStack> outputs;
+    protected final List<EmiIngredient> outputs;
     protected final List<Integer> liquidSteps;
     protected final List<Integer> solidSteps;
     protected final boolean supportsRecipeTree;
@@ -57,7 +55,7 @@ public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
     protected boolean renderOutputBack;
 
 
-    protected EmiCustomWorldInteractionRecipe(Builder builder) {
+    protected EmiGoldenDungWorldInteractionRecipe(Builder builder) {
         this.id = builder.id;
         this.left = builder.left;
         this.right = builder.right;
@@ -71,7 +69,7 @@ public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
         this.inputs = Stream.concat(this.left.stream(), this.right.stream()).filter(i -> !i.catalyst).map(i -> i.stack).collect(Collectors.toList());
         this.catalysts = Stream.concat(this.left.stream(), this.right.stream()).filter(i -> i.catalyst).map(i -> i.stack).collect(Collectors.toList());
         this.outputIngredients = builder.output;
-        this.outputs = builder.output.stream().map(i -> (EmiStack)i.stack).collect(Collectors.toList());
+        this.outputs = builder.output.stream().map(i -> i.stack).collect(Collectors.toList());
         this.supportsRecipeTree = builder.supportsRecipeTree;
         for (EmiIngredient catalyst : this.catalysts) {
             for (EmiStack stack : catalyst.getEmiStacks()) {
@@ -103,9 +101,13 @@ public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
             this.rightSize = this.right.size();
             this.outputSize = this.outputs.size();
         }
+
         this.leftHeight = (this.left.size() - 1) / this.leftSize + 1;
         this.rightHeight = (this.right.size() - 1) / this.rightSize + 1;
         this.outputHeight = (this.outputs.size() - 1) / this.outputSize + 1;
+        //
+        this.outputHeight *= 2;
+        //
         this.slotHeight = Math.max(this.leftHeight, Math.max(this.rightHeight, this.outputHeight));
         this.height = this.slotHeight * 18;
         if (this.totalSize > 4) {
@@ -113,8 +115,8 @@ public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
         }
     }
 
-    public static EmiCustomWorldInteractionRecipe.Builder builder() {
-        return new EmiCustomWorldInteractionRecipe.Builder();
+    public static EmiGoldenDungWorldInteractionRecipe.Builder builder() {
+        return new EmiGoldenDungWorldInteractionRecipe.Builder();
     }
 
     @Override
@@ -140,7 +142,10 @@ public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
 
     @Override
     public List<EmiStack> getOutputs() {
-        return this.outputs;
+        ArrayList<EmiStack> newOut = new ArrayList();
+        for (EmiIngredient stack : this.outputs) newOut.add(stack.getEmiStacks().get(0));
+
+        return newOut;
     }
 
     @Override
@@ -186,7 +191,7 @@ public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
                 if (this.renderPlusOverlay != null) widgets.addTexture(this.renderPlusOverlay, i % this.leftSize * 18, yo + i / this.leftSize * 18);
             }
             else widgets.add(wi.mutator.apply(new SlotWidget(wi.stack, i % this.leftSize * 18, yo + i / this.leftSize * 18)))
-                    .drawBack(this.renderInputBack);
+                        .drawBack(this.renderInputBack);
 
         }
         yo = (this.slotHeight - this.rightHeight) * 9;
@@ -213,7 +218,10 @@ public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
                         .appendTooltip(getFillTypeString(fillType))
                         .drawBack(this.renderOutputBack);
             }
-            else widgets.add(wi.mutator.apply(this.getWidget(wi.stack, ol + i % this.outputSize * 18, yo + i / this.outputSize * 18)).recipeContext(this))
+            else widgets.add(wi.mutator.apply(this.getWidget(wi.stack, ol + i % this.outputSize * 18, (yo + i / this.outputSize * 18) + 16)).recipeContext(this))
+                    .drawBack(this.renderOutputBack);
+
+            widgets.add(wi.mutator.apply(this.getWidget(EmiStack.of(new ItemStack(Block.deadBush, 1, 0)), ol + i % this.outputSize * 18, (yo + i / this.outputSize * 18))).recipeContext(this))
                     .drawBack(this.renderOutputBack);
         }
     }
@@ -281,9 +289,9 @@ public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
     }
 
     public static class Builder {
-        protected final List<EmiCustomWorldInteractionRecipe.WorldIngredient> left = Lists.newArrayList();
-        protected final List<EmiCustomWorldInteractionRecipe.WorldIngredient> right = Lists.newArrayList();
-        protected final List<EmiCustomWorldInteractionRecipe.WorldIngredient> output = Lists.newArrayList();
+        protected final List<EmiGoldenDungWorldInteractionRecipe.WorldIngredient> left = Lists.newArrayList();
+        protected final List<EmiGoldenDungWorldInteractionRecipe.WorldIngredient> right = Lists.newArrayList();
+        protected final List<EmiGoldenDungWorldInteractionRecipe.WorldIngredient> output = Lists.newArrayList();
         protected final List<Integer> liquidSteps = Lists.newArrayList();
         protected final List<Integer> solidSteps = Lists.newArrayList();
         protected boolean renderInputBack;
@@ -297,7 +305,7 @@ public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
         private Builder() {
         }
 
-        public EmiCustomWorldInteractionRecipe build() {
+        public EmiGoldenDungWorldInteractionRecipe build() {
             if (this.left.isEmpty()) {
                 throw new IllegalStateException("Cannot create a world interaction recipe without a left input");
             }
@@ -307,55 +315,55 @@ public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
             if (this.output.isEmpty()) {
                 throw new IllegalStateException("Cannot create a world interaction recipe without an output");
             }
-            return new EmiCustomWorldInteractionRecipe(this);
+            return new EmiGoldenDungWorldInteractionRecipe(this);
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder id(ResourceLocation id) {
+        public EmiGoldenDungWorldInteractionRecipe.Builder id(ResourceLocation id) {
             this.id = id;
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder leftInput(EmiIngredient stack) {
-            this.left.add(new EmiCustomWorldInteractionRecipe.WorldIngredient(stack, false, s -> s));
+        public EmiGoldenDungWorldInteractionRecipe.Builder leftInput(EmiIngredient stack) {
+            this.left.add(new EmiGoldenDungWorldInteractionRecipe.WorldIngredient(stack, false, s -> s));
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder leftInput(EmiIngredient stack, Function<SlotWidget, SlotWidget> mutator) {
-            this.left.add(new EmiCustomWorldInteractionRecipe.WorldIngredient(stack, false, mutator));
+        public EmiGoldenDungWorldInteractionRecipe.Builder leftInput(EmiIngredient stack, Function<SlotWidget, SlotWidget> mutator) {
+            this.left.add(new EmiGoldenDungWorldInteractionRecipe.WorldIngredient(stack, false, mutator));
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder rightInput(EmiIngredient stack, boolean catalyst) {
-            this.right.add(new EmiCustomWorldInteractionRecipe.WorldIngredient(stack, catalyst, s -> s));
+        public EmiGoldenDungWorldInteractionRecipe.Builder rightInput(EmiIngredient stack, boolean catalyst) {
+            this.right.add(new EmiGoldenDungWorldInteractionRecipe.WorldIngredient(stack, catalyst, s -> s));
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder rightInput(EmiIngredient stack, boolean catalyst, Function<SlotWidget, SlotWidget> mutator) {
-            this.right.add(new EmiCustomWorldInteractionRecipe.WorldIngredient(stack, catalyst, mutator));
+        public EmiGoldenDungWorldInteractionRecipe.Builder rightInput(EmiIngredient stack, boolean catalyst, Function<SlotWidget, SlotWidget> mutator) {
+            this.right.add(new EmiGoldenDungWorldInteractionRecipe.WorldIngredient(stack, catalyst, mutator));
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder output(EmiStack stack) {
-            this.output.add(new EmiCustomWorldInteractionRecipe.WorldIngredient(stack, false, s -> s));
+        public EmiGoldenDungWorldInteractionRecipe.Builder output(EmiStack stack) {
+            this.output.add(new EmiGoldenDungWorldInteractionRecipe.WorldIngredient(stack, false, s -> s));
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder output(EmiIngredient stack) {
-            this.output.add(new EmiCustomWorldInteractionRecipe.WorldIngredient(stack, false, s -> s));
+        public EmiGoldenDungWorldInteractionRecipe.Builder output(EmiIngredient stack) {
+            this.output.add(new EmiGoldenDungWorldInteractionRecipe.WorldIngredient(stack, false, s -> s));
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder output(EmiStack stack, Function<SlotWidget, SlotWidget> mutator) {
-            this.output.add(new EmiCustomWorldInteractionRecipe.WorldIngredient(stack, false, mutator));
+        public EmiGoldenDungWorldInteractionRecipe.Builder output(EmiStack stack, Function<SlotWidget, SlotWidget> mutator) {
+            this.output.add(new EmiGoldenDungWorldInteractionRecipe.WorldIngredient(stack, false, mutator));
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder supportsRecipeTree(boolean supportsRecipeTree) {
+        public EmiGoldenDungWorldInteractionRecipe.Builder supportsRecipeTree(boolean supportsRecipeTree) {
             this.supportsRecipeTree = supportsRecipeTree;
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder animateOutputContents(int[] liquidsteps, int[] solidsteps) {
+        public EmiGoldenDungWorldInteractionRecipe.Builder animateOutputContents(int[] liquidsteps, int[] solidsteps) {
             if (liquidsteps != null) {
                 for (int step : liquidsteps){
                     this.liquidSteps.add(step);
@@ -370,19 +378,19 @@ public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder setArrowToolTip(String s) {
+        public EmiGoldenDungWorldInteractionRecipe.Builder setArrowToolTip(String s) {
             this.arrowToolTip = s;
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder setRenderBack(boolean renderInputBack, boolean renderInput2Back,boolean renderOutputBack) {
+        public EmiGoldenDungWorldInteractionRecipe.Builder setRenderBack(boolean renderInputBack, boolean renderInput2Back, boolean renderOutputBack) {
             this.renderInputBack = renderInputBack;
             this.renderInput2Back = renderInput2Back;
             this.renderOutputBack = renderOutputBack;
             return this;
         }
 
-        public EmiCustomWorldInteractionRecipe.Builder renderPlusOverlay(EmiTexture emiTexture) {
+        public EmiGoldenDungWorldInteractionRecipe.Builder renderPlusOverlay(EmiTexture emiTexture) {
             this.renderPlusOverlay = emiTexture;
             return this;
         }

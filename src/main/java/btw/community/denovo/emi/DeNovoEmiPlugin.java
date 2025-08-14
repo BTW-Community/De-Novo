@@ -1,5 +1,7 @@
 package btw.community.denovo.emi;
 
+import btw.block.BTWBlocks;
+import btw.block.blocks.AestheticOpaqueEarthBlock;
 import btw.community.denovo.block.DNBlocks;
 import btw.community.denovo.item.DNItems;
 import btw.community.denovo.recipes.LootEntry;
@@ -55,6 +57,7 @@ public class DeNovoEmiPlugin implements EmiPlugin {
 
     private static void addInWorldRecipes(EmiRegistry reg){
         addRummagingInteractionRecipes(reg);
+        addGoldenDungInteractionRecipes(reg);
         addComposterInteractionRecipes(reg);
         addCisternInteractionRecipes(reg);
 
@@ -99,8 +102,33 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                 .leftInput(EmiStack.EMPTY)
                 .renderPlusOverlay(SHIFT_RIGHT_CLICK_TEXTURE)
                 .rightInput(EmiStack.of(Block.grass), false)
-                .output(EmiStack.of(new ItemStack(Block.deadBush, 1, 0)))
+                .output(EmiStack.of(new ItemStack(Block.deadBush, 1, 3)))
                 .setArrowToolTip("denovo.emi.hunger.rummaging")
+                .setRenderBack(true, false,false)
+                .supportsRecipeTree(true).build());
+    }
+
+    private static void addGoldenDungInteractionRecipes(EmiRegistry reg) {
+
+        ArrayList validBlocks = new ArrayList();
+        validBlocks.add(EmiStack.of(Block.bedrock));
+        validBlocks.add(EmiStack.of(Block.grass));
+//        validBlocks.add(EmiStack.of(BTWBlocks.looseSparseGrass)); //sparse
+        validBlocks.add(EmiStack.of(Block.dirt));
+        validBlocks.add(EmiStack.of(BTWBlocks.looseDirt));
+        validBlocks.add(EmiStack.of(BTWBlocks.planterWithSoil));
+        validBlocks.add(EmiStack.of(new ItemStack(BTWBlocks.aestheticEarth, 1, AestheticOpaqueEarthBlock.SUBTYPE_BLIGHT_LEVEL_0)));
+        validBlocks.add(EmiStack.of(new ItemStack(BTWBlocks.aestheticEarth, 1, AestheticOpaqueEarthBlock.SUBTYPE_BLIGHT_LEVEL_1)));
+        validBlocks.add(EmiStack.of(new ItemStack(BTWBlocks.aestheticEarth, 1, AestheticOpaqueEarthBlock.SUBTYPE_BLIGHT_LEVEL_2)));
+        validBlocks.add(EmiStack.of(new ItemStack(BTWBlocks.aestheticEarth, 1, AestheticOpaqueEarthBlock.SUBTYPE_BLIGHT_ROOTS_LEVEL_2)));
+        validBlocks.add(EmiStack.of(new ItemStack(BTWBlocks.aestheticEarth, 1, AestheticOpaqueEarthBlock.SUBTYPE_BLIGHT_LEVEL_3)));
+        validBlocks.add(EmiStack.of(new ItemStack(BTWBlocks.aestheticEarth, 1, AestheticOpaqueEarthBlock.SUBTYPE_BLIGHT_ROOTS_LEVEL_3)));
+
+        reg.addRecipe(EmiGoldenDungWorldInteractionRecipe.builder().id(
+                        new ResourceLocation("denovo", "/world/block_interaction/denovo/golden_dung"))
+                .leftInput(EmiStack.of(BTWItems.goldenDung))
+                .rightInput(EmiStack.of(Block.grass), false)
+                .output(EmiIngredient.of(validBlocks.stream().toList()))
                 .setRenderBack(true, false,false)
                 .supportsRecipeTree(true).build());
     }
