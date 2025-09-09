@@ -2,8 +2,11 @@ package btw.community.denovo.block.tileentities;
 
 import btw.block.tileentity.TileEntityDataPacketHandler;
 import btw.client.fx.BTWEffectManager;
+import btw.community.denovo.DeNovoAddon;
 import btw.community.denovo.block.DNBlocks;
 import btw.community.denovo.block.blocks.SieveBlock;
+import btw.community.denovo.entity.mob.possession.PossessionSource;
+import btw.community.denovo.entity.mob.possession.PossessionType;
 import net.minecraft.src.*;
 
 public class SieveTileEntity extends TileEntity implements TileEntityDataPacketHandler {
@@ -85,7 +88,7 @@ public class SieveTileEntity extends TileEntity implements TileEntityDataPacketH
         if (containedSoulCount >= OVERLOAD_SOUL_COUNT) {
             ((SieveBlock) DNBlocks.sieve).breakSieve(worldObj, xCoord, yCoord, zCoord);
 
-            EntityCreature.attemptToPossessCreaturesAroundBlock(this.worldObj, this.xCoord, this.yCoord, this.zCoord, POSSESSION_COUNT_ON_OVERLOAD, BlockPortal.CREATURE_POSSESSION_RANGE);
+            EntityCreature.attemptToPossessCreaturesAroundBlock(this.worldObj, this.xCoord, this.yCoord, this.zCoord, POSSESSION_COUNT_ON_OVERLOAD, BlockPortal.CREATURE_POSSESSION_RANGE, new PossessionSource.Sifting());
         }
     }
 
