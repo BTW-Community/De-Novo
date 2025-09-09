@@ -27,6 +27,7 @@ import java.util.function.Supplier;
 public class DeNovoEmiPlugin implements EmiPlugin {
 
     private static final EmiTexture SHIFT_RIGHT_CLICK_TEXTURE = new EmiTexture(new ResourceLocation("denovo", "textures/emi/shift_right_click.png"), 0, 0, 20, 20, 20, 20, 20, 20);
+    private static final EmiTexture USE_RIGHT_CLICK_TEXTURE = new EmiTexture(new ResourceLocation("denovo", "textures/emi/use_right_click.png"), 0, 0, 20, 20, 20, 20, 20, 20);
 
 
     static {
@@ -60,6 +61,7 @@ public class DeNovoEmiPlugin implements EmiPlugin {
         addGoldenDungInteractionRecipes(reg);
         addComposterInteractionRecipes(reg);
         addCisternInteractionRecipes(reg);
+        addCharcoalInteractionRecipes(reg);
 
         addComposterProcessingRecipe(reg, "composter/process_maggot_creation",
                 DNBlocks.composter,
@@ -94,6 +96,21 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                 CisternUtils.CONTENTS_INFECTED_WATER, CisternUtils.CONTENTS_RUST_WATER,
                 CisternUtils.INFECTED_WATER_CONVERSION_TIME,
                 "denovo.emi.water.infected.dirt", "denovo.emi.water.rust");
+    }
+
+    private static void addCharcoalInteractionRecipes(EmiRegistry reg) {
+        int[] solids = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,14,15};
+
+        reg.addRecipe(EmiCharcoalWorldInteractionRecipe.builder().id(
+                        new ResourceLocation("denovo", "/world/block_interaction/denovo/charcoal"))
+                .leftInput(EmiStack.EMPTY)
+                .renderPlusOverlay(USE_RIGHT_CLICK_TEXTURE)
+                .rightInput(EmiStack.EMPTY, false)
+                .output(EmiStack.of(new ItemStack(DNBlocks.placedSticks)))
+                .animateOutputContents(solids)
+//                .setArrowToolTip("denovo.emi.hunger.rummaging")
+                .setRenderBack(true, true,true)
+                .supportsRecipeTree(true).build());
     }
 
     private static void addRummagingInteractionRecipes(EmiRegistry reg) {
