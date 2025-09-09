@@ -40,7 +40,7 @@ public class DNRecipes {
                 new ItemStack(DNItems.charcoalDust)
         });
         addSickleRecipes();
-        addHoeRecipes();
+//        addHoeRecipes();
         addHammerRecipes();
     }
 
