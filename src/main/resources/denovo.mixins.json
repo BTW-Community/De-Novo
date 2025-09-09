@@ -8,6 +8,7 @@
     "BlockMixin",
     "CampfireBlockMixin",
     "DeadBushBlockMixin",
+    "DifficultyMixin",
     "EntityLivingMixin",
     "EntityPlayerMPMixin",
     "FarmlandBlockBaseMixin",
