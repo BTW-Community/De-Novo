@@ -187,11 +187,13 @@ public class DNRecipes {
     }
 
     private static void addCisternRecipes() {
-        //remove old recipe
+        //Crafting
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.cauldron, 1), new Object[]{"# #", "# #", "###", '#', Item.ingotIron});
-        //add new recipe
         RecipeManager.addRecipe(new ItemStack(DNBlocks.cistern, 1), new Object[]{"# #", "# #", "###", '#', Item.ingotIron});
 
+        RecipeManager.addShapelessRecipe(new ItemStack(BTWBlocks.cauldron), new Object[]{DNBlocks.cistern, Item.bucketWater, Item.bone});
+
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 42), new ItemStack[]{new ItemStack(DNBlocks.cistern)});
     }
 
 
