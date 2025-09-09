@@ -183,50 +183,27 @@ public class EmiCharcoalWorldInteractionRecipe implements EmiRecipe {
                         .appendTooltip(getFillTypeString(fillType))
                         .drawBack(this.renderInputBack);
             }
-            else if (wi.stack.getEmiStacks().get(0).isEmpty()){
-                if (this.renderPlusOverlay != null) {
-                    widgets.addTexture(this.renderPlusOverlay, (i % this.leftSize * 18) + 22, (yo + i / this.leftSize * 18) + 6)
-                            .tooltip((mx, my) -> List.of(TooltipComponent.of(EmiPort.ordered(EmiPort.translatable("denovo.emi.use_right_click")))));
-                };
-                widgets.add(wi.mutator.apply(new SlotWidget(wi.stack, i % this.leftSize * 18, (yo + i / this.leftSize * 18) + 6)))
-                        .drawBack(this.renderInputBack);
-            }
             else widgets.add(wi.mutator.apply(new SlotWidget(wi.stack, i % this.leftSize * 18, (yo + i / this.leftSize * 18) + 6)))
                         .drawBack(this.renderInputBack);
+
+            if (this.renderPlusOverlay != null) {
+                widgets.addTexture(this.renderPlusOverlay, (i % this.leftSize * 18) + 22, (yo + i / this.leftSize * 18) + 6)
+                        .tooltip((mx, my) -> List.of(TooltipComponent.of(EmiPort.ordered(EmiPort.translatable("denovo.emi.use_right_click")))));
+            };
 
         }
         yo = (this.slotHeight - this.rightHeight) * 9;
         for (i = 0; i < this.right.size(); ++i) {
             wi = this.right.get(i);
-            ItemStack item = wi.stack.getEmiStacks().get(0).getItemStack();
-            if (item != null && (item.itemID == DNBlocks.placedSticks.blockID)){
-                int fillType = CisternUtils.getFillType(wi.stack.getEmiStacks().get(0).getItemStack().getItemDamage());
-                widgets.add(wi.mutator.apply(new SlotWidget(wi.stack, rl + i % this.rightSize * 18, (yo + i / this.rightSize * 18) + 6).catalyst(wi.catalyst)))
-//                        .appendTooltip(getFillTypeString(fillType))
-                        .drawBack(this.renderInput2Back);
-            }
-            else widgets.add(wi.mutator.apply(new SlotWidget(wi.stack, rl + i % this.rightSize * 18, (yo + i / this.rightSize * 18) + 6).catalyst(wi.catalyst)))
+            widgets.add(wi.mutator.apply(new SlotWidget(wi.stack, rl + i % this.rightSize * 18, (yo + i / this.rightSize * 18) + 6).catalyst(wi.catalyst)))
                     .drawBack(this.renderInput2Back);
         }
         yo = (this.slotHeight - this.outputHeight) * 9;
         for (i = 0; i < this.outputIngredients.size(); ++i) {
             wi = this.outputIngredients.get(i);
 
-//            ItemStack item = wi.stack.getEmiStacks().get(0).getItemStack();
-//            if (item != null && (item.itemID == DNBlocks.cistern.blockID || item.itemID == DNBlocks.composter.blockID)){
-//                int fillType = CisternUtils.getFillType(wi.stack.getEmiStacks().get(0).getItemStack().getItemDamage());
-//                widgets.add(wi.mutator.apply(this.getWidget(wi.stack, ol + i % this.outputSize * 18, yo + i / this.outputSize * 18)).recipeContext(this))
-//                        .appendTooltip(getFillTypeString(fillType))
-//                        .drawBack(this.renderOutputBack);
-//            }
-//            else widgets.add(wi.mutator.apply(this.getWidget(wi.stack, ol + i % this.outputSize * 18, yo + i / this.outputSize * 18)).recipeContext(this))
-//                    .drawBack(this.renderOutputBack);
-
-            widgets.add(wi.mutator.apply(this.getWidget(EmiStack.EMPTY, ol + i % this.outputSize * 18, (yo + i / this.outputSize * 18) + 8 + 4)))
+            widgets.add(wi.mutator.apply(this.getWidget(wi.stack, (ol + i % this.outputSize * 18), (yo + i / this.outputSize * 18) + 6)).recipeContext(this))
                     .drawBack(this.renderOutputBack);
-            widgets.add(wi.mutator.apply(this.getWidget(EmiStack.of(new ItemStack(DNBlocks.placedSticks, 1)), ol + i % this.outputSize * 18, (yo + i / this.outputSize * 18) - 8 + 4)))
-                    .drawBack(this.renderOutputBack);
-
         }
     }
 
@@ -277,8 +254,7 @@ public class EmiCharcoalWorldInteractionRecipe implements EmiRecipe {
             return new GeneratedSlotWidget(r -> {
                 int value = solidSteps.get(index);
                 ItemStack item = outputs.get(0).getItemStack();
-                int damage = item.getItemDamage();
-                item.setItemDamage(damage);
+                item.setItemDamage(value);
                 index = (index + 1) % solidSteps.size();
                 return EmiStack.of(item);
             }, 0, x, y);

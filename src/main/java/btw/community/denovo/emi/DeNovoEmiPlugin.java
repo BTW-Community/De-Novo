@@ -22,6 +22,7 @@ import emi.shims.java.net.minecraft.util.SyntheticIdentifier;
 import net.minecraft.src.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class DeNovoEmiPlugin implements EmiPlugin {
@@ -34,6 +35,7 @@ public class DeNovoEmiPlugin implements EmiPlugin {
         DeNovoEmiRecipeCategories.SIEVE = DeNovoEmiPlugin.category("sieve",  EmiStack.of(DNBlocks.sieve));
         DeNovoEmiRecipeCategories.CISTERN = DeNovoEmiPlugin.category("cistern",  EmiStack.of(DNBlocks.cistern));
         DeNovoEmiRecipeCategories.COMPOSTER = DeNovoEmiPlugin.category("composter",  EmiStack.of(DNBlocks.composter));
+        DeNovoEmiRecipeCategories.CHARCOAL = DeNovoEmiPlugin.category("charcoal",  EmiStack.of(DNBlocks.charcoalPile));
     }
 
     @Override
@@ -43,6 +45,7 @@ public class DeNovoEmiPlugin implements EmiPlugin {
         addInWorldRecipes(reg);
         addProgressiveCraftingRecipes(reg);
         addSiftingRecipes(reg);
+        addCharcoalProcessingRecipes(reg);
     }
 
     private static void addCategories(EmiRegistry reg) {
@@ -54,6 +57,8 @@ public class DeNovoEmiPlugin implements EmiPlugin {
 
         reg.addCategory(DeNovoEmiRecipeCategories.COMPOSTER);
         reg.addWorkstation(DeNovoEmiRecipeCategories.COMPOSTER, EmiStack.of(new ItemStack(DNBlocks.composter, 1, 0)));
+
+        reg.addCategory(DeNovoEmiRecipeCategories.CHARCOAL);
     }
 
     private static void addInWorldRecipes(EmiRegistry reg){
@@ -99,18 +104,35 @@ public class DeNovoEmiPlugin implements EmiPlugin {
     }
 
     private static void addCharcoalInteractionRecipes(EmiRegistry reg) {
-        int[] solids = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,14,15};
+        int[] stages = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,14,15};
 
         reg.addRecipe(EmiCharcoalWorldInteractionRecipe.builder().id(
                         new ResourceLocation("denovo", "/world/block_interaction/denovo/charcoal"))
-                .leftInput(EmiStack.EMPTY)
+                .leftInput(EmiStack.of(Item.stick))
                 .renderPlusOverlay(USE_RIGHT_CLICK_TEXTURE)
-                .rightInput(EmiStack.EMPTY, false)
+                .rightInput(EmiIngredient.of(
+                    List.of(EmiStack.EMPTY,
+                        EmiStack.of(new ItemStack(DNBlocks.placedSticks, 1, 0)),
+                        EmiStack.of(new ItemStack(DNBlocks.placedSticks, 1, 1)),
+                        EmiStack.of(new ItemStack(DNBlocks.placedSticks, 1, 2)),
+                        EmiStack.of(new ItemStack(DNBlocks.placedSticks, 1, 3)),
+                        EmiStack.of(new ItemStack(DNBlocks.placedSticks, 1, 4)),
+                        EmiStack.of(new ItemStack(DNBlocks.placedSticks, 1, 5)),
+                        EmiStack.of(new ItemStack(DNBlocks.placedSticks, 1, 6)),
+                        EmiStack.of(new ItemStack(DNBlocks.placedSticks, 1, 7)),
+                        EmiStack.of(new ItemStack(DNBlocks.placedSticks, 1, 8)),
+                        EmiStack.of(new ItemStack(DNBlocks.placedSticks, 1, 9)),
+                        EmiStack.of(new ItemStack(DNBlocks.placedSticks, 1, 10)),
+                        EmiStack.of(new ItemStack(DNBlocks.placedSticks, 1, 11)),
+                        EmiStack.of(new ItemStack(DNBlocks.placedSticks, 1, 12)),
+                        EmiStack.of(new ItemStack(DNBlocks.placedSticks, 1, 13)),
+                        EmiStack.of(new ItemStack(DNBlocks.placedSticks, 1, 14))
+                    )
+                ), false)
                 .output(EmiStack.of(new ItemStack(DNBlocks.placedSticks)))
-                .animateOutputContents(solids)
-//                .setArrowToolTip("denovo.emi.hunger.rummaging")
+                .animateOutputContents(stages)
                 .setRenderBack(true, true,true)
-                .supportsRecipeTree(true).build());
+                .build());
     }
 
     private static void addRummagingInteractionRecipes(EmiRegistry reg) {
@@ -148,6 +170,16 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                 .output(EmiIngredient.of(validBlocks.stream().toList()))
                 .setRenderBack(true, false,false)
                 .supportsRecipeTree(true).build());
+    }
+
+    private void addCharcoalProcessingRecipes(EmiRegistry reg) {
+        addRecipeSafe(reg, () -> new EmiCharcoalRecipe(new ResourceLocation("denovo", "placed_sticks"),
+                new ItemStack(DNBlocks.placedSticks, 1, 15), new ItemStack(DNBlocks.smolderingPlacedSticks))
+                .setArrowToolTip("denovo.emi.placed_to_smoldering"));
+        addRecipeSafe(reg, () -> new EmiCharcoalRecipe(new ResourceLocation("denovo", "smoldering_sticks"),
+                new ItemStack(DNBlocks.smolderingPlacedSticks), new ItemStack(DNBlocks.charcoalPile, 1, 7)));
+        addRecipeSafe(reg, () -> new EmiCharcoalRecipe(new ResourceLocation("denovo", "charcoal_pile"),
+                new ItemStack(DNBlocks.charcoalPile, 1, 7), new ItemStack(DNItems.charcoalDust, 1)));
     }
 
     private static void addCisternProcessingRecipe(EmiRegistry reg, String id, int inputType, int outputType, int processingTime, String inputString, String outputString) {

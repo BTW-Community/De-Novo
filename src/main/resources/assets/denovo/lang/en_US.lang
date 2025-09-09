@@ -31,10 +31,12 @@ item.hoeStone.name=Primitive Stone Hoe
 
 ### EMI ###
 denovo.emi.shift_right_click=Hold Shift and Right Click
+denovo.emi.use_right_click=Hold "Use" Button and Right Click
 
 emi.category.denovo.sieve=Sifting
 emi.category.denovo.cistern=Cistern Processing
 emi.category.denovo.composter=Composter Processing
+emi.category.denovo.charcoal=Charcoal Creation
 
 denovo.emi.rain=Rain
 
@@ -49,3 +51,6 @@ denovo.emi.water.clay=Clay Water
 denovo.emi.water.infected=Infected Water
 denovo.emi.water.infected.dirt=Infected Water with Dirt
 denovo.emi.water.rust=Rust Water
+
+denovo.emi.placed_to_smoldering=Set on fire
+denovo.emi.charcoal_creation=Keep covered

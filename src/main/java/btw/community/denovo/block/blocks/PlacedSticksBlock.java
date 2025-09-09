@@ -1,6 +1,7 @@
 package btw.community.denovo.block.blocks;
 
 import btw.block.util.Flammability;
+import btw.client.render.util.RenderUtils;
 import btw.community.denovo.block.DNBlocks;
 import btw.item.util.ItemUtils;
 import net.fabricmc.api.EnvType;
@@ -272,4 +273,39 @@ public class PlacedSticksBlock extends Block {
         return (x + z) % 2 == 0;
     }
 
+    @Override
+    public void renderBlockAsItem(RenderBlocks renderer, int iItemDamage, float fBrightness) {
+
+        IBlockAccess blockAccess = renderer.blockAccess;
+        int metadata = iItemDamage; // Implement this method to extract the correct value from metadata
+        int numberOfLayers = (int) Math.floor(metadata / 4D);
+
+        for (int layer = 0; layer < numberOfLayers + 1; layer++) {
+
+            double xMin = 0 / 16D;
+            double xMax = 4 / 16D + (metadata % 4) * 4 / 16D;
+
+            if (layer < numberOfLayers) {
+                xMax = 1D;  // If the layer is full, set xMax to the full width of the block
+            }
+
+            double yMin = layer * 4 / 16D;
+            double yMax = yMin + 4 / 16D;
+
+            double zMin = 0D;
+            double zMax = 1D;
+
+            if (layer % 2 == 0) {
+                // x and z swapped
+                renderer.setRenderBounds(zMin, yMin, xMin, zMax, yMax, xMax);
+            } else {
+                renderer.setRenderBounds(xMin, yMin, zMin, xMax, yMax, zMax);
+            }
+
+            RenderUtils.renderInvBlockWithMetadata(renderer, this, -0.5F, -0.5F, -0.5F, metadata);
+
+        }
+
+
+    }
 }

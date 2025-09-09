@@ -6,4 +6,5 @@ public class DeNovoEmiRecipeCategories {
     public static EmiRecipeCategory SIEVE;
     public static EmiRecipeCategory CISTERN;
     public static EmiRecipeCategory COMPOSTER;
+    public static EmiRecipeCategory CHARCOAL;
 }
