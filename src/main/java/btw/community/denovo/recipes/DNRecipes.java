@@ -16,11 +16,12 @@ public class DNRecipes {
 
     //Cistern and Composter Valid Items
     static {
-        CisternUtils.addLiquidContainers(new ItemStack(Item.bucketWater), new ItemStack(Item.bucketEmpty), 15, 45);
-        CisternUtils.addLiquidContainers(new ItemStack(Item.potion), new ItemStack(Item.glassBottle), 5, 15);
-        CisternUtils.addLiquidContainers(new ItemStack(DNItems.waterBowl), new ItemStack(Item.bowlEmpty), 5, 15);
+        CisternUtils.addLiquidContainers(new ItemStack(Item.bucketWater), new ItemStack(Item.bucketEmpty), 15, 15, 45, 45);
+        CisternUtils.addLiquidContainers(new ItemStack(Item.potion), new ItemStack(Item.glassBottle), 5, 0, 15, 0);
+        CisternUtils.addLiquidContainers(new ItemStack(DNItems.waterBowl), new ItemStack(Item.bowlEmpty), 5,5, 15,15);
 
-        CisternUtils.addRustWaterContainer(new ItemStack(DNItems.rustWaterBowl, 1, DNItems.rustWaterBowl.getMaxDamage()), new ItemStack(Item.bowlEmpty), 5, 15);
+        CisternUtils.addRustWaterContainer(new ItemStack(DNItems.rustWaterBowl, 1, DNItems.rustWaterBowl.getMaxDamage()), new ItemStack(Item.bowlEmpty),
+                5, 15);
     }
 
     public static void addRecipes() {

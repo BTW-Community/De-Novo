@@ -22,7 +22,9 @@ public class CisternUtils {
 
     private static final Map<ItemStack, ItemStack> liquidContainers = new HashMap<>();
     private static final Map<ItemStack, Integer> cisternFillValues = new HashMap<>();
+    private static final Map<ItemStack, Integer> cisternRemoveValues = new HashMap<>();
     private static final Map<ItemStack, Integer> composterFillValues = new HashMap<>();
+    private static final Map<ItemStack, Integer> composterRemoveValues = new HashMap<>();
     public static final Map<ItemStack, ItemStack> rustWaterContainers = new HashMap<>();
 
     public static final int MAX_SOLID_FILL_LEVEL = 16;
@@ -57,7 +59,7 @@ public class CisternUtils {
     public static final Color COLOR_INFECTED_WATER = new Color(248, 133, 117);
     public static final Color COLOR_RUST_WATER = new Color(252, 69, 0);
 
-    public static void addLiquidContainers(ItemStack fullStack, ItemStack emptyStack, int cisternFillValue, int composterFillValue) {
+    public static void addLiquidContainers(ItemStack fullStack, ItemStack emptyStack, int cisternFillValue, int cisternRemoveValue, int composterFillValue, int composterRemoveValue) {
         liquidContainers.put(fullStack, emptyStack);
 
         cisternFillValues.put(fullStack, cisternFillValue);
@@ -65,6 +67,12 @@ public class CisternUtils {
 
         cisternFillValues.put(emptyStack, cisternFillValue);
         composterFillValues.put(emptyStack, composterFillValue);
+
+        cisternRemoveValues.put(fullStack, cisternRemoveValue);
+        composterRemoveValues.put(fullStack, composterRemoveValue);
+
+        cisternRemoveValues.put(emptyStack, cisternRemoveValue);
+        composterRemoveValues.put(emptyStack, composterRemoveValue);
     }
 
     public static void addRustWaterContainer(ItemStack fullStack, ItemStack emptyStack, int cisternFillValue, int composterFillValue) {
@@ -86,6 +94,22 @@ public class CisternUtils {
             }
         } else if (cisterBase instanceof CisternTileEntity) {
             for (Map.Entry<ItemStack, Integer> entry : cisternFillValues.entrySet()) {
+                if (stack.isItemEqual(entry.getKey())) return entry.getValue();
+            }
+        }
+
+        return 0;
+    }
+
+    public static int getRemoveValue(ItemStack stack, CisternBaseTileEntity cisterBase) {
+        if (stack == null) return 0;
+
+        if (cisterBase instanceof ComposterTileEntity) {
+            for (Map.Entry<ItemStack, Integer> entry : composterRemoveValues.entrySet()) {
+                if (stack.isItemEqual(entry.getKey())) return entry.getValue();
+            }
+        } else if (cisterBase instanceof CisternTileEntity) {
+            for (Map.Entry<ItemStack, Integer> entry : cisternRemoveValues.entrySet()) {
                 if (stack.isItemEqual(entry.getKey())) return entry.getValue();
             }
         }
@@ -153,7 +177,7 @@ public class CisternUtils {
 
         if (cisternBase.getFillType() == CONTENTS_WATER) {
             int remainingLiquidAmount = cisternBase.getLiquidFillLevel();
-            int containerSize = getFillValue(heldStack, cisternBase);
+            int containerSize = getRemoveValue(heldStack, cisternBase);
 
             if (remainingLiquidAmount >= containerSize) {
                 if (!world.isRemote) cisternBase.removeLiquid(containerSize);
