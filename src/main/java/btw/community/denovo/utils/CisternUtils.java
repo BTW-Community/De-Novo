@@ -65,12 +65,6 @@ public class CisternUtils {
         cisternFillValues.put(fullStack, cisternFillValue);
         composterFillValues.put(fullStack, composterFillValue);
 
-        cisternFillValues.put(emptyStack, cisternFillValue);
-        composterFillValues.put(emptyStack, composterFillValue);
-
-        cisternRemoveValues.put(fullStack, cisternRemoveValue);
-        composterRemoveValues.put(fullStack, composterRemoveValue);
-
         cisternRemoveValues.put(emptyStack, cisternRemoveValue);
         composterRemoveValues.put(emptyStack, composterRemoveValue);
     }
