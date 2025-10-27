@@ -6,6 +6,9 @@ import btw.community.denovo.block.DNBlocks;
 import btw.community.denovo.item.DNItems;
 import btw.community.denovo.particles.WaterSplashFX;
 import btw.community.denovo.recipes.DNRecipes;
+import btw.world.util.difficulty.Difficulties;
+import btw.world.util.difficulty.Difficulty;
+import btw.world.util.difficulty.DifficultyParam;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.EntityFX;
 import net.minecraft.src.EntityList;
@@ -39,6 +42,11 @@ public class DeNovoAddon extends BTWAddon {
      */
     public static boolean disableMobSpawnsOnSurface = false;
 
+    /**
+     * Set the following to True to disable Hardcore Spawn for all difficulties
+     */
+    public static boolean disableHCSpawn = false;
+
     public DeNovoAddon() {
         super();
         DeNovoAddon.instance = this;
@@ -65,6 +73,15 @@ public class DeNovoAddon extends BTWAddon {
     }
 
     @Override
+    public void postInitialize() {
+        if (DeNovoAddon.disableHCSpawn) {
+            for (Difficulty difficulty: Difficulties.DIFFICULTY_LIST) {
+                difficulty.modifyParam(DifficultyParam.ShouldPlayersHardcoreSpawn.class, false);
+            }
+        }
+    }
+
+    @Override
     public EntityFX spawnCustomParticle(World world, String particleType, double x, double y, double z, double velX, double velY, double velZ) {
 
         if (particleType.startsWith("DNSplash_")) {
@@ -85,6 +102,7 @@ public class DeNovoAddon extends BTWAddon {
         this.registerProperty("DisableSlimeSpawningInFlatWorlds", "False", "Set the following to True to disable all Slime spawning in flat worlds");
         this.registerProperty("LimitSlimeSpawningInFlatWorlds", "False", "Set the following to True to disable Slime Spawning specifically on Grass Blocks in slime chunks in flat worlds");
         this.registerProperty("DiableMobSpawnsOnSurface", "False", "Set the following to True to disable mob spawns on blocks with sky access");
+        this.registerProperty("DisableHCSpawn", "False", "Set the following to True to disable Hardcore Spawn for all difficulties");
 
         //Block IDs
         this.registerProperty("DNBlockSieveID", "3900", "***Block IDs***\n\n");
@@ -117,6 +135,7 @@ public class DeNovoAddon extends BTWAddon {
         disableSlimeSpawningInFlatWorlds = Boolean.parseBoolean(this.propertyValues.get("DisableSlimeSpawningInFlatWorlds"));
         limitSlimeSpawningInFlatWorlds = Boolean.parseBoolean(this.propertyValues.get("LimitSlimeSpawningInFlatWorlds"));
         disableMobSpawnsOnSurface = Boolean.parseBoolean(this.propertyValues.get("DisableMobSpawnsOnSurface"));
+        disableHCSpawn = Boolean.parseBoolean(this.propertyValues.get("DisableHCSpawn"));
     }
 
     public int parseID(String name) {

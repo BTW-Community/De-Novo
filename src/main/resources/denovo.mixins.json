@@ -6,12 +6,12 @@
   "mixins": [
     "BlockLeavesMixin",
     "BlockMixin",
+    "BlockTallGrassMixin",
     "CampfireBlockMixin",
     "DeadBushBlockMixin",
     "EntityLivingMixin",
     "EntityPlayerMPMixin",
     "FarmlandBlockBaseMixin",
-    "FishingRodBaitingRecipeMixin",
     "GrassBlockMixin",
     "HardcoreSpawnUtilsMixin",
     "ItemCoalMixin",

@@ -36,7 +36,8 @@ public abstract class DeadBushBlockMixin extends BlockFlower {
     }
 
     protected int getLightLevelForGrowth() {
-        return 9; //wheat is 11, crops 9
+        //always allow to grow, except gloom
+        return 1; //wheat is 11, crops 9
     }
 
     protected boolean requiresNaturalLight() {

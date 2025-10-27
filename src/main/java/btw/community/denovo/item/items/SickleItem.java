@@ -6,7 +6,7 @@ import net.minecraft.src.*;
 
 public class SickleItem extends ToolItem {
     public SickleItem(int itemID, EnumToolMaterial material, int maxUses) {
-        super(itemID, 2, material);
+        super(itemID, 0, material);
 
         setMaxStackSize(1);
         setMaxDamage(maxUses);
@@ -16,10 +16,18 @@ public class SickleItem extends ToolItem {
         setCreativeTab(CreativeTabs.tabTools);
     }
 
+    private boolean isValidHarvestable(int id){
+
+        if (id == Block.leaves.blockID) return true;
+        if (id == BTWBlocks.bloodWoodLeaves.blockID) return true;
+        if (id == Block.tallGrass.blockID) return true;
+
+        return false;
+    }
+
     @Override
     public boolean onBlockDestroyed(ItemStack stack, World world, int iBlockID, int i, int j, int k, EntityLivingBase usingEntity) {
-        if (iBlockID != Block.leaves.blockID &&
-                iBlockID != BTWBlocks.bloodWoodLeaves.blockID) {
+        if (!isValidHarvestable(iBlockID)) {
             return super.onBlockDestroyed(stack, world, iBlockID, i, j, k, usingEntity);
         } else {
             stack.damageItem(1, usingEntity);
@@ -30,8 +38,7 @@ public class SickleItem extends ToolItem {
     @Override
     public float getStrVsBlock(ItemStack stack, World world, Block block, int i, int j, int k) {
         if (isEfficientVsBlock(stack, world, block, i, j, k)) {
-            if (block.blockID == BTWBlocks.bloodWoodLeaves.blockID ||
-                    block.blockID == Block.leaves.blockID) {
+            if (isValidHarvestable(block.blockID)) {
                 int toolLevel = toolMaterial.getHarvestLevel();
                 return 1F + (toolLevel * 2);
             } else {
@@ -50,13 +57,12 @@ public class SickleItem extends ToolItem {
             }
         }
 
-        return block == Block.leaves ||
-                block == BTWBlocks.bloodWoodLeaves;
+        return isValidHarvestable(block.blockID);
     }
 
     @Override
     public boolean isToolTypeEfficientVsBlockType(Block block) {
-        return block.blockID == Block.leaves.blockID || block.blockID == BTWBlocks.bloodWoodLeaves.blockID;
+        return isValidHarvestable(block.blockID);
     }
 
     @Override

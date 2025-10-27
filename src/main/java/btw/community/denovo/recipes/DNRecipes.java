@@ -8,6 +8,7 @@ import btw.community.denovo.utils.CisternUtils;
 import btw.crafting.recipe.RecipeManager;
 import btw.crafting.recipe.types.customcrafting.FishingRodBaitingRecipe;
 import btw.item.BTWItems;
+import btw.item.tag.BTWTags;
 import net.minecraft.src.Block;
 import net.minecraft.src.FurnaceRecipes;
 import net.minecraft.src.Item;
@@ -17,11 +18,12 @@ public class DNRecipes {
 
     //Cistern and Composter Valid Items
     static {
-        CisternUtils.addLiquidContainers(new ItemStack(Item.bucketWater), new ItemStack(Item.bucketEmpty), 15, 45);
-        CisternUtils.addLiquidContainers(new ItemStack(Item.potion), new ItemStack(Item.glassBottle), 5, 15);
-        CisternUtils.addLiquidContainers(new ItemStack(DNItems.waterBowl), new ItemStack(Item.bowlEmpty), 5, 15);
+        CisternUtils.addLiquidContainers(new ItemStack(Item.bucketWater), new ItemStack(Item.bucketEmpty), 15, 15, 45, 45);
+        CisternUtils.addLiquidContainers(new ItemStack(Item.potion), new ItemStack(Item.glassBottle), 5, 0, 15, 0);
+        CisternUtils.addLiquidContainers(new ItemStack(DNItems.waterBowl), new ItemStack(Item.bowlEmpty), 5,5, 15,15);
 
-        CisternUtils.addRustWaterContainer(new ItemStack(DNItems.rustWaterBowl, 1, DNItems.rustWaterBowl.getMaxDamage()), new ItemStack(Item.bowlEmpty), 5, 15);
+        CisternUtils.addRustWaterContainer(new ItemStack(DNItems.rustWaterBowl, 1, DNItems.rustWaterBowl.getMaxDamage()), new ItemStack(Item.bowlEmpty),
+                5, 15);
     }
 
     public static void addRecipes() {
@@ -31,6 +33,12 @@ public class DNRecipes {
         addComposterRecipes();
         addCisternRecipes();
         addCharcoalRecipes();
+
+        addFishingBait();
+    }
+
+    private static void addFishingBait() {
+        BTWTags.fishingBait.add(DNItems.rawMaggots);
     }
 
     private static void addCharcoalRecipes() {
@@ -41,7 +49,7 @@ public class DNRecipes {
                 new ItemStack(DNItems.charcoalDust)
         });
         addSickleRecipes();
-        addHoeRecipes();
+//        addHoeRecipes();
         addHammerRecipes();
     }
 
@@ -188,11 +196,13 @@ public class DNRecipes {
     }
 
     private static void addCisternRecipes() {
-        //remove old recipe
+        //Crafting
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.cauldron, 1), new Object[]{"# #", "# #", "###", '#', Item.ingotIron});
-        //add new recipe
         RecipeManager.addRecipe(new ItemStack(DNBlocks.cistern, 1), new Object[]{"# #", "# #", "###", '#', Item.ingotIron});
 
+        RecipeManager.addShapelessRecipe(new ItemStack(BTWBlocks.cauldron), new Object[]{DNBlocks.cistern, Item.bucketWater, Item.bone});
+
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 42), new ItemStack[]{new ItemStack(DNBlocks.cistern)});
     }
 
 

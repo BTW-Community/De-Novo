@@ -27,7 +27,7 @@ tile.deadbush.medium.name=Medium Dead Bush
 tile.deadbush.mature.name=Dead Bush
 
 #Items
-item.hoeStone.name=Primitive Stone Hoe
+#item.hoeStone.name=Primitive Stone Hoe
 
 ### EMI ###
 denovo.emi.shift_right_click=Hold Shift and Right Click

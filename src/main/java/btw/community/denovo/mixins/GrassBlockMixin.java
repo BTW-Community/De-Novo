@@ -16,24 +16,24 @@ public abstract class GrassBlockMixin extends Block {
         return 0.25F;
     }
 
-    @Inject(method = "convertBlock",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/src/World;setBlockWithNotify(IIII)Z",
-                    ordinal = 0,
-                    shift = At.Shift.AFTER
-            ),
-            cancellable = true)
-    public void disableDroppingHempSeeds(ItemStack heldStack, World world, int x, int y, int z, int fromSide, CallbackInfoReturnable<Boolean> cir) {
-
-        if (heldStack != null && heldStack.itemID == Item.hoeStone.itemID) {
-            cir.setReturnValue(true);
-        }
-    }
+//    @Inject(method = "convertBlock",
+//            at = @At(
+//                    value = "INVOKE",
+//                    target = "Lnet/minecraft/src/World;setBlockWithNotify(IIII)Z",
+//                    ordinal = 0,
+//                    shift = At.Shift.AFTER
+//            ),
+//            cancellable = true)
+//    public void disableDroppingHempSeeds(ItemStack heldStack, World world, int x, int y, int z, int fromSide, CallbackInfoReturnable<Boolean> cir) {
+//
+//        if (heldStack != null && heldStack.itemID == Item.hoeStone.itemID) {
+//            cir.setReturnValue(true);
+//        }
+//    }
 
     @Override
     public boolean onBlockActivated(World world, int xCoord, int yCoord, int zCoord, EntityPlayer player, int facing, float xClick, float yClick, float zClick) {
-        if (player.getHeldItem() == null && player.isSneaking()) {
+        if (player.getHeldItem() == null && player.isSneaking() && world.isAirBlock(xCoord, yCoord + 1, zCoord)) {
 
             player.foodStats.addExhaustion(1F);
 
