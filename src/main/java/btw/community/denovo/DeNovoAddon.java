@@ -6,6 +6,9 @@ import btw.community.denovo.block.DNBlocks;
 import btw.community.denovo.item.DNItems;
 import btw.community.denovo.particles.WaterSplashFX;
 import btw.community.denovo.recipes.DNRecipes;
+import btw.world.util.difficulty.Difficulties;
+import btw.world.util.difficulty.Difficulty;
+import btw.world.util.difficulty.DifficultyParam;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.EntityFX;
 import net.minecraft.src.EntityList;
@@ -66,6 +69,15 @@ public class DeNovoAddon extends BTWAddon {
         // Client only
         if (!MinecraftServer.getIsServer()) {
             EntityList.addMapping(WaterSplashFX.class, "DNWaterSplashFX", -50);
+        }
+    }
+
+    @Override
+    public void postInitialize() {
+        if (DeNovoAddon.disableHCSpawn) {
+            for (Difficulty difficulty: Difficulties.DIFFICULTY_LIST) {
+                difficulty.modifyParam(DifficultyParam.ShouldPlayersHardcoreSpawn.class, false);
+            }
         }
     }
 
