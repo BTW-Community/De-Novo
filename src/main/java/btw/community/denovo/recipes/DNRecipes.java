@@ -7,6 +7,7 @@ import btw.community.denovo.item.items.RustWaterBowlItem;
 import btw.community.denovo.utils.CisternUtils;
 import btw.crafting.recipe.RecipeManager;
 import btw.item.BTWItems;
+import btw.item.tag.BTWTags;
 import net.minecraft.src.Block;
 import net.minecraft.src.FurnaceRecipes;
 import net.minecraft.src.Item;
@@ -31,6 +32,12 @@ public class DNRecipes {
         addComposterRecipes();
         addCisternRecipes();
         addCharcoalRecipes();
+
+        addFishingBait();
+    }
+
+    private static void addFishingBait() {
+        BTWTags.fishingBait.add(DNItems.rawMaggots);
     }
 
     private static void addCharcoalRecipes() {
