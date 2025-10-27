@@ -33,7 +33,7 @@ public abstract class GrassBlockMixin extends Block {
 
     @Override
     public boolean onBlockActivated(World world, int xCoord, int yCoord, int zCoord, EntityPlayer player, int facing, float xClick, float yClick, float zClick) {
-        if (player.getHeldItem() == null && player.isSneaking()) {
+        if (player.getHeldItem() == null && player.isSneaking() && world.isAirBlock(xCoord, yCoord + 1, zCoord)) {
 
             player.foodStats.addExhaustion(1F);
 
