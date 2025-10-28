@@ -226,7 +226,7 @@ public class EmiCustomWorldInteractionRecipe implements EmiRecipe {
         if (fillType == CisternUtils.CONTENTS_CLAY_WATER) return Text.translatable("denovo.emi.water.clay");
         if (fillType == CisternUtils.CONTENTS_INFECTED_WATER) return Text.translatable("denovo.emi.water.infected");
         if (fillType == CisternUtils.CONTENTS_RUST_WATER) return Text.translatable("denovo.emi.water.rust");
-        return Text.translatable("denovo.emi.cistern.empty");
+        return Text.translatable("denovo.emi.empty");
     }
 
     private int index = 0;

@@ -3,12 +3,15 @@ package btw.community.denovo.emi;
 import btw.block.BTWBlocks;
 import btw.block.blocks.AestheticOpaqueEarthBlock;
 import btw.community.denovo.block.DNBlocks;
+import btw.community.denovo.emi.tag.DeNovoTags;
 import btw.community.denovo.item.DNItems;
 import btw.community.denovo.recipes.LootEntry;
 import btw.community.denovo.recipes.SiftingCraftingManager;
 import btw.community.denovo.recipes.SiftingRecipe;
 import btw.community.denovo.utils.CisternUtils;
 import btw.item.BTWItems;
+import btw.item.tag.BTWTags;
+import btw.item.tag.TagInstance;
 import emi.dev.emi.emi.api.EmiPlugin;
 import emi.dev.emi.emi.api.EmiRegistry;
 import emi.dev.emi.emi.api.recipe.EmiRecipe;
@@ -325,13 +328,14 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                 .supportsRecipeTree(true).build());
 
         //Composting
-        ArrayList compostables = new ArrayList();
-        for (ItemStack item : CisternUtils.validCompostables) { compostables.add(EmiStack.of(item)); }
+//        ArrayList compostables = new ArrayList();
+//        for (ItemStack item : CisternUtils.validCompostables) { compostables.add(EmiStack.of(item)); }
         int[] solids = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 
         reg.addRecipe(EmiCustomWorldInteractionRecipe.builder().id(
                         new ResourceLocation("denovo", "/world/block_interaction/denovo/composter_composting"))
-                .leftInput(EmiIngredient.of(compostables.stream().toList()))
+//                .leftInput(EmiIngredient.of(compostables.stream().toList()))
+                .leftInput(EmiIngredient.of(DeNovoTags.compostables))
                 .rightInput(EmiStack.of(DNBlocks.composter), false)
                 .output(EmiStack.of(new ItemStack(DNBlocks.composter, 1, CisternUtils.pack(0, 16, CisternUtils.CONTENTS_INFECTED_WATER, 0))))
                 .animateOutputContents(null, solids)

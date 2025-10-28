@@ -4,6 +4,7 @@ import btw.community.denovo.block.blocks.CisternBaseBlock;
 import btw.community.denovo.block.tileentities.CisternBaseTileEntity;
 import btw.community.denovo.block.tileentities.CisternTileEntity;
 import btw.community.denovo.block.tileentities.ComposterTileEntity;
+import btw.community.denovo.emi.tag.DeNovoTags;
 import btw.item.util.ItemUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -14,6 +15,7 @@ import net.minecraft.src.World;
 
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class CisternUtils {
 
@@ -227,12 +229,9 @@ public class CisternUtils {
     public static boolean isValidCompostable(ItemStack heldStack) {
         if (heldStack == null) return false;
 
-        Iterator<ItemStack> validStacks = validCompostables.iterator();
+        for (ItemStack compostableItem : DeNovoTags.compostables.getItems()){
 
-        for (Iterator<ItemStack> it = validStacks; it.hasNext(); ) {
-            ItemStack stack = it.next();
-
-            if (heldStack.isItemEqual(stack)) {
+            if (heldStack.isItemEqual(compostableItem)) {
                 return true;
             }
         }

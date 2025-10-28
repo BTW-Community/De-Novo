@@ -30,6 +30,9 @@ tile.deadbush.mature.name=Dead Bush
 #item.hoeStone.name=Primitive Stone Hoe
 
 ### EMI ###
+
+tag.denovo.compostables=Compostables
+
 denovo.emi.shift_right_click=Hold Shift and Right Click
 denovo.emi.use_right_click=Hold "Use" Button and Right Click
 
@@ -43,6 +46,7 @@ denovo.emi.rain=Rain
 denovo.emi.arrow.rain=Fills up with water while it's raining
 denovo.emi.composter.composting=Fills by 1/16 per item
 
+denovo.emi.empty=Empty
 denovo.emi.compost=Compost
 denovo.emi.maggots=Maggots
 denovo.emi.water=Water
