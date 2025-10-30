@@ -46,7 +46,8 @@ public class DNItems {
                 .setTextureName("denovo:maggots_cooked")
                 .setCreativeTab(CreativeTabs.tabMisc);
 
-        maggotsSilkExtraction = new MaggotsSilkExtractionItem(DeNovoAddon.instance.parseID("DNItemMaggotsSilkExtractionID") - 256, "maggots_silk_extraction");
+        maggotsSilkExtraction = new MaggotsSilkExtractionItem(DeNovoAddon.instance.parseID("DNItemMaggotsSilkExtractionID") - 256, "denovo.maggots_silk_extraction")
+                .setTextureName("denovo:maggots_silk_extraction");
 
         waterBowl = new WaterBowlItem(DeNovoAddon.instance.parseID("DNItemWaterBowlID") - 256);
         rustWaterBowl = new RustWaterBowlItem(DeNovoAddon.instance.parseID("DNItemRustWaterBowlID") - 256, "rust_water_bowl");
