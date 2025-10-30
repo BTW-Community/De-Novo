@@ -124,8 +124,8 @@ public class DNRecipes {
     private static void addComposterRecipes() {
         //Composter
         RecipeManager.addRecipe(new ItemStack(DNBlocks.composter), new Object[]{
-                "SS",
-                "CC",
+                "S",
+                "C",
                 'S', new ItemStack(Item.stick),
                 'C', new ItemStack(BTWBlocks.unlitCampfire)
         });
