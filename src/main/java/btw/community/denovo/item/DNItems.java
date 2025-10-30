@@ -26,12 +26,10 @@ public class DNItems {
     public static Item woodSickle;
     public static Item flintHammer;
 
-    //TODO: progressive maggots to string item?
-
-    private static final int RAW_MAGGOTS_HUNGER_HEALED = 1;
+    private static final int RAW_MAGGOTS_HUNGER_HEALED = 2;
     private static final float RAW_MAGGOTS_SATURATION_MOD = 0.125f;
 
-    private static final int COOKED_MAGGOTS_HUNGER_HEALED = 2;
+    private static final int COOKED_MAGGOTS_HUNGER_HEALED = 3;
     private static final float COOKED_MAGGOTS_SATURATION_MOD = 0.25f;
 
     public static void initItems() {
