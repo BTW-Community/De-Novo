@@ -16,6 +16,7 @@ import emi.dev.emi.emi.api.EmiPlugin;
 import emi.dev.emi.emi.api.EmiRegistry;
 import emi.dev.emi.emi.api.recipe.EmiRecipe;
 import emi.dev.emi.emi.api.recipe.EmiRecipeCategory;
+import emi.dev.emi.emi.api.recipe.EmiWorldInteractionRecipe;
 import emi.dev.emi.emi.api.render.EmiTexture;
 import emi.dev.emi.emi.api.stack.EmiIngredient;
 import emi.dev.emi.emi.api.stack.EmiStack;
@@ -70,6 +71,10 @@ public class DeNovoEmiPlugin implements EmiPlugin {
         addComposterInteractionRecipes(reg);
         addCisternInteractionRecipes(reg);
         addCharcoalInteractionRecipes(reg);
+
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("emi", "/world/block_interaction/denovo/water_bowl_from_source")).rightInput(EmiStack.of(Block.waterStill), false).leftInput(EmiStack.of(new ItemStack(Item.bowlEmpty, 1, 0))).output(EmiStack.of(new ItemStack(DNItems.waterBowl, 1, 0))).supportsRecipeTree(true).build());
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("emi", "/world/block_interaction/denovo/water_bucket_from_source")).rightInput(EmiStack.of(Block.waterStill), false).leftInput(EmiStack.of(new ItemStack(Item.bucketEmpty, 1, 0))).output(EmiStack.of(new ItemStack(Item.bucketWater, 1, 0))).supportsRecipeTree(true).build());
+
 
         addComposterProcessingRecipe(reg, "composter/process_maggot_creation",
                 DNBlocks.composter,
