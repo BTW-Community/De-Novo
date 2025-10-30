@@ -134,6 +134,7 @@ public abstract class DeadBushBlockMixin extends BlockFlower {
                 //chance for 2nd stick
                 dropItemsIndividually(world, x, y, z, Item.stick.itemID, 1, 0, 0.5F);
 
+                world.playAuxSFX(2290, x, y, z, 0);
                 return true;
             }
         }
