@@ -120,7 +120,8 @@ public abstract class DeadBushBlockMixin extends BlockFlower {
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int iFacing, float fXClick, float fYClick, float fZClick) {
-        if (player.getCurrentEquippedItem() != null) return false;
+        //allow harvesting with stick or empty hand
+        if (player.getHeldItem() != null && player.getHeldItem().itemID != Item.stick.itemID) return false;
 
         if (isFullyGrown(world.getBlockMetadata(x, y, z))) {
             //reduce Growth Level
