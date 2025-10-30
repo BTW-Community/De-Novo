@@ -28,7 +28,7 @@ public abstract class DeadBushBlockMixin extends BlockFlower {
     }
 
     private float getBaseGrowthChance() {
-        return 0.25F; //Crops are 0.05F, Daily Crops 0.4F
+        return 0.5F; //Crops are 0.05F, Daily Crops 0.4F
     }
 
     private float getReduceGrowthChance() {
