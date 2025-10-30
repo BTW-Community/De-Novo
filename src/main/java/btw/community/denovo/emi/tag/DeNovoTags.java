@@ -15,6 +15,9 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.ResourceLocation;
 
 public class DeNovoTags {
+    public static void init() {
+        //call class to init tags
+    }
     public static final Tag compostables = Tag.of(DeNovoTags.loc("compostables"))
             .add(new ItemStack(Item.stick))
             .add(new ItemStack(BTWItems.sawDust))

@@ -3,6 +3,7 @@ package btw.community.denovo;
 import btw.AddonHandler;
 import btw.BTWAddon;
 import btw.community.denovo.block.DNBlocks;
+import btw.community.denovo.emi.tag.DeNovoTags;
 import btw.community.denovo.item.DNItems;
 import btw.community.denovo.particles.WaterSplashFX;
 import btw.community.denovo.recipes.DNRecipes;
@@ -65,6 +66,7 @@ public class DeNovoAddon extends BTWAddon {
         DNItems.initItems();
 
         DNRecipes.addRecipes();
+        DeNovoTags.init();
 
         // Client only
         if (!MinecraftServer.getIsServer()) {
