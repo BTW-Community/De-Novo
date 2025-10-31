@@ -33,9 +33,9 @@ public class DNItems {
     private static final float COOKED_MAGGOTS_SATURATION_MOD = 0.25f;
 
     public static void initItems() {
-        BTWItems.goldenDung = new PlaceAsBlockItem(BTWItems.goldenDung.itemID - 256, Block.deadBush.blockID)
-                .setUnlocalizedName("fcItemDungGolden")
-                .setTextureName("btw:golden_dung");
+//        BTWItems.goldenDung = new PlaceAsBlockItem(BTWItems.goldenDung.itemID - 256, Block.deadBush.blockID)
+//                .setUnlocalizedName("fcItemDungGolden")
+//                .setTextureName("btw:golden_dung");
 
         mesh = new MeshItem(DeNovoAddon.instance.parseID("DNItemMeshID") - 256);
 
