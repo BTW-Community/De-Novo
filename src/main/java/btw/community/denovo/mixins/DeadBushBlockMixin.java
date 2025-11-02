@@ -1,6 +1,7 @@
 package btw.community.denovo.mixins;
 
 import btw.block.BTWBlocks;
+import btw.community.denovo.emi.tag.DeNovoTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -49,9 +50,18 @@ public abstract class DeadBushBlockMixin extends BlockFlower {
 
         Block block = Block.blocksList[world.getBlockId(x, y, z)];
 
-        if (block != null && (block.canSaplingsGrowOnBlock(world, x, y, z) || block.blockID == Block.bedrock.blockID)) {
+        if (block != null && isValidBlock(block)) {
             cir.setReturnValue(true);
         }
+    }
+
+    private boolean isValidBlock(Block block) {
+        for (ItemStack validBlock : DeNovoTags.validGoldenDungBushBlocks.getItems()){
+            if (validBlock.isItemEqual(new ItemStack(block))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

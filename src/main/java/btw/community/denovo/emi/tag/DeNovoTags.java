@@ -1,6 +1,7 @@
 package btw.community.denovo.emi.tag;
 
 import btw.block.BTWBlocks;
+import btw.block.blocks.AestheticOpaqueEarthBlock;
 import btw.community.denovo.utils.CisternUtils;
 import btw.item.BTWItems;
 import btw.item.tag.BTWTags;
@@ -58,6 +59,14 @@ public class DeNovoTags {
             .add(new ItemStack(BTWBlocks.jungleSapling, 1, 7))
 
             .addFromAndUntilDamage(0, 2, Block.tallGrass);
+
+    public static final Tag validGoldenDungBushBlocks = Tag.of(DeNovoTags.loc("validGoldenDungBushBlocks"),
+            Block.bedrock,
+            Block.grass,
+            Block.dirt,
+            BTWBlocks.looseDirt,
+            BTWBlocks.planterWithSoil)
+            .addFromAndUntilDamage(0, 6, BTWBlocks.aestheticEarth);
 
     private static ResourceLocation loc(String id) {
         return new ResourceLocation("denovo", id);

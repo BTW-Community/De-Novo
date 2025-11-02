@@ -32,18 +32,26 @@ tile.deadbush.mature.name=Dead Bush
 ### EMI ###
 
 tag.denovo.compostables=Compostables
-
-denovo.emi.shift_right_click=Hold Shift and Right Click
-denovo.emi.use_right_click=Hold "Use" Button and Right Click
+tag.denovo.validGoldenDungBushBlocks=Valid Dead Bush Blocks
 
 emi.category.denovo.sieve=Sifting
 emi.category.denovo.cistern=Cistern Processing
 emi.category.denovo.composter=Composter Processing
 emi.category.denovo.charcoal=Charcoal Creation
 
-denovo.emi.rain=Rain
+emi.world_interaction.denovo.hold_shift=§6While Holding Shift
+emi.world_interaction.denovo.right_click=§6Right Click
+emi.world_interaction.denovo.rummaging_cost=§6Costs 0.16 Hunger
 
-denovo.emi.arrow.rain=Fills up with water while it's raining
+emi.world_interaction.denovo.morning=§6Chance to fill with water every morning
+
+emi.world_interaction.denovo.composter.water=§6Water
+emi.world_interaction.denovo.composter.empty=§6Empty
+
+emi.denovo.rain=Rain
+emi.denovo.rain.desc=Fills up with water while it's raining
+
+denovo.emi.rain.desc=
 denovo.emi.composter.composting=Fills by 1/16 per item
 
 denovo.emi.empty=Empty

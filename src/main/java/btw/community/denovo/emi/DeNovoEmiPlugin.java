@@ -3,6 +3,7 @@ package btw.community.denovo.emi;
 import btw.block.BTWBlocks;
 import btw.block.blocks.AestheticOpaqueEarthBlock;
 import btw.community.denovo.block.DNBlocks;
+import btw.community.denovo.emi.custom.EmiRainStack;
 import btw.community.denovo.emi.tag.DeNovoTags;
 import btw.community.denovo.item.DNItems;
 import btw.community.denovo.recipes.LootEntry;
@@ -10,29 +11,32 @@ import btw.community.denovo.recipes.SiftingCraftingManager;
 import btw.community.denovo.recipes.SiftingRecipe;
 import btw.community.denovo.utils.CisternUtils;
 import btw.item.BTWItems;
-import btw.item.tag.BTWTags;
-import btw.item.tag.TagInstance;
 import emi.dev.emi.emi.api.EmiPlugin;
 import emi.dev.emi.emi.api.EmiRegistry;
-import emi.dev.emi.emi.api.recipe.EmiRecipe;
+import emi.dev.emi.emi.api.plugin.BTWPlugin;
 import emi.dev.emi.emi.api.recipe.EmiRecipeCategory;
 import emi.dev.emi.emi.api.recipe.EmiWorldInteractionRecipe;
 import emi.dev.emi.emi.api.render.EmiTexture;
 import emi.dev.emi.emi.api.stack.EmiIngredient;
 import emi.dev.emi.emi.api.stack.EmiStack;
 import emi.dev.emi.emi.recipe.btw.EmiProgressiveRecipe;
-import emi.dev.emi.emi.runtime.EmiReloadLog;
+import emi.shims.java.net.minecraft.text.Text;
 import emi.shims.java.net.minecraft.util.SyntheticIdentifier;
 import net.minecraft.src.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 public class DeNovoEmiPlugin implements EmiPlugin {
 
     private static final EmiTexture SHIFT_RIGHT_CLICK_TEXTURE = new EmiTexture(new ResourceLocation("denovo", "textures/emi/shift_right_click.png"), 0, 0, 20, 20, 20, 20, 20, 20);
     private static final EmiTexture USE_RIGHT_CLICK_TEXTURE = new EmiTexture(new ResourceLocation("denovo", "textures/emi/use_right_click.png"), 0, 0, 20, 20, 20, 20, 20, 20);
+
+    //Cistern Damage Values
+    private final int EMPTY = CisternUtils.pack(5, 0, CisternUtils.CONTENTS_EMPTY, 0);
+    private final int WATER_5 = CisternUtils.pack(5, 0, CisternUtils.CONTENTS_WATER, 0);
+    private final int WATER_10 = CisternUtils.pack(10, 0, CisternUtils.CONTENTS_WATER, 0);
+    private final int WATER_15 = CisternUtils.pack(15, 0, CisternUtils.CONTENTS_WATER, 0);
 
 
     static {
@@ -46,13 +50,13 @@ public class DeNovoEmiPlugin implements EmiPlugin {
     public void register(EmiRegistry reg) {
         addCategories(reg);
 
-        addInWorldRecipes(reg);
+        addWorldInteractionRecipes(reg);
         addProgressiveCraftingRecipes(reg);
         addSiftingRecipes(reg);
         addCharcoalProcessingRecipes(reg);
     }
 
-    private static void addCategories(EmiRegistry reg) {
+    private void addCategories(EmiRegistry reg) {
         reg.addCategory(DeNovoEmiRecipeCategories.SIEVE);
         reg.addWorkstation(DeNovoEmiRecipeCategories.SIEVE, EmiStack.of(new ItemStack(DNBlocks.sieve, 1, 0)));
 
@@ -65,16 +69,108 @@ public class DeNovoEmiPlugin implements EmiPlugin {
         reg.addCategory(DeNovoEmiRecipeCategories.CHARCOAL);
     }
 
-    private static void addInWorldRecipes(EmiRegistry reg){
-        addRummagingInteractionRecipes(reg);
-        addGoldenDungInteractionRecipes(reg);
-        addComposterInteractionRecipes(reg);
-        addCisternInteractionRecipes(reg);
-        addCharcoalInteractionRecipes(reg);
+    private void addWorldInteractionRecipes(EmiRegistry reg) {
+        //Golden Dung
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/golden_dung"))
+                .leftInput(EmiStack.of(new ItemStack(BTWItems.goldenDung, 1, 0)))
+                .rightInput(EmiIngredient.of(DeNovoTags.validGoldenDungBushBlocks), false)
+                .output(EmiStack.of(new ItemStack(Block.deadBush, 1, 0)))
+                .supportsRecipeTree(true)
+                .build());
 
-        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("emi", "/world/block_interaction/denovo/water_bowl_from_source")).rightInput(EmiStack.of(Block.waterStill), false).leftInput(EmiStack.of(new ItemStack(Item.bowlEmpty, 1, 0))).output(EmiStack.of(new ItemStack(DNItems.waterBowl, 1, 0))).supportsRecipeTree(true).build());
-        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("emi", "/world/block_interaction/denovo/water_bucket_from_source")).rightInput(EmiStack.of(Block.waterStill), false).leftInput(EmiStack.of(new ItemStack(Item.bucketEmpty, 1, 0))).output(EmiStack.of(new ItemStack(Item.bucketWater, 1, 0))).supportsRecipeTree(true).build());
+        //Rummaging
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/rummaging_dead_bush"))
+                .leftInput(EmiStack.EMPTY, sw -> {
+                    sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.right_click"));
+                    return sw;
+                })
+                .rightInput(EmiStack.of(Block.grass), false, sw -> {
+                    sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.hold_shift"));
+                    return sw;
+                })
+                .output(EmiStack.of(new ItemStack(Block.deadBush, 1, 3)), sw -> {
+                    sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.rummaging_cost"));
+                    return sw;
+                })
+                .build());
 
+        //Water Source
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/water_bowl_from_source"))
+                .leftInput(EmiStack.of(new ItemStack(Item.bowlEmpty, 1, 0)))
+                .rightInput(EmiStack.of(Block.waterStill), false)
+                .output(EmiStack.of(new ItemStack(DNItems.waterBowl, 1, 0)))
+                .supportsRecipeTree(true)
+                .build());
+
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/water_bucket_from_source"))
+                .leftInput(EmiStack.of(new ItemStack(Item.bucketEmpty, 1, 0)))
+                .rightInput(EmiStack.of(Block.waterStill), false)
+                .output(EmiStack.of(new ItemStack(Item.bucketWater, 1, 0)))
+                .supportsRecipeTree(true)
+                .build());
+
+        //Removing Water
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/water_bowl_from_composter"))
+                .leftInput(EmiStack.of(new ItemStack(Item.bowlEmpty, 1, 0)))
+                .rightInput(EmiStack.of(new ItemStack(DNBlocks.composter, 1, WATER_15)), false,
+                        sw -> {
+                            sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.composter.water"));
+                        return sw;
+                })
+                .output(EmiStack.of(new ItemStack(DNItems.waterBowl, 1, 0)))
+                .supportsRecipeTree(true)
+                .build());
+
+        //Adding Water
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/composter_water_bowl"))
+                .leftInput(EmiStack.of(new ItemStack(DNItems.waterBowl, 1, 0)))
+                .rightInput(EmiStack.of(new ItemStack(DNBlocks.composter, 1, EMPTY)), false,
+                        sw -> {
+                            sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.composter.empty"));
+                            return sw;
+                })
+                .output(EmiStack.of(new ItemStack(DNBlocks.composter, 1, WATER_15)),
+                        sw -> {
+                            sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.composter.water"));
+                            return sw;
+                        })
+                .supportsRecipeTree(true)
+                .build());
+
+        //Rain Filling
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/composter_water_bowl"))
+                .leftInput(new EmiRainStack())
+                .rightInput(EmiStack.of(new ItemStack(DNBlocks.composter, 1, EMPTY)), false,
+                        sw -> {
+                            sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.composter.empty"));
+                            return sw;
+                        })
+                .output(EmiStack.of(new ItemStack(DNBlocks.composter, 1, WATER_15)),
+                        sw -> {
+                            sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.composter.water"));
+                            return sw;
+                        })
+                .supportsRecipeTree(true)
+                .build());
+
+        //Morning Filling
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/composter_water_bowl"))
+                .leftInput(EmiStack.of(new ItemStack(DNBlocks.composter, 1, EMPTY)),
+                        sw -> {
+                            sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.composter.empty"));
+                            return sw;
+                        })
+                .rightInput(EmiStack.of(Item.pocketSundial), false, sw -> {
+                    sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.morning"));
+                    return sw;
+                })
+                .output(EmiStack.of(new ItemStack(DNBlocks.composter, 1, WATER_5)),
+                        sw -> {
+                            sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.composter.water"));
+                            return sw;
+                        })
+                .supportsRecipeTree(true)
+                .build());
 
         addComposterProcessingRecipe(reg, "composter/process_maggot_creation",
                 DNBlocks.composter,
@@ -93,6 +189,38 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                 CisternUtils.CONTENTS_INFECTED_WATER, CisternUtils.CONTENTS_RUST_WATER,
                 CisternUtils.INFECTED_WATER_CONVERSION_TIME,
                 "denovo.emi.water.infected.dirt", "denovo.emi.water.rust");
+    }
+
+    private void addProgressiveCraftingRecipes(EmiRegistry reg) {
+        // Progressive Crafting
+        BTWPlugin.addRecipeSafe(reg, () -> new EmiProgressiveRecipe(new ResourceLocation("denovo", "maggots_silk_extraction"),
+                new ItemStack(DNItems.maggotsSilkExtraction), new ItemStack(Item.silk)));
+        BTWPlugin.addRecipeSafe(reg, () -> new EmiProgressiveRecipe(new ResourceLocation("denovo", "rust_water_bowl"),
+                new ItemStack(DNItems.rustWaterBowl), new ItemStack(DNItems.ironDust)));
+    }
+
+    private void addSiftingRecipes(EmiRegistry reg) {
+        // Sieve
+        for (SiftingRecipe siftingRecipe : SiftingCraftingManager.getRecipes()){
+            LootEntry[] output = siftingRecipe.getLootTable();
+            ItemStack filterUsed = siftingRecipe.getFilterUsed();
+            ItemStack input = siftingRecipe.getInput();
+            boolean containsSouls = siftingRecipe.getContainsSouls();
+            BTWPlugin.addRecipeSafe(reg, () -> new EmiSieveRecipe(new SyntheticIdentifier((SiftingRecipe)siftingRecipe),
+                    (LootEntry[]) output, (ItemStack) input, (ItemStack)filterUsed, containsSouls));
+
+        }
+    }
+
+    private static void addInWorldRecipes(EmiRegistry reg){
+//        addRummagingInteractionRecipes(reg);
+//        addGoldenDungInteractionRecipes(reg);
+//        addComposterInteractionRecipes(reg);
+//        addCisternInteractionRecipes(reg);
+//        addCharcoalInteractionRecipes(reg);
+
+
+
 
         //Cistern
         addCisternProcessingRecipe(reg,"cistern/process_clay_water",
@@ -181,17 +309,17 @@ public class DeNovoEmiPlugin implements EmiPlugin {
     }
 
     private void addCharcoalProcessingRecipes(EmiRegistry reg) {
-        addRecipeSafe(reg, () -> new EmiCharcoalRecipe(new ResourceLocation("denovo", "placed_sticks"),
+        BTWPlugin.addRecipeSafe(reg, () -> new EmiCharcoalRecipe(new ResourceLocation("denovo", "placed_sticks"),
                 new ItemStack(DNBlocks.placedSticks, 1, 15), new ItemStack(DNBlocks.smolderingPlacedSticks))
                 .setArrowToolTip("denovo.emi.placed_to_smoldering"));
-        addRecipeSafe(reg, () -> new EmiCharcoalRecipe(new ResourceLocation("denovo", "smoldering_sticks"),
+        BTWPlugin.addRecipeSafe(reg, () -> new EmiCharcoalRecipe(new ResourceLocation("denovo", "smoldering_sticks"),
                 new ItemStack(DNBlocks.smolderingPlacedSticks), new ItemStack(DNBlocks.charcoalPile, 1, 7)));
-        addRecipeSafe(reg, () -> new EmiCharcoalRecipe(new ResourceLocation("denovo", "charcoal_pile"),
+        BTWPlugin.addRecipeSafe(reg, () -> new EmiCharcoalRecipe(new ResourceLocation("denovo", "charcoal_pile"),
                 new ItemStack(DNBlocks.charcoalPile, 1, 7), new ItemStack(DNItems.charcoalDust, 1)));
     }
 
     private static void addCisternProcessingRecipe(EmiRegistry reg, String id, int inputType, int outputType, int processingTime, String inputString, String outputString) {
-        addRecipeSafe(reg, () -> new EmiCisternRecipe(new ResourceLocation("denovo", id),
+        BTWPlugin.addRecipeSafe(reg, () -> new EmiCisternRecipe(new ResourceLocation("denovo", id),
                 new ItemStack(DNBlocks.cistern, 1, CisternUtils.pack(15, 0, inputType, 0)),
                 EmiStack.of(new ItemStack(DNBlocks.cistern, 1, CisternUtils.pack(15, 0, outputType, 0))),
                 processingTime / 20, // converted to s
@@ -201,7 +329,7 @@ public class DeNovoEmiPlugin implements EmiPlugin {
 
     private static void addComposterProcessingRecipe(EmiRegistry reg, String id, Block block, int inputType, int outputType, int processingTime, String inputString, String outputString) {
         if (inputType == CisternUtils.CONTENTS_COMPOST){
-            addRecipeSafe(reg, () -> new EmiComposterRecipe(new ResourceLocation("denovo", id),
+            BTWPlugin.addRecipeSafe(reg, () -> new EmiComposterRecipe(new ResourceLocation("denovo", id),
                     new ItemStack(block, 1, CisternUtils.pack(0, 16, inputType, 0)),
                     EmiStack.of( new ItemStack(block, 1, CisternUtils.pack(0, 16, outputType, 0))),
                     processingTime / 20, // converted to s
@@ -209,7 +337,7 @@ public class DeNovoEmiPlugin implements EmiPlugin {
             ));
         }
         else if (inputType == CisternUtils.CONTENTS_INFECTED_WATER){
-            addRecipeSafe(reg, () -> new EmiComposterRecipe(new ResourceLocation("denovo", id),
+            BTWPlugin.addRecipeSafe(reg, () -> new EmiComposterRecipe(new ResourceLocation("denovo", id),
                     new ItemStack(DNBlocks.composter, 1, CisternUtils.pack(15, 16, inputType, 0)),
                     EmiStack.of( new ItemStack(DNBlocks.composter, 1, CisternUtils.pack(0, 16, outputType, CisternUtils.INFECTED_WATER_CONVERSION_TIME))),
                     processingTime / 20, // converted to s
@@ -217,7 +345,7 @@ public class DeNovoEmiPlugin implements EmiPlugin {
             ));
         }
         else {
-            addRecipeSafe(reg, () -> new EmiComposterRecipe(new ResourceLocation("denovo", id),
+            BTWPlugin.addRecipeSafe(reg, () -> new EmiComposterRecipe(new ResourceLocation("denovo", id),
                     new ItemStack(DNBlocks.composter, 1, CisternUtils.pack(15, 0, inputType, 0)),
                     EmiStack.of( new ItemStack(DNBlocks.composter, 1, CisternUtils.pack(15, 0, outputType, 0))),
                     processingTime / 20, // converted to s
@@ -375,46 +503,11 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                 .supportsRecipeTree(true).build());
     }
 
-    private static void addProgressiveCraftingRecipes(EmiRegistry reg) {
-        // Progressive Crafting
-        addRecipeSafe(reg, () -> new EmiProgressiveRecipe(new ResourceLocation("denovo", "maggots_silk_extraction"),
-                new ItemStack(DNItems.maggotsSilkExtraction), new ItemStack(Item.silk)));
-        addRecipeSafe(reg, () -> new EmiProgressiveRecipe(new ResourceLocation("denovo", "rust_water_bowl"),
-                new ItemStack(DNItems.rustWaterBowl), new ItemStack(DNItems.ironDust)));
-    }
 
-    private static void addSiftingRecipes(EmiRegistry reg) {
-        // Sieve
-        for (SiftingRecipe siftingRecipe : SiftingCraftingManager.getRecipes()){
-            LootEntry[] output = siftingRecipe.getLootTable();
-            ItemStack filterUsed = siftingRecipe.getFilterUsed();
-            ItemStack input = siftingRecipe.getInput();
-            boolean containsSouls = siftingRecipe.getContainsSouls();
-            addRecipeSafe(reg, () -> new EmiSieveRecipe(new SyntheticIdentifier((SiftingRecipe)siftingRecipe),
-                (LootEntry[]) output, (ItemStack) input, (ItemStack)filterUsed, false));
 
-        }
-    }
+
 
     public static EmiRecipeCategory category(String id, EmiStack icon) {
         return new EmiRecipeCategory(new ResourceLocation("denovo", id), icon, new EmiTexture(new ResourceLocation("denovo", "textures/simple_icons/" + id + ".png"), 0, 0, 16, 16, 16, 16, 16, 16));
-    }
-
-    private static void addRecipeSafe(EmiRegistry registry, Supplier<EmiRecipe> supplier) {
-        try {
-            registry.addRecipe(supplier.get());
-        } catch (Throwable e) {
-            EmiReloadLog.warn("Exception when parsing EMI/DeNovo recipe (no ID available)");
-            EmiReloadLog.error(e);
-        }
-    }
-
-    private static void addRecipeSafe(EmiRegistry registry, Supplier<EmiRecipe> supplier, IRecipe recipe) {
-        try {
-            registry.addRecipe(supplier.get());
-        } catch (Throwable e) {
-            EmiReloadLog.warn("Exception when parsing DeNovo recipe " + recipe);
-            EmiReloadLog.error(e);
-        }
     }
 }
