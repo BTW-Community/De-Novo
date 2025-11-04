@@ -1,5 +1,6 @@
 package btw.community.denovo.emi;
 
+import btw.block.BTWBlocks;
 import btw.community.denovo.block.DNBlocks;
 import btw.community.denovo.emi.custom.EmiGloomStack;
 import btw.community.denovo.emi.custom.EmiHeartStack;
@@ -385,7 +386,7 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                     return sw;
                 })
                 .rightInput(EmiStack.of(new ItemStack(DNBlocks.composter, 1, COMPOST_16)), false)
-                .output(EmiStack.of(BTWItems.dirtPile))
+                .output(EmiStack.of(BTWBlocks.looseDirt))
                 .supportsRecipeTree(true)
                 .build());
     }

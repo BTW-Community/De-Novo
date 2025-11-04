@@ -1,5 +1,6 @@
 package btw.community.denovo.block.blocks;
 
+import btw.block.BTWBlocks;
 import btw.block.util.Flammability;
 import btw.client.render.util.RenderUtils;
 import btw.community.denovo.block.models.ComposterModel;
@@ -114,7 +115,8 @@ public class ComposterBlock extends CisternBaseBlock {
     }
 
     protected static void returnItemsWhenFullWithCompost(World world, int x, int y, int z, int facing) {
-        ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(BTWItems.dirtPile), facing);
+//        ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(BTWItems.dirtPile), facing);
+        ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(BTWBlocks.looseDirt), facing);
     }
 
     protected static void returnItemsWhenFullWithMaggots(World world, int x, int y, int z, int facing) {
