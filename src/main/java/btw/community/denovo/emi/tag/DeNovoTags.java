@@ -45,6 +45,7 @@ public class DeNovoTags {
             .add(new ItemStack(Block.waterlily))
             .add(new ItemStack(BTWItems.redMushroom))
             .add(new ItemStack(BTWItems.brownMushroom))
+            .add(new ItemStack(Block.cactus))
 
             .add(BTWTags.logs)
             .addFromAndUntilDamage(0, 3, Block.leaves)
