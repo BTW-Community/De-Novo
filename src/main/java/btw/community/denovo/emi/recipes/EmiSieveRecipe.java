@@ -1,10 +1,11 @@
 /*
  * Decompiled with CFR 0.2.1 (FabricMC 53fa44c9).
  */
-package btw.community.denovo.emi;
+package btw.community.denovo.emi.recipes;
 
 import btw.block.BTWBlocks;
 import btw.community.denovo.block.DNBlocks;
+import btw.community.denovo.emi.DeNovoEmiRecipeCategories;
 import btw.community.denovo.item.DNItems;
 import btw.community.denovo.recipes.LootEntry;
 import btw.item.BTWItems;

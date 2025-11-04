@@ -30,39 +30,35 @@ tile.deadbush.mature.name=Dead Bush
 #item.hoeStone.name=Primitive Stone Hoe
 
 ### EMI ###
-
 tag.denovo.compostables=Compostables
 tag.denovo.validGoldenDungBushBlocks=Valid Dead Bush Blocks
+
+emi.denovo.sickle.info=A primitive tool that allows the harvesting of Leaves and Grass
+emi.denovo.flint_hammer.info=A primitive tool that allows breaking of Stone
+emi.denovo.composter_water.info=§fA Composter that is filled with §6Water §fis a valid Water Source Block for §6Reeds §fand will also §6Hydrate Farmland §fup to 2 Blocks away.
 
 emi.category.denovo.sieve=Sifting
 emi.category.denovo.cistern=Cistern Processing
 emi.category.denovo.composter=Composter Processing
 emi.category.denovo.charcoal=Charcoal Creation
 
-emi.world_interaction.denovo.hold_shift=§6While Holding Shift
+emi.world_interaction.denovo.gloom_dung=§6When taking Damage from Gloom
+emi.denovo.gloom=Gloom
+emi.denovo.heart=Damage
+
 emi.world_interaction.denovo.right_click=§6Right Click
+emi.world_interaction.denovo.hold_shift=§6While Holding Shift
 emi.world_interaction.denovo.rummaging_cost=§6Costs 0.16 Hunger
 
-emi.world_interaction.denovo.morning=§6Chance to fill with water every morning
+emi.world_interaction.denovo.morning=§6Can fill 33% of water each morning
+emi.world_interaction.denovo.composter_filling=§6Fills Composter by 1/16
 
-emi.world_interaction.denovo.composter.water=§6Water
-emi.world_interaction.denovo.composter.empty=§6Empty
+emi.world_interaction.denovo.composter_mushroom=§6Spawn around Composter over time
+
+emi.denovo.right_click=RMB
 
 emi.denovo.rain=Rain
 emi.denovo.rain.desc=Fills up with water while it's raining
-
-denovo.emi.rain.desc=
-denovo.emi.composter.composting=Fills by 1/16 per item
-
-denovo.emi.empty=Empty
-denovo.emi.compost=Compost
-denovo.emi.maggots=Maggots
-denovo.emi.water=Water
-denovo.emi.water.muddy=Muddy Water
-denovo.emi.water.clay=Clay Water
-denovo.emi.water.infected=Infected Water
-denovo.emi.water.infected.dirt=Infected Water with Dirt
-denovo.emi.water.rust=Rust Water
 
 denovo.emi.placed_to_smoldering=Set on fire
 denovo.emi.charcoal_creation=Keep covered

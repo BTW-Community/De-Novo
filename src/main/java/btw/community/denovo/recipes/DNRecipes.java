@@ -297,7 +297,7 @@ public class DNRecipes {
                 new LootEntry[]{
                         new LootEntry(1.0D / 3, 8, new ItemStack(Item.pumpkinSeeds)),
                         new LootEntry(1.0D / 3, 8, new ItemStack(Item.melonSeeds)),
-                        new LootEntry(1.0D / 3, 8, new ItemStack(Item.seeds)),
+                        new LootEntry(1.0D / 3, 8, new ItemStack(BTWItems.wheatSeeds)),
                 },
                 new ItemStack(BTWBlocks.aestheticEarth, 1, 7),
                 new ItemStack(DNItems.mesh)
@@ -307,7 +307,7 @@ public class DNRecipes {
                 new LootEntry[]{
                         new LootEntry(1.0D / 3, 1, new ItemStack(Item.pumpkinSeeds)),
                         new LootEntry(1.0D / 3, 1, new ItemStack(Item.melonSeeds)),
-                        new LootEntry(1.0D / 3, 1, new ItemStack(Item.seeds)),
+                        new LootEntry(1.0D / 3, 1, new ItemStack(BTWItems.wheatSeeds)),
                 },
                 new ItemStack(BTWItems.dung),
                 new ItemStack(DNItems.mesh)

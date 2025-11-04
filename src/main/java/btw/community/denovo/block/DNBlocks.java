@@ -2,6 +2,7 @@ package btw.community.denovo.block;
 
 import btw.community.denovo.DeNovoAddon;
 import btw.community.denovo.block.blocks.*;
+import btw.community.denovo.block.item.CisternBaseItemBlock;
 import btw.community.denovo.block.tileentities.CisternTileEntity;
 import btw.community.denovo.block.tileentities.ComposterTileEntity;
 import btw.community.denovo.block.tileentities.SieveTileEntity;
@@ -23,10 +24,12 @@ public class DNBlocks {
         sieve = registerItemBlock(new SieveBlock(DeNovoAddon.instance.parseID("DNBlockSieveID")));
         TileEntity.addMapping(SieveTileEntity.class, "DNSieve");
 
-        composter = registerItemBlock(new ComposterBlock(DeNovoAddon.instance.parseID("DNBlockComposterID")));
+        composter = new ComposterBlock(DeNovoAddon.instance.parseID("DNBlockComposterID"));
+        Item.itemsList[composter.blockID] = new CisternBaseItemBlock(composter.blockID - 256);
         TileEntity.addMapping(ComposterTileEntity.class, "DNComposter");
 
-        cistern = registerItemBlock(new CisternBlock(DeNovoAddon.instance.parseID("DNBlockCisternID")));
+        cistern = new CisternBlock(DeNovoAddon.instance.parseID("DNBlockCisternID"));
+        Item.itemsList[cistern.blockID] = new CisternBaseItemBlock(cistern.blockID - 256);
         TileEntity.addMapping(CisternTileEntity.class, "DNCistern");
 
         placedSticks = registerItemBlock(new PlacedSticksBlock(DeNovoAddon.instance.parseID("DNBlockPlacedSticksID")));

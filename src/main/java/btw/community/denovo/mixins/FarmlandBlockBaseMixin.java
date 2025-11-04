@@ -15,7 +15,7 @@ public class FarmlandBlockBaseMixin {
 
     @Inject(method = "hasIrrigatingBlocks", at = @At(value = "HEAD"), cancellable = true)
     public void isConcideredIrrigationBlock(World world, int i, int j, int k, CallbackInfoReturnable<Boolean> cir) {
-        int iHorizontalRange = 4;
+        int iHorizontalRange = 2;
 
         for (int iTempI = i - iHorizontalRange; iTempI <= i + iHorizontalRange; iTempI++) {
             for (int iTempJ = j; iTempJ <= j + 1; iTempJ++) {

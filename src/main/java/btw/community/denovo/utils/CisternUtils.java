@@ -58,7 +58,7 @@ public class CisternUtils {
     public static final Color COLOR_WATER = new Color(255, 255, 255);
     public static final Color COLOR_MUDDY_WATER = new Color(255, 130, 0);
     public static final Color COLOR_CLAY_WATER = new Color(255, 223, 77);
-    public static final Color COLOR_INFECTED_WATER = new Color(248, 133, 117);
+    public static final Color COLOR_INFECTED_WATER = new Color(248, 133, 85);
     public static final Color COLOR_RUST_WATER = new Color(252, 69, 0);
 
     public static void addLiquidContainers(ItemStack fullStack, ItemStack emptyStack, int cisternFillValue, int cisternRemoveValue, int composterFillValue, int composterRemoveValue) {
@@ -256,6 +256,7 @@ public class CisternUtils {
 
     @Environment(EnvType.CLIENT)
     public static void spawnParticlesAndPlaySound(World world, int x, int y, int z, Random rand, CisternBaseTileEntity cisternBase) {
+        playSound(world, x, y, z, "random.splash", 1 / 16F, 1F);
 
         if (!world.isRemote) return;
 
@@ -275,7 +276,6 @@ public class CisternUtils {
             world.spawnParticle("DNSplash_" + red + "_" + green + "_" + blue, xPos, yPos, zPos, 0.0D, 0.0D, 0.0D);
         }
 
-        playSound(world, x, y, z, "random.splash", 1 / 8F, 1F);
     }
 
     public static void playSound(World world, int x, int y, int z, String soundName, float volume, float pitch) {
@@ -395,5 +395,30 @@ public class CisternUtils {
 
     public static int getProgress(int packed) {
         return (packed >> PROGRESS_SHIFT) & PROGRESS_MASK;
+    }
+
+    public static String getNameForFillType(int fillType) {
+        if (fillType == CONTENTS_WATER) return "Water";
+        if (fillType == CONTENTS_COMPOST) return "Compost";
+        if (fillType == CONTENTS_MAGGOTS) return "Compost with Maggots";
+        if (fillType == CONTENTS_MUDDY_WATER) return "Muddy Water";
+        if (fillType == CONTENTS_CLAY_WATER) return "Clay Water";
+        if (fillType == CONTENTS_INFECTED_WATER) return "Infected Water";
+        if (fillType == CONTENTS_RUST_WATER) return "Rust Water";
+
+        return null;
+    }
+
+    public static String getCurrentCapacityForLiquidFillLevel(int fillLevel, boolean isSolid) {
+        if (isSolid){
+            return String.valueOf((int)(fillLevel/16F * 100F)).concat("%");
+        }
+        else {
+            if (fillLevel == 5) return "33%";
+            if (fillLevel == 10) return "66%";
+            if (fillLevel == 15) return "100%";
+        }
+
+        return null;
     }
 }

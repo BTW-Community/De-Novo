@@ -1,6 +1,7 @@
-package btw.community.denovo.emi;
+package btw.community.denovo.emi.recipes;
 
 import btw.community.denovo.block.DNBlocks;
+import btw.community.denovo.emi.DeNovoEmiRecipeCategories;
 import emi.dev.emi.emi.EmiPort;
 import emi.dev.emi.emi.api.recipe.EmiRecipe;
 import emi.dev.emi.emi.api.recipe.EmiRecipeCategory;
