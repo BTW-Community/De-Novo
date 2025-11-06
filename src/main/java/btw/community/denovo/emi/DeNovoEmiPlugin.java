@@ -198,7 +198,7 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                 .build());
 
         //Lava to Obsidian bowl
-        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/water_bowl_from_source"))
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/water_bowl_to_obsidian"))
                 .leftInput(EmiStack.of(new ItemStack(DNItems.waterBowl, 1, 0)))
                 .rightInput(EmiStack.of(Block.lavaStill), false)
                 .output(EmiStack.of(new ItemStack(Block.obsidian, 1, 0)))
@@ -206,7 +206,7 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                 .build());
 
         //Lava to Obsidian bucket
-        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/water_bucket_from_source"))
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/water_bucket_to_obsidian"))
                 .leftInput(EmiStack.of(new ItemStack(Item.bucketWater, 1, 0)))
                 .rightInput(EmiStack.of(Block.lavaStill), false)
                 .output(EmiStack.of(new ItemStack(Block.obsidian, 1, 0)))
@@ -501,7 +501,7 @@ public class DeNovoEmiPlugin implements EmiPlugin {
         int fullLava = CisternUtils.pack(cobbleCount, strawCount, state, 0);
 
         //Iron chunk and rocks
-        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/lava_creation"))
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/lava_creation_rocks"))
                 .leftInput(EmiStack.of(BTWItems.stone))
                 .rightInput(EmiStack.of(BTWItems.ironOreChunk), false)
                 .output(EmiStack.of(new ItemStack(DNBlocks.lavaCobble, 1, fullCobble)))
@@ -509,7 +509,7 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                 .build());
 
         //straw
-        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/lava_creation"))
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/lava_creation_straw"))
                 .leftInput(EmiStack.of(BTWItems.straw))
                 .rightInput(EmiStack.of(new ItemStack(DNBlocks.lavaCobble, 1, fullCobble)), false)
                 .output(EmiStack.of(new ItemStack(DNBlocks.lavaCobble, 1, fullStraw)))
@@ -517,7 +517,7 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                 .build());
 
         //cooking
-        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/lava_creation"))
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/lava_creation_cooking"))
                 .leftInput(EmiStack.of(new ItemStack(DNBlocks.lavaCobble, 1, fullStraw)), sw -> {
                     sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.lava_cobble"));
                     return sw;
