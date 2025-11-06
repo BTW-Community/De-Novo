@@ -1,17 +1,12 @@
 package btw.community.denovo.item;
 
 import btw.community.denovo.DeNovoAddon;
-import btw.community.denovo.block.DNBlocks;
 import btw.community.denovo.item.items.*;
 import btw.crafting.util.FurnaceBurnTime;
 import btw.item.BTWItems;
 import btw.item.items.FoodItem;
 import btw.item.items.PlaceAsBlockItem;
-import emi.dev.emi.emi.config.EmiConfig;
-import net.minecraft.src.Block;
-import net.minecraft.src.CreativeTabs;
-import net.minecraft.src.EnumToolMaterial;
-import net.minecraft.src.Item;
+import net.minecraft.src.*;
 
 public class DNItems {
     public static Item mesh;
@@ -25,6 +20,7 @@ public class DNItems {
     public static Item charcoalDust;
     public static Item woodSickle;
     public static Item flintHammer;
+    public static Item cactusWaterExtraction;
 
     private static final int RAW_MAGGOTS_HUNGER_HEALED = 2;
     private static final float RAW_MAGGOTS_SATURATION_MOD = 0.125f;
@@ -46,7 +42,10 @@ public class DNItems {
                 .setTextureName("denovo:maggots_cooked")
                 .setCreativeTab(CreativeTabs.tabMisc);
 
-        maggotsSilkExtraction = new MaggotsSilkExtractionItem(DeNovoAddon.instance.parseID("DNItemMaggotsSilkExtractionID") - 256, "denovo.maggots_silk_extraction")
+        maggotsSilkExtraction = new ExtractionItem(DeNovoAddon.instance.parseID("DNItemMaggotsSilkExtractionID") - 256,
+                "denovo.maggots_silk_extraction",
+                ExtractionItem.TIME_TO_CRAFT_SILK, new ItemStack(Item.silk),
+                "mob.slime.attack", "mob.slime.small", "mob.slime.attack")
                 .setTextureName("denovo:maggots_silk_extraction");
 
         waterBowl = new WaterBowlItem(DeNovoAddon.instance.parseID("DNItemWaterBowlID") - 256);
@@ -71,5 +70,11 @@ public class DNItems {
         woodSickle = new SickleItem(DeNovoAddon.instance.parseID("DNItemWoodSickleID") - 256, EnumToolMaterial.WOOD, 10);
 
         flintHammer = new HammerItem(DeNovoAddon.instance.parseID("DNItemFlintHammerID") - 256, EnumToolMaterial.STONE, 25);
+
+        cactusWaterExtraction = new ExtractionItem(DeNovoAddon.instance.parseID("DNItemCactusWaterExtractionID") - 256,
+                "denovo.cactus_water_extraction",
+                ExtractionItem.TIME_TO_CRAFT_WATER, new ItemStack(DNItems.waterBowl),
+                "mob.slime.attack", "mob.slime.small", "random.splash")
+                .setTextureName("denovo:cactus_water_extraction");
     }
 }

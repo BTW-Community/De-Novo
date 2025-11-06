@@ -3,11 +3,9 @@ package btw.community.denovo.recipes;
 import btw.block.BTWBlocks;
 import btw.community.denovo.block.DNBlocks;
 import btw.community.denovo.item.DNItems;
-import btw.community.denovo.item.items.MaggotsSilkExtractionItem;
-import btw.community.denovo.item.items.RustWaterBowlItem;
+import btw.community.denovo.item.items.ExtractionItem;
 import btw.community.denovo.utils.CisternUtils;
 import btw.crafting.recipe.RecipeManager;
-import btw.crafting.recipe.types.customcrafting.FishingRodBaitingRecipe;
 import btw.item.BTWItems;
 import btw.item.tag.BTWTags;
 import net.minecraft.src.Block;
@@ -34,8 +32,16 @@ public class DNRecipes {
         addComposterRecipes();
         addCisternRecipes();
         addCharcoalRecipes();
+        addWaterExtractionRecipes();
 
         addFishingBait();
+    }
+
+    private static void addWaterExtractionRecipes() {
+        RecipeManager.addShapelessRecipe(new ItemStack(DNItems.cactusWaterExtraction, 1, ExtractionItem.TIME_TO_CRAFT_WATER), new Object[]{
+                new ItemStack(Block.cactus),
+                new ItemStack(Item.bowlEmpty)
+        });
     }
 
     private static void addFishingBait() {
@@ -114,7 +120,7 @@ public class DNRecipes {
          */
 
         //Maggots progressively to String
-        RecipeManager.addShapelessRecipe(new ItemStack(DNItems.maggotsSilkExtraction, 1, MaggotsSilkExtractionItem.TIME_TO_CRAFT), new Object[]{
+        RecipeManager.addShapelessRecipe(new ItemStack(DNItems.maggotsSilkExtraction, 1, ExtractionItem.TIME_TO_CRAFT_SILK), new Object[]{
                 new ItemStack(DNItems.rawMaggots),
                 new ItemStack(BTWItems.pointyStick)
         });
@@ -318,7 +324,7 @@ public class DNRecipes {
         SiftingCraftingManager.addSiftingRecipe(
                 new LootEntry[]{
                         new LootEntry(1.0D, 1, new ItemStack(BTWItems.straw)),
-                        new LootEntry(1.0D, 1, new ItemStack(BTWItems.wheatSeeds, 2))
+                        new LootEntry(1.0D, 1, new ItemStack(BTWItems.wheatSeeds, 2, 0))
                 },
                 new ItemStack(BTWItems.wheat),
                 new ItemStack(BTWBlocks.wickerPane)

@@ -463,6 +463,8 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                 new ItemStack(DNItems.maggotsSilkExtraction), new ItemStack(Item.silk)));
         BTWPlugin.addRecipeSafe(reg, () -> new EmiProgressiveRecipe(new ResourceLocation("denovo", "rust_water_bowl"),
                 new ItemStack(DNItems.rustWaterBowl), new ItemStack(DNItems.ironDust)));
+        BTWPlugin.addRecipeSafe(reg, () -> new EmiProgressiveRecipe(new ResourceLocation("denovo", "cactus_water_extraction"),
+                new ItemStack(DNItems.cactusWaterExtraction), new ItemStack(DNItems.waterBowl)));
     }
 
     private void addSiftingRecipes(EmiRegistry reg) {

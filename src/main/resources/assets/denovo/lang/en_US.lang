@@ -19,6 +19,7 @@ item.denovo.flint_hammer.name=Flint Hammer
 item.denovo.charcoal_dust.name=Pile of Charcoal Dust
 item.denovo.rust_water_bowl.name=Bowl of Rust Water
 item.denovo.iron_dust.name=Iron Dust
+item.denovo.cactus_water_extraction.name=Water Extraction
 
 ### Vanilla Overwrites ###
 #Blocks
