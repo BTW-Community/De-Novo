@@ -3,10 +3,7 @@ package btw.community.denovo.block;
 import btw.community.denovo.DeNovoAddon;
 import btw.community.denovo.block.blocks.*;
 import btw.community.denovo.block.item.CisternBaseItemBlock;
-import btw.community.denovo.block.tileentities.CisternTileEntity;
-import btw.community.denovo.block.tileentities.ComposterTileEntity;
-import btw.community.denovo.block.tileentities.SieveTileEntity;
-import btw.community.denovo.block.tileentities.SmolderingPlacedSticksTileEntity;
+import btw.community.denovo.block.tileentities.*;
 import net.minecraft.src.*;
 
 public class DNBlocks {
@@ -16,6 +13,7 @@ public class DNBlocks {
     public static Block placedSticks;
     public static Block smolderingPlacedSticks;
     public static Block charcoalPile;
+    public static Block lavaCobble;
 
     public static void initBlocks() {
         Item.itemsList[Block.deadBush.blockID] = (new ItemMultiTextureTile(Block.deadBush.blockID - 256, Block.deadBush, new String[]{"mature", "medium", "small", "tiny"}))
@@ -38,6 +36,10 @@ public class DNBlocks {
         TileEntity.addMapping(SmolderingPlacedSticksTileEntity.class, "DNSmolderingPlacedSticks");
 
         charcoalPile = registerItemBlock(new CharcoalPileBlock(DeNovoAddon.instance.parseID("DNBlockCharcoalPileID")));
+
+        lavaCobble = registerItemBlock(new LavaCobbleBlock(DeNovoAddon.instance.parseID("DNBlockLavaCobbleID")));
+        TileEntity.addMapping(LavaCobbleTileEntity.class, "DNLavaCobble");
+
     }
 
     private static Block registerItemBlock(Block block) {

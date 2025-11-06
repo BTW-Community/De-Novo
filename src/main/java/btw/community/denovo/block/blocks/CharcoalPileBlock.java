@@ -14,7 +14,6 @@ public class CharcoalPileBlock extends Block {
     public CharcoalPileBlock(int blockID) {
         super(blockID, Material.ground);
 
-        setShovelsEffectiveOn();
         setPicksEffectiveOn();
 
         setHardness(0.25F);

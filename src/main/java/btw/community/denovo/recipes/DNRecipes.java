@@ -312,5 +312,15 @@ public class DNRecipes {
                 new ItemStack(BTWItems.dung),
                 new ItemStack(DNItems.mesh)
         );
+
+        //Wheat sifting
+        SiftingCraftingManager.addSiftingRecipe(
+                new LootEntry[]{
+                        new LootEntry(1.0D, 1, new ItemStack(BTWItems.straw)),
+                        new LootEntry(1.0D, 1, new ItemStack(BTWItems.wheatSeeds, 2))
+                },
+                new ItemStack(BTWItems.wheat),
+                new ItemStack(BTWBlocks.wickerPane)
+        );
     }
 }

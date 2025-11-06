@@ -15,7 +15,7 @@ import net.minecraft.src.*;
 import java.util.Random;
 
 public class SmolderingPlacedSticksBlock extends BlockContainer {
-    private static final int CHANCE_OF_DECAY = 10;
+    private static final int CHANCE_OF_DECAY = 8;
 
     private static final int CHANCE_OF_EXTINGUISH_IN_RAIN = 2;
 
@@ -82,7 +82,7 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
                 BlockFire.checkForSmoulderingSpreadFromLocation(world, i, j, k);
 
                 int iBurnLevel = tileEntity.getBurnLevel();
-//                if (!world.isRemote) System.out.println("burn level: " + iBurnLevel);
+                if (!world.isRemote) System.out.println("burn level: " + iBurnLevel);
 
                 convertNeighborBlock(world, i, j, k, rand);
 
@@ -147,6 +147,11 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
         int count = 0;
         for (int iTempFacing = 0; iTempFacing < 6; iTempFacing++) {
             if (hasNeighborSmolderingSticksToFacing(world, i, j, k, iTempFacing)) {
+                count += 1;
+            }
+            BlockPos pos = new BlockPos(i,j,k);
+            pos.addFacingAsOffset(iTempFacing);
+            if (world.getBlockId(pos.x, pos.y, pos.z) == DNBlocks.lavaCobble.blockID){
                 count += 1;
             }
         }

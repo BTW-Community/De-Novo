@@ -1,10 +1,11 @@
 package btw.community.denovo.mixins;
 
+import btw.block.blocks.OreChunkBlockIron;
 import btw.community.denovo.block.DNBlocks;
 import btw.community.denovo.block.tileentities.CisternBaseTileEntity;
-import net.minecraft.src.Block;
-import net.minecraft.src.TileEntity;
-import net.minecraft.src.World;
+import btw.community.denovo.block.tileentities.LavaCobbleTileEntity;
+import btw.item.BTWItems;
+import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(Block.class)
 public abstract class BlockMixin {
+
     @Inject(method = "isConsideredNeighbouringWaterForReedGrowthOn",
             at = @At(
                     value = "INVOKE",
