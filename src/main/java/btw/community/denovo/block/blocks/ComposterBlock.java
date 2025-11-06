@@ -55,10 +55,14 @@ public class ComposterBlock extends CisternBaseBlock {
         TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
         CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) tileEntity;
 
-        if (cisternBase.isEmptyOrHasCompost()) {
+        if (cisternBase.isEmptyOrHasCompost() || cisternBase.isEmptyOrHasSand()) {
             return handleContentsEmptyOrCompost(world, x, y, z, facing, player, cisternBase);
-        } else if (cisternBase.isFullWithCompostOrMaggots()) {
+        }
+        else if (cisternBase.isFullWithCompostOrMaggots()) {
             return handleContentsCompostOrMaggots(world, x, y, z, facing, player, cisternBase);
+        }
+        else if (cisternBase.isFullWithSand()) {
+            return handleContentsSand(world, x, y, z, facing, player, cisternBase);
         }
 
         return false;
@@ -83,6 +87,13 @@ public class ComposterBlock extends CisternBaseBlock {
 
         return true;
     }
+
+    public boolean canCactusGrowOnBlock(World world, int x, int y, int z) {
+        CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) world.getBlockTileEntity(x, y, z);
+
+        return cisternBase.isFullWithSand();
+    }
+
     //----------- Class Specific Methods -----------//
 
     protected boolean handleContentsCompostOrMaggots(World world, int x, int y, int z, int facing, EntityPlayer player, CisternBaseTileEntity cisternBase) {
@@ -114,6 +125,30 @@ public class ComposterBlock extends CisternBaseBlock {
         return true;
     }
 
+    protected boolean handleContentsSand(World world, int x, int y, int z, int facing, EntityPlayer player, CisternBaseTileEntity cisternBase) {
+        if (player.getHeldItem() != null) return false;
+
+        if (cisternBase.getFillType() == CisternUtils.CONTENTS_SAND) {
+            if (!world.isRemote) {
+                returnItemsWhenFullWithSand(world, x, y, z, facing);
+
+                CisternUtils.playSound(world, x, y, z, Block.sand.stepSound.getStepSound(), 1 / 4F, 1F);
+            }
+
+            cisternBase.setFillType(CisternUtils.CONTENTS_EMPTY);
+        }
+
+        world.markBlockForRenderUpdate(x, y, z);
+        world.notifyBlockChange(x, y, z, this.blockID);
+
+        return true;
+    }
+
+    protected static void returnItemsWhenFullWithSand(World world, int x, int y, int z, int facing) {
+//        ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(BTWItems.dirtPile), facing);
+        ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(Block.sand), facing);
+    }
+
     protected static void returnItemsWhenFullWithCompost(World world, int x, int y, int z, int facing) {
 //        ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(BTWItems.dirtPile), facing);
         ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(BTWBlocks.looseDirt), facing);
@@ -128,7 +163,23 @@ public class ComposterBlock extends CisternBaseBlock {
         ItemStack heldStack = player.getHeldItem();
         if (heldStack == null) return false;
 
-        if (CisternUtils.isValidCompostable(heldStack)) {
+        if (cisternBase.isEmptyOrHasSand() && CisternUtils.isSand(heldStack) > 0){
+            int amountFilled = CisternUtils.isSand(heldStack);
+            int containsAmount = cisternBase.getSolidFillLevel();
+
+            if (containsAmount + amountFilled <= CisternUtils.MAX_SOLID_FILL_LEVEL){
+                cisternBase.addSolid(amountFilled);
+                cisternBase.setFillType(CisternUtils.CONTENTS_SAND);
+                world.markBlockForRenderUpdate(x, y, z);
+
+                if (!player.capabilities.isCreativeMode) heldStack.stackSize--;
+                CisternUtils.playSound(world, x, y, z, Block.sand.stepSound.getStepSound(), 0.25F, 1F);
+                return true;
+            }
+
+        }
+
+        if (cisternBase.isEmptyOrHasCompost() && CisternUtils.isValidCompostable(heldStack)) {
             cisternBase.addSolid(1);
             cisternBase.setFillType(CisternUtils.CONTENTS_COMPOST);
             world.markBlockForRenderUpdate(x, y, z);

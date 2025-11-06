@@ -170,6 +170,9 @@ public abstract class CisternBaseBlock extends BlockContainer {
     protected static Icon water;
     @Environment(EnvType.CLIENT)
     protected static Icon compost;
+
+    @Environment(EnvType.CLIENT)
+    protected static Icon sand;
     @Environment(EnvType.CLIENT)
     protected static Icon maggotsDone;
     @Environment(EnvType.CLIENT)
@@ -207,6 +210,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
 
 
         maggotsDone = register.registerIcon("denovo:composter_maggots");
+        sand = register.registerIcon("sand");
     }
 
 
@@ -223,12 +227,18 @@ public abstract class CisternBaseBlock extends BlockContainer {
                 if (progress > 0 && progress < CisternUtils.MAGGOT_CREATION_TIME) {
                     int iconIndex = CisternUtils.getIconIndex(progress, 8, CisternUtils.MAGGOT_CREATION_TIME);
                     return maggotsGrowing[iconIndex];
-                } else return compost;
-            } else if (fillType == CisternUtils.CONTENTS_MAGGOTS) {
+                }
+                else return compost;
+            }
+            else if (fillType == CisternUtils.CONTENTS_MAGGOTS) {
                 return maggotsDone;
-            } else if (fillType == CisternUtils.CONTENTS_INFECTED_WATER) {
+            }
+            else if (fillType == CisternUtils.CONTENTS_INFECTED_WATER) {
                 int iconIndex = CisternUtils.getIconIndex(progress, 8, CisternUtils.INFECTED_WATER_CONVERSION_TIME);
                 return dirtBreaking[iconIndex];
+            }
+            else if (fillType == CisternUtils.CONTENTS_SAND) {
+                return sand;
             }
             else return water;
         }

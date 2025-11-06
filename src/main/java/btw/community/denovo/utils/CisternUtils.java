@@ -1,10 +1,12 @@
 package btw.community.denovo.utils;
 
+import btw.block.BTWBlocks;
 import btw.community.denovo.block.blocks.CisternBaseBlock;
 import btw.community.denovo.block.tileentities.CisternBaseTileEntity;
 import btw.community.denovo.block.tileentities.CisternTileEntity;
 import btw.community.denovo.block.tileentities.ComposterTileEntity;
 import btw.community.denovo.emi.tag.DeNovoTags;
+import btw.item.BTWItems;
 import btw.item.util.ItemUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -41,6 +43,10 @@ public class CisternUtils {
     public static final int CONTENTS_CLAY_WATER = 5;
     public static final int CONTENTS_INFECTED_WATER = 6;
     public static final int CONTENTS_RUST_WATER = 7;
+
+    public static final int CONTENTS_SAND = 8;
+    public static final int CONTENTS_GRASS = 9;
+    public static final int CONTENTS_SNOW = 10;
 
     //
     public static final float RAIN_FILL_CHANCE = 1 / 8F;
@@ -238,6 +244,14 @@ public class CisternUtils {
         return false;
     }
 
+    public static int isSand(ItemStack heldStack) {
+        if (heldStack.itemID == BTWItems.sandPile.itemID) return 2;
+        if (heldStack.itemID == BTWBlocks.sandAndGravelSlab.blockID && heldStack.getItemDamage() == 1) return 8;
+        if (heldStack.itemID == Block.sand.blockID) return 16;
+
+        return 0;
+    }
+
     public static boolean isValidDirt(ItemStack heldStack) {
         if (heldStack == null) return false;
 
@@ -421,4 +435,6 @@ public class CisternUtils {
 
         return null;
     }
+
+
 }
