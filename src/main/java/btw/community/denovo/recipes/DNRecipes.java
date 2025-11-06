@@ -299,6 +299,31 @@ public class DNRecipes {
                 new ItemStack(BTWBlocks.wickerPane)
         );
 
+        //Sand Sifting
+        SiftingCraftingManager.addSiftingRecipe(
+                new LootEntry[]{
+                        new LootEntry(1.0D / 40, 1, new ItemStack(Block.cactus))
+                },
+                new ItemStack(BTWItems.sandPile),
+                new ItemStack(DNItems.mesh)
+        );
+
+        SiftingCraftingManager.addSiftingRecipe(
+                new LootEntry[]{
+                        new LootEntry(1.0D / 10, 1, new ItemStack(Block.cactus))
+                },
+                new ItemStack(BTWBlocks.sandAndGravelSlab, 1, 1), //0 is gravel
+                new ItemStack(DNItems.mesh)
+        );
+
+        SiftingCraftingManager.addSiftingRecipe(
+                new LootEntry[]{
+                        new LootEntry(1.0D / 5, 1, new ItemStack(Block.cactus))
+                },
+                new ItemStack(Block.sand),
+                new ItemStack(DNItems.mesh)
+        );
+
         // Dung sifting
         SiftingCraftingManager.addSiftingRecipe(
                 new LootEntry[]{
