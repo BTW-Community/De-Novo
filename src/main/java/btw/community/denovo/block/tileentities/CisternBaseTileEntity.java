@@ -26,13 +26,31 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
         //handle other contents states
         if (fillType == CisternUtils.CONTENTS_MUDDY_WATER) {
             handleMuddyWater();
-        } else if (fillType == CisternUtils.CONTENTS_CLAY_WATER) {
+        }
+        else if (fillType == CisternUtils.CONTENTS_CLAY_WATER) {
             handleClayWater();
-        } else if (fillType == CisternUtils.CONTENTS_INFECTED_WATER) {
+        }
+        else if (fillType == CisternUtils.CONTENTS_INFECTED_WATER) {
             handleInfectedWater();
+        }
+        else if (fillType == CisternUtils.CONTENTS_SNOW) {
+            handleSnow();
         }
 
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+
+    private void handleSnow() {
+        if (solidFillLevel == CisternUtils.MAX_SOLID_FILL_LEVEL) {
+            if (progressCounter < CisternUtils.SNOW_MELTING_CONVERSION_TIME) {
+                setProgressCounter(getProgressCounter() + 1);
+            } else {
+                setFillType(CisternUtils.CONTENTS_WATER);
+                setSolidFillLevel(0);
+                setLiquidFillLevel(15);
+                setProgressCounter(0);
+            }
+        }
     }
 
     protected void handleMuddyWater() {
@@ -143,6 +161,14 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
 
     public boolean isEmptyOrHasSand() {
         return this.isEmpty() || (!this.isFull() && this.getFillType() == CisternUtils.CONTENTS_SAND);
+    }
+
+    public boolean isFullWithSnow() {
+        return this.solidFillLevel == CisternUtils.MAX_SOLID_FILL_LEVEL && (this.fillType == CisternUtils.CONTENTS_SNOW);
+    }
+
+    public boolean isEmptyOrHasSnow() {
+        return this.isEmpty() || (!this.isFull() && this.getFillType() == CisternUtils.CONTENTS_SNOW);
     }
 
     public boolean isFullWithCompost() {

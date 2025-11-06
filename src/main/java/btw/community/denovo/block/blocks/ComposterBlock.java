@@ -15,6 +15,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 
+import java.util.List;
 import java.util.Random;
 
 public class ComposterBlock extends CisternBaseBlock {
@@ -56,7 +57,7 @@ public class ComposterBlock extends CisternBaseBlock {
         CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) tileEntity;
 
         if (cisternBase.isEmptyOrHasCompost() || cisternBase.isEmptyOrHasSand()) {
-            return handleContentsEmptyOrCompost(world, x, y, z, facing, player, cisternBase);
+            return handleContentsEmptyOrContents(world, x, y, z, facing, player, cisternBase);
         }
         else if (cisternBase.isFullWithCompostOrMaggots()) {
             return handleContentsCompostOrMaggots(world, x, y, z, facing, player, cisternBase);
@@ -159,7 +160,7 @@ public class ComposterBlock extends CisternBaseBlock {
         ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(DNItems.rawMaggots), facing);
     }
 
-    protected boolean handleContentsEmptyOrCompost(World world, int x, int y, int z, int facing, EntityPlayer player, CisternBaseTileEntity cisternBase) {
+    protected boolean handleContentsEmptyOrContents(World world, int x, int y, int z, int facing, EntityPlayer player, CisternBaseTileEntity cisternBase) {
         ItemStack heldStack = player.getHeldItem();
         if (heldStack == null) return false;
 
@@ -176,7 +177,6 @@ public class ComposterBlock extends CisternBaseBlock {
                 CisternUtils.playSound(world, x, y, z, Block.sand.stepSound.getStepSound(), 0.25F, 1F);
                 return true;
             }
-
         }
 
         if (cisternBase.isEmptyOrHasCompost() && CisternUtils.isValidCompostable(heldStack)) {

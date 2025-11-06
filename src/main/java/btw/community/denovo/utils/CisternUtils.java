@@ -10,10 +10,7 @@ import btw.item.BTWItems;
 import btw.item.util.ItemUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.src.Block;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.World;
+import net.minecraft.src.*;
 
 import java.awt.*;
 import java.util.*;
@@ -58,6 +55,7 @@ public class CisternUtils {
     public static final int MUDDY_WATER_SETTLE_TIME = 5 * 60 * 20; //5 min
     public static final int CLAY_WATER_CONVERSION_TIME = 5 * 60 * 20; // 5 min
     public static final int INFECTED_WATER_CONVERSION_TIME = 10 * 60 * 20; // 10 min
+    public static final int SNOW_MELTING_CONVERSION_TIME = 240; //10 * 60 * 20; // 10 min
 
 
     // --- Colors below are multiplied colors with water --- //
@@ -248,6 +246,12 @@ public class CisternUtils {
         if (heldStack.itemID == BTWItems.sandPile.itemID) return 2;
         if (heldStack.itemID == BTWBlocks.sandAndGravelSlab.blockID && heldStack.getItemDamage() == 1) return 8;
         if (heldStack.itemID == Block.sand.blockID) return 16;
+
+        return 0;
+    }
+
+    public static int isSnow(ItemStack heldStack) {
+        if (heldStack.itemID == Item.snowball.itemID) return 2;
 
         return 0;
     }

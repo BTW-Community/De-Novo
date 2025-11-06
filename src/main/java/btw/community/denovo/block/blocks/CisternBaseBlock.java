@@ -11,12 +11,15 @@ import net.minecraft.src.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
+import java.util.List;
 import java.util.Random;
 
 public abstract class CisternBaseBlock extends BlockContainer {
     public CisternBaseBlock(int blockID, Material material) {
         super(blockID, material);
+        initBlockBounds(0,0,0,1,1,1);
     }
+
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int facing, float clickX, float clickY, float clickZ) {
@@ -27,7 +30,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
         //Don't let the player interact while it's processing something
         if (cisternBase.getProgressCounter() > 0) return false;
 
-        if (cisternBase.isEmpty()) {
+        if (cisternBase.isEmptyOrHasSnow()) {
             return handleContentsEmpty(world, x, y, z, facing, player, cisternBase);
         } else if (fillType == CisternUtils.CONTENTS_WATER) {
             return handleContentsWater(world, x, y, z, facing, player, cisternBase);
@@ -72,8 +75,26 @@ public abstract class CisternBaseBlock extends BlockContainer {
     //----------- Class Specific Methods -----------//
 
     protected boolean handleContentsEmpty(World world, int x, int y, int z, int facing, EntityPlayer player, CisternBaseTileEntity cisternBase) {
+        if (player.getHeldItem() == null) return false;
+
         if (CisternUtils.isValidWaterContainer(player.getHeldItem())) {
             return CisternUtils.addWaterAndReturnContainer(world, x, y, z, facing, player, cisternBase);
+        }
+
+        if (!world.isRemote && CisternUtils.isSnow(player.getHeldItem()) > 0){
+            int amountFilled = CisternUtils.isSnow(player.getHeldItem());
+            int containsAmount = cisternBase.getSolidFillLevel();
+
+            if (containsAmount + amountFilled <= CisternUtils.MAX_SOLID_FILL_LEVEL){
+
+                cisternBase.addSolid(amountFilled);
+                cisternBase.setFillType(CisternUtils.CONTENTS_SNOW);
+                world.markBlockForRenderUpdate(x, y, z);
+
+                if (!player.capabilities.isCreativeMode) player.getHeldItem().stackSize--;
+                CisternUtils.playSound(world, x, y, z, Block.snow.stepSound.getStepSound(), 0.25F, 1F);
+                return true;
+            }
         }
 
         return false;
@@ -173,6 +194,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
 
     @Environment(EnvType.CLIENT)
     protected static Icon sand;
+
     @Environment(EnvType.CLIENT)
     protected static Icon maggotsDone;
     @Environment(EnvType.CLIENT)
@@ -184,6 +206,10 @@ public abstract class CisternBaseBlock extends BlockContainer {
     private static final Icon[] dirtBreaking = new Icon[8];
     @Environment(EnvType.CLIENT)
     private final Icon[] gravelBreaking = new Icon[8];
+
+    @Environment(EnvType.CLIENT)
+    private static final Icon[] snowMelting = new Icon[8];
+
 
     @Override
     @Environment(EnvType.CLIENT)
@@ -208,9 +234,12 @@ public abstract class CisternBaseBlock extends BlockContainer {
             gravelBreaking[i] = register.registerIcon("denovo:gravel_breaking_" + i);
         }
 
-
         maggotsDone = register.registerIcon("denovo:composter_maggots");
         sand = register.registerIcon("sand");
+
+        for (int i = 0; i < snowMelting.length; i++) {
+            snowMelting[i] = register.registerIcon("denovo:snow_melting_" + i);
+        }
     }
 
 
@@ -239,6 +268,10 @@ public abstract class CisternBaseBlock extends BlockContainer {
             }
             else if (fillType == CisternUtils.CONTENTS_SAND) {
                 return sand;
+            }
+            else if (fillType == CisternUtils.CONTENTS_SNOW) {
+                int iconIndex = CisternUtils.getIconIndex(progress, 8, CisternUtils.SNOW_MELTING_CONVERSION_TIME);
+                return snowMelting[iconIndex];
             }
             else return water;
         }
@@ -289,10 +322,10 @@ public abstract class CisternBaseBlock extends BlockContainer {
         //Solids
         if (cisternBase.getSolidFillLevel() > 0) {
             if (cisternBase.getFillType() == CisternUtils.CONTENTS_INFECTED_WATER) {
-                renderer.setRenderBounds(3 / 16D, 1 / 16D, 3 / 16D, 13 / 16D, getMaxY(cisternBase), 13 / 16D);
+                renderer.setRenderBounds(3 / 16D, 1 / 16D, 3 / 16D, 13 / 16D, getMaxY(cisternBase) - 0.0001D, 13 / 16D);
                 RenderUtils.renderStandardBlockWithTexture(renderer, this, x, y, z, getSolidContentsIcon(cisternBase));
             } else {
-                renderer.setRenderBounds(2 / 16D, 1 / 16D, 2 / 16D, 14 / 16D, cisternBase.getSolidFillLevel() / 16D, 14 / 16D);
+                renderer.setRenderBounds(2 / 16D, 1 / 16D, 2 / 16D, 14 / 16D, cisternBase.getSolidFillLevel() / 16D - 0.0001D, 14 / 16D);
                 RenderUtils.renderStandardBlockWithTexture(renderer, this, x, y, z, getSolidContentsIcon(cisternBase));
             }
 
