@@ -310,7 +310,7 @@ public class DNRecipes {
 
         SiftingCraftingManager.addSiftingRecipe(
                 new LootEntry[]{
-                        new LootEntry(1.0D / 10, 1, new ItemStack(Block.cactus))
+                        new LootEntry(1.0D / 40, 4, new ItemStack(Block.cactus))
                 },
                 new ItemStack(BTWBlocks.sandAndGravelSlab, 1, 1), //0 is gravel
                 new ItemStack(DNItems.mesh)
@@ -318,7 +318,7 @@ public class DNRecipes {
 
         SiftingCraftingManager.addSiftingRecipe(
                 new LootEntry[]{
-                        new LootEntry(1.0D / 5, 1, new ItemStack(Block.cactus))
+                        new LootEntry(1.0D / 40, 8, new ItemStack(Block.cactus))
                 },
                 new ItemStack(Block.sand),
                 new ItemStack(DNItems.mesh)
