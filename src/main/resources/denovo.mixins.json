@@ -17,6 +17,7 @@
     "ItemCoalMixin",
     "ItemMixin",
     "OreBlockStagedMixin",
+    "OreChunkIronBlockMixin",
     "PlanterBlockSoilMixin",
     "SaplingBlockMixin",
     "ShaftItemMixin",

@@ -113,6 +113,7 @@ public class DeNovoAddon extends BTWAddon {
         this.registerProperty("DNBlockPlacedSticksID", "3903");
         this.registerProperty("DNBlockSmolderingPlacedSticksID", "3904");
         this.registerProperty("DNBlockCharcoalPileID", "3905");
+        this.registerProperty("DNBlockLavaCobbleID", "3906");
 
         //Item IDs
         this.registerProperty("DNItemMeshID", "23000", "***Item IDs***\n\n");
