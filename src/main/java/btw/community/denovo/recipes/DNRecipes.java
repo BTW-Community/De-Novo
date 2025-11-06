@@ -296,7 +296,7 @@ public class DNRecipes {
                         new LootEntry(1.0D / 8, 1, new ItemStack(Item.flint))
                 },
                 new ItemStack(BTWItems.gravelPile),
-                new ItemStack(BTWBlocks.wickerPane)
+                new ItemStack(BTWItems.wickerPane)
         );
 
         //Sand Sifting
@@ -352,7 +352,7 @@ public class DNRecipes {
                         new LootEntry(1.0D, 1, new ItemStack(BTWItems.wheatSeeds, 2, 0))
                 },
                 new ItemStack(BTWItems.wheat),
-                new ItemStack(BTWBlocks.wickerPane)
+                new ItemStack(BTWItems.wickerPane)
         );
     }
 }
