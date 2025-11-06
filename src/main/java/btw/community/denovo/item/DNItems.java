@@ -74,7 +74,7 @@ public class DNItems {
         cactusWaterExtraction = new ExtractionItem(DeNovoAddon.instance.parseID("DNItemCactusWaterExtractionID") - 256,
                 "denovo.cactus_water_extraction",
                 ExtractionItem.TIME_TO_CRAFT_WATER, new ItemStack(DNItems.waterBowl),
-                "mob.slime.attack", "mob.slime.small", "random.splash")
+                "mob.slime.attack", "mob.slime.small", "mob.slime.attack")
                 .setTextureName("denovo:cactus_water_extraction");
     }
 }
