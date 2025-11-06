@@ -167,6 +167,10 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
         return this.solidFillLevel == CisternUtils.MAX_SOLID_FILL_LEVEL && (this.fillType == CisternUtils.CONTENTS_SNOW);
     }
 
+    public boolean isFullWithGrass() {
+        return this.solidFillLevel == CisternUtils.MAX_SOLID_FILL_LEVEL && (this.fillType == CisternUtils.CONTENTS_GRASS);
+    }
+
     public boolean isEmptyOrHasSnow() {
         return this.isEmpty() || (!this.isFull() && this.getFillType() == CisternUtils.CONTENTS_SNOW);
     }

@@ -82,7 +82,7 @@ public class SmolderingPlacedSticksBlock extends BlockContainer {
                 BlockFire.checkForSmoulderingSpreadFromLocation(world, i, j, k);
 
                 int iBurnLevel = tileEntity.getBurnLevel();
-                if (!world.isRemote) System.out.println("burn level: " + iBurnLevel);
+//                if (!world.isRemote) System.out.println("burn level: " + iBurnLevel);
 
                 convertNeighborBlock(world, i, j, k, rand);
 

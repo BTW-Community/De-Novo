@@ -5,6 +5,7 @@ import btw.community.denovo.block.tileentities.CisternBaseTileEntity;
 import btw.community.denovo.utils.CisternUtils;
 import btw.item.BTWItems;
 import btw.item.util.ItemUtils;
+import com.prupe.mcpatcher.cc.ColorizeBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -59,6 +60,11 @@ public abstract class CisternBaseBlock extends BlockContainer {
     @Override
     public boolean canBlockStay(World world, int x, int y, int z) {
         return world.doesBlockHaveSolidTopSurface(x, y - 1, z) && super.canBlockStay(world, x, y, z);
+    }
+
+    @Override
+    public boolean isNormalCube(IBlockAccess blockAccess, int i, int j, int k) {
+        return false;
     }
 
     @Override
@@ -180,15 +186,21 @@ public abstract class CisternBaseBlock extends BlockContainer {
 
     @Environment(EnvType.CLIENT)
     public static boolean mudColorPass;
+    @Environment(EnvType.CLIENT)
+    public static boolean grassPass;
 
     @Environment(EnvType.CLIENT)
     protected Icon top;
+
     @Environment(EnvType.CLIENT)
     protected Icon side;
+
     @Environment(EnvType.CLIENT)
     protected Icon bottom;
+
     @Environment(EnvType.CLIENT)
     protected static Icon water;
+
     @Environment(EnvType.CLIENT)
     protected static Icon compost;
 
@@ -196,14 +208,20 @@ public abstract class CisternBaseBlock extends BlockContainer {
     protected static Icon sand;
 
     @Environment(EnvType.CLIENT)
+    protected static Icon grass;
+
+    @Environment(EnvType.CLIENT)
     protected static Icon maggotsDone;
+
     @Environment(EnvType.CLIENT)
     private static final Icon[] maggotsGrowing = new Icon[8];
 
     @Environment(EnvType.CLIENT)
     private final Icon[] compostBreaking = new Icon[8];
+
     @Environment(EnvType.CLIENT)
     private static final Icon[] dirtBreaking = new Icon[8];
+
     @Environment(EnvType.CLIENT)
     private final Icon[] gravelBreaking = new Icon[8];
 
@@ -240,6 +258,8 @@ public abstract class CisternBaseBlock extends BlockContainer {
         for (int i = 0; i < snowMelting.length; i++) {
             snowMelting[i] = register.registerIcon("denovo:snow_melting_" + i);
         }
+
+        grass = register.registerIcon("grass_top");
     }
 
 
@@ -273,6 +293,9 @@ public abstract class CisternBaseBlock extends BlockContainer {
                 int iconIndex = CisternUtils.getIconIndex(progress, 8, CisternUtils.SNOW_MELTING_CONVERSION_TIME);
                 return snowMelting[iconIndex];
             }
+            else if (fillType == CisternUtils.CONTENTS_GRASS) {
+                return grass;
+            }
             else return water;
         }
 
@@ -295,6 +318,25 @@ public abstract class CisternBaseBlock extends BlockContainer {
             return CisternUtils.getColorMultiplier(fillType, progress);
         }
 
+        if (grassPass) {
+            //Copied from BlockGrass
+            if (ColorizeBlock.colorizeBlock(this, blockAccess, x, y, z)) {
+                return ColorizeBlock.blockColor;
+            }
+            int var5 = 0;
+            int var6 = 0;
+            int var7 = 0;
+            for (int var8 = -1; var8 <= 1; ++var8) {
+                for (int var9 = -1; var9 <= 1; ++var9) {
+                    int var10 = blockAccess.getBiomeGenForCoords(x + var9, z + var8).getBiomeGrassColor();
+                    var5 += (var10 & 0xFF0000) >> 16;
+                    var6 += (var10 & 0xFF00) >> 8;
+                    var7 += var10 & 0xFF;
+                }
+            }
+            return (var5 / 9 & 0xFF) << 16 | (var6 / 9 & 0xFF) << 8 | var7 / 9 & 0xFF;
+        }
+
         return super.colorMultiplier(blockAccess, x, y, z);
     }
 
@@ -310,7 +352,6 @@ public abstract class CisternBaseBlock extends BlockContainer {
 
     @Environment(EnvType.CLIENT)
     private void renderContents(RenderBlocks renderer, int x, int y, int z, CisternBaseTileEntity cisternBase) {
-
         //render contents
         mudColorPass = true;
         //Liquids
@@ -321,13 +362,18 @@ public abstract class CisternBaseBlock extends BlockContainer {
         mudColorPass = false;
         //Solids
         if (cisternBase.getSolidFillLevel() > 0) {
+
             if (cisternBase.getFillType() == CisternUtils.CONTENTS_INFECTED_WATER) {
                 renderer.setRenderBounds(3 / 16D, 1 / 16D, 3 / 16D, 13 / 16D, getMaxY(cisternBase) - 0.0001D, 13 / 16D);
                 RenderUtils.renderStandardBlockWithTexture(renderer, this, x, y, z, getSolidContentsIcon(cisternBase));
             } else {
+                if (cisternBase.getFillType() == CisternUtils.CONTENTS_GRASS) grassPass = true;
                 renderer.setRenderBounds(2 / 16D, 1 / 16D, 2 / 16D, 14 / 16D, cisternBase.getSolidFillLevel() / 16D - 0.0001D, 14 / 16D);
                 RenderUtils.renderStandardBlockWithTexture(renderer, this, x, y, z, getSolidContentsIcon(cisternBase));
+                grassPass = false;
             }
+
+
 
         }
     }

@@ -59,7 +59,7 @@ public class ComposterBlock extends CisternBaseBlock {
         if (cisternBase.isEmptyOrHasCompost() || cisternBase.isEmptyOrHasSand()) {
             return handleContentsEmptyOrContents(world, x, y, z, facing, player, cisternBase);
         }
-        else if (cisternBase.isFullWithCompostOrMaggots()) {
+        else if (cisternBase.isFullWithCompostOrMaggots() || cisternBase.isFullWithGrass()) {
             return handleContentsCompostOrMaggots(world, x, y, z, facing, player, cisternBase);
         }
         else if (cisternBase.isFullWithSand()) {
@@ -74,6 +74,15 @@ public class ComposterBlock extends CisternBaseBlock {
         CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) world.getBlockTileEntity(x, y, z);
         if (cisternBase.isFullWithCompostOrMaggots()) {
             checkForSpread(world, x, y, z, rand);
+        }
+        else if (cisternBase.isFullWithGrass()) {
+            if (BlockGrass.canGrassSpreadFromLocation(world, x, y, z)) {
+                System.out.println("spreading?");
+                if (rand.nextFloat() <= 0.8f) {
+                    System.out.println("spreading!");
+                    BlockGrass.checkForGrassSpreadFromLocation(world, x, y, z);
+                }
+            }
         }
 
     }
@@ -98,17 +107,27 @@ public class ComposterBlock extends CisternBaseBlock {
     //----------- Class Specific Methods -----------//
 
     protected boolean handleContentsCompostOrMaggots(World world, int x, int y, int z, int facing, EntityPlayer player, CisternBaseTileEntity cisternBase) {
-        if (player.getHeldItem() != null) return false;
 
-        if (cisternBase.getFillType() == CisternUtils.CONTENTS_COMPOST) {
-            if (!world.isRemote) {
-                returnItemsWhenFullWithCompost(world, x, y, z, facing);
 
-                CisternUtils.playSound(world, x, y, z, Block.dirt.stepSound.getStepSound(), 1 / 4F, 1F);
+        if (cisternBase.getFillType() == CisternUtils.CONTENTS_COMPOST || cisternBase.getFillType() == CisternUtils.CONTENTS_GRASS ) {
+            if (player.getHeldItem() == null){
+                if (!world.isRemote) {
+                    returnItemsWhenFullWithCompost(world, x, y, z, facing);
+
+                    CisternUtils.playSound(world, x, y, z, Block.dirt.stepSound.getStepSound(), 1 / 4F, 1F);
+                }
+                cisternBase.setFillType(CisternUtils.CONTENTS_EMPTY);
             }
+            else if (player.getHeldItem().itemID == BTWItems.dung.itemID){
+                if (!player.capabilities.isCreativeMode) --player.getHeldItem().stackSize;
 
-            cisternBase.setFillType(CisternUtils.CONTENTS_EMPTY);
+                CisternUtils.playSound(world, x, y, z, Block.grass.stepSound.getStepSound(), 1 / 4F, 1F);
+                cisternBase.setFillType(CisternUtils.CONTENTS_GRASS);
+                cisternBase.setProgressCounter(0);
+            }
         } else if (cisternBase.getFillType() == CisternUtils.CONTENTS_MAGGOTS) {
+            if (player.getHeldItem() != null) return false;
+
             if (!world.isRemote) {
 
                 returnItemsWhenFullWithMaggots(world, x, y, z, facing);
