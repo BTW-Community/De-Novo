@@ -5,6 +5,7 @@ import btw.block.model.OreChunkLegacyModel;
 import btw.block.model.OreChunkModel;
 import btw.client.render.util.RenderUtils;
 import btw.community.denovo.block.tileentities.LavaCobbleTileEntity;
+import btw.community.denovo.utils.CisternUtils;
 import btw.item.BTWItems;
 import btw.item.util.ItemUtils;
 import btw.world.util.WorldUtils;
@@ -254,6 +255,30 @@ public class LavaCobbleBlock extends BlockContainer {
                     RenderUtils.renderBlockFullBrightWithTexture(renderBlocks, renderBlocks.blockAccess, i, j, k, this.lavaCracks);
                 }
             }
+        }
+    }
+
+    @Override
+    public void renderBlockAsItem(RenderBlocks renderBlocks, int iItemDamage, float fBrightness) {
+
+//        CisternUtils.pack(cobble, straw, 0, 0);
+        int cobbleCount = CisternUtils.getLiquidFillLevel(iItemDamage);
+        int strawCount = CisternUtils.getSolidFillLevel(iItemDamage);
+        int state = CisternUtils.getFillType(iItemDamage);
+
+        if (cobbleCount < 3) {
+            this.getModel().renderAsItemBlock(renderBlocks, this, iItemDamage);
+        }
+
+        if (cobbleCount > 0){
+            renderBlocks.setRenderBounds(getAABBForCobble(cobbleCount / 8D));
+            RenderUtils.renderInvBlockWithTexture(renderBlocks, this, -0.5F, -0.5F, -0.5F, this.lavaCobble);
+        }
+
+        if (strawCount > 0){
+            Icon fillIcon = state == 0 ? this.strawCracks : this.lavaCracks;
+            renderBlocks.setRenderBounds(getAABBForStraw(strawCount /4D));
+            RenderUtils.renderInvBlockWithTexture(renderBlocks, this, -0.5F, -0.5F, -0.5F, fillIcon);
         }
     }
 

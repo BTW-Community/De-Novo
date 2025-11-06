@@ -1,5 +1,6 @@
 package btw.community.denovo.emi;
 
+import btw.block.BTWBlocks;
 import btw.community.denovo.block.DNBlocks;
 import btw.community.denovo.emi.custom.EmiGloomStack;
 import btw.community.denovo.emi.custom.EmiHeartStack;
@@ -15,6 +16,7 @@ import btw.community.denovo.recipes.SiftingCraftingManager;
 import btw.community.denovo.recipes.SiftingRecipe;
 import btw.community.denovo.utils.CisternUtils;
 import btw.item.BTWItems;
+import btw.item.tag.BTWTags;
 import emi.dev.emi.emi.api.EmiPlugin;
 import emi.dev.emi.emi.api.EmiRegistry;
 import emi.dev.emi.emi.api.plugin.BTWPlugin;
@@ -73,7 +75,10 @@ public class DeNovoEmiPlugin implements EmiPlugin {
         addSiftingRecipes(reg);
         addProgressiveCraftingRecipes(reg);
         addCharcoalProcessingRecipes(reg);
+        addLavaWorldInteractionRecipes(reg);
     }
+
+
 
     private void addInfoRecipes(EmiRegistry reg) {
         this.info(reg, DNItems.woodSickle, "emi.denovo.sickle.info");
@@ -189,6 +194,22 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                 .leftInput(EmiStack.of(new ItemStack(Item.bucketEmpty, 1, 0)))
                 .rightInput(EmiStack.of(Block.waterStill), false)
                 .output(EmiStack.of(new ItemStack(Item.bucketWater, 1, 0)))
+                .supportsRecipeTree(true)
+                .build());
+
+        //Lava to Obsidian bowl
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/water_bowl_from_source"))
+                .leftInput(EmiStack.of(new ItemStack(DNItems.waterBowl, 1, 0)))
+                .rightInput(EmiStack.of(Block.lavaStill), false)
+                .output(EmiStack.of(new ItemStack(Block.obsidian, 1, 0)))
+                .supportsRecipeTree(true)
+                .build());
+
+        //Lava to Obsidian bucket
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/water_bucket_from_source"))
+                .leftInput(EmiStack.of(new ItemStack(Item.bucketWater, 1, 0)))
+                .rightInput(EmiStack.of(Block.lavaStill), false)
+                .output(EmiStack.of(new ItemStack(Block.obsidian, 1, 0)))
                 .supportsRecipeTree(true)
                 .build());
 
@@ -465,6 +486,60 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                 new ItemStack(DNBlocks.smolderingPlacedSticks), new ItemStack(DNBlocks.charcoalPile, 1, 7)));
         BTWPlugin.addRecipeSafe(reg, () -> new EmiCharcoalRecipe(new ResourceLocation("denovo", "charcoal_pile"),
                 new ItemStack(DNBlocks.charcoalPile, 1, 7), new ItemStack(DNItems.charcoalDust, 1)));
+    }
+
+    private void addLavaWorldInteractionRecipes(EmiRegistry reg) {
+        int cobbleCount = 8;
+        int strawCount = 0;
+        int state = 0;
+        int fullCobble = CisternUtils.pack(cobbleCount, strawCount, state, 0);
+
+        strawCount = 4;
+        int fullStraw = CisternUtils.pack(cobbleCount, strawCount, state, 0);
+
+        state = 1;
+        int fullLava = CisternUtils.pack(cobbleCount, strawCount, state, 0);
+
+        //Iron chunk and rocks
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/lava_creation"))
+                .leftInput(EmiStack.of(BTWItems.stone))
+                .rightInput(EmiStack.of(BTWItems.ironOreChunk), false)
+                .output(EmiStack.of(new ItemStack(DNBlocks.lavaCobble, 1, fullCobble)))
+                .supportsRecipeTree(true)
+                .build());
+
+        //straw
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/lava_creation"))
+                .leftInput(EmiStack.of(BTWItems.straw))
+                .rightInput(EmiStack.of(new ItemStack(DNBlocks.lavaCobble, 1, fullCobble)), false)
+                .output(EmiStack.of(new ItemStack(DNBlocks.lavaCobble, 1, fullStraw)))
+                .supportsRecipeTree(true)
+                .build());
+
+        //cooking
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/lava_creation"))
+                .leftInput(EmiStack.of(new ItemStack(DNBlocks.lavaCobble, 1, fullStraw)), sw -> {
+                    sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.lava_cobble"));
+                    return sw;
+                })
+                .rightInput(EmiStack.of(DNBlocks.smolderingPlacedSticks), false)
+                .output(EmiStack.of(new ItemStack(DNBlocks.lavaCobble, 1, fullLava)))
+                .supportsRecipeTree(true)
+                .build());
+
+        //lava
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/lava_creation"))
+                .leftInput(EmiStack.of(new ItemStack(DNBlocks.lavaCobble, 1, fullLava)), sw -> {
+                    sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.lava_cobble"));
+                    return sw;
+                })
+                .rightInput(EmiStack.of(Item.pocketSundial), false, sw -> {
+                    sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.lava_cobble_time"));
+                    return sw;
+                })
+                .output(EmiStack.of(Block.lavaStill))
+                .supportsRecipeTree(true)
+                .build());
     }
 
     public static EmiRecipeCategory category(String id, EmiStack icon) {

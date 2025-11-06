@@ -6,6 +6,7 @@ tile.denovo.cistern.name=Cistern
 tile.denovo.placed_sticks.name=Placed Shafts
 tile.denovo.smoldering_placed_sticks.name=Smoldering Placed Shafts
 tile.denovo.charcoal.name=Charcoal Pile
+tile.denovo.lava_cobble.name=Straw Infused Cobblestone
 
 #Items
 item.denovo.mesh.name=Mesh
@@ -54,6 +55,9 @@ emi.world_interaction.denovo.morning=§6Can fill 33% of water each morning
 emi.world_interaction.denovo.composter_filling=§6Fills Composter by 1/16
 
 emi.world_interaction.denovo.composter_mushroom=§6Spawn around Composter over time
+
+emi.world_interaction.denovo.lava_cobble=§6Surrounded by 4 Smoldering Placed Shafts
+emi.world_interaction.denovo.lava_cobble_time=§6Will convert over Time
 
 emi.denovo.right_click=RMB
 
