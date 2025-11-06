@@ -115,7 +115,8 @@ public class DNRecipes {
 
         //Maggots progressively to String
         RecipeManager.addShapelessRecipe(new ItemStack(DNItems.maggotsSilkExtraction, 1, MaggotsSilkExtractionItem.TIME_TO_CRAFT), new Object[]{
-                new ItemStack(DNItems.rawMaggots)
+                new ItemStack(DNItems.rawMaggots),
+                new ItemStack(BTWItems.pointyStick)
         });
 
         FurnaceRecipes.smelting().addSmelting(DNItems.rawMaggots.itemID, new ItemStack(DNItems.cookedMaggots), 0);
