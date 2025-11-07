@@ -60,6 +60,9 @@ emi.world_interaction.denovo.composter_mushroom=§6Spawn around Composter over t
 emi.world_interaction.denovo.lava_cobble=§6Surrounded by 4 Smoldering Placed Shafts
 emi.world_interaction.denovo.lava_cobble_time=§6Will convert over Time
 
+emi.world_interaction.denovo.composter_sand=§6Allows Cactus to be placed on top
+emi.world_interaction.denovo.composter_grass_spread=§6Can spread grass to other Blocks
+
 emi.denovo.right_click=RMB
 
 emi.denovo.rain=Rain

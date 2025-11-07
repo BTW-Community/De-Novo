@@ -209,6 +209,7 @@ public class DNRecipes {
         RecipeManager.addRecipe(new ItemStack(DNBlocks.cistern, 1), new Object[]{"# #", "# #", "###", '#', Item.ingotIron});
 
         RecipeManager.addShapelessRecipe(new ItemStack(BTWBlocks.cauldron), new Object[]{DNBlocks.cistern, Item.bucketWater, Item.bone});
+        RecipeManager.addShapelessRecipe(new ItemStack(DNBlocks.cistern), new Object[]{Item.cauldron});
 
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 42), new ItemStack[]{new ItemStack(DNBlocks.cistern)});
     }

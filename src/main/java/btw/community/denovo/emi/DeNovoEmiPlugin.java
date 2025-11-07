@@ -53,6 +53,10 @@ public class DeNovoEmiPlugin implements EmiPlugin {
     private final int WATER_INFECTED_DIRT = CisternUtils.pack(15, 16, CisternUtils.CONTENTS_INFECTED_WATER, 0);
     private final int WATER_RUST = CisternUtils.pack(15, 0, CisternUtils.CONTENTS_RUST_WATER, CisternUtils.INFECTED_WATER_CONVERSION_TIME);
     private final int COMPOST_16 = CisternUtils.pack(0, 16, CisternUtils.CONTENTS_COMPOST, 0);
+    private final int GRASS_16 = CisternUtils.pack(0, 16, CisternUtils.CONTENTS_GRASS, 0);
+    private final int SAND_16 = CisternUtils.pack(0, 16, CisternUtils.CONTENTS_SAND, 0);
+    private final int SNOW_0 = CisternUtils.pack(0, 16, CisternUtils.CONTENTS_SNOW, 0);
+    private final int SNOW_100 = CisternUtils.pack(0, 16, CisternUtils.CONTENTS_SNOW, CisternUtils.SNOW_MELTING_CONVERSION_TIME);
     private final int MAGGOTS_16 = CisternUtils.pack(0, 16, CisternUtils.CONTENTS_MAGGOTS, 0);
 
 
@@ -363,6 +367,15 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                     .output(EmiStack.of(DNItems.rustWaterBowl))
                     .supportsRecipeTree(true)
                     .build());
+
+            //Snow
+            reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/" + blockName[i] + "_snow"))
+                    .leftInput(EmiStack.of(Item.snowball, 2))
+                    .rightInput(EmiStack.of(new ItemStack(blocks[i], 1, EMPTY)), false)
+                    .output(EmiStack.of(new ItemStack(blocks[i], 1, SNOW_0)))
+                    .supportsRecipeTree(true)
+                    .build());
+
         }
     }
 
@@ -405,10 +418,54 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                     sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.right_click"));
                     return sw;
                 })
-                .rightInput(EmiStack.of(new ItemStack(DNBlocks.composter, 1, COMPOST_16)), false)
+                .rightInput(EmiIngredient.of(
+                        List.of(
+                                EmiStack.of(new ItemStack(DNBlocks.composter, 1, COMPOST_16)),
+                                EmiStack.of(new ItemStack(DNBlocks.composter, 1, GRASS_16))
+                        )
+                ), false)
                 .output(EmiStack.of(BTWBlocks.looseDirt))
                 .supportsRecipeTree(true)
                 .build());
+
+        //Adding Sand
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/compost_adding_dung"))
+                .leftInput(EmiIngredient.of(List.of(
+                                EmiStack.of(BTWItems.sandPile),
+                                EmiStack.of(new ItemStack(BTWBlocks.sandAndGravelSlab, 1, 1)),
+                                EmiStack.of(Block.sand)
+                        )))
+                .rightInput(EmiStack.of(new ItemStack(DNBlocks.composter, 1, EMPTY)), false)
+                .output(EmiStack.of(new ItemStack(DNBlocks.composter, 1, SAND_16)), sw -> {
+                    sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.composter_sand"));
+                    return sw;
+                })
+                .supportsRecipeTree(true)
+                .build());
+
+        //Remove Sand
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/composter_sand_removal"))
+                .leftInput(new EmiRightClickStack(), sw -> {
+                    sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.right_click"));
+                    return sw;
+                })
+                .rightInput(EmiStack.of(new ItemStack(DNBlocks.composter, 1, SAND_16)), false)
+                .output(EmiStack.of(Block.sand))
+                .supportsRecipeTree(true)
+                .build());
+
+        //Adding Dung to Compost
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/compost_adding_dung"))
+                .leftInput(EmiStack.of(BTWItems.dung))
+                .rightInput(EmiStack.of(new ItemStack(DNBlocks.composter, 1, COMPOST_16)), false)
+                .output(EmiStack.of(new ItemStack(DNBlocks.composter, 1, GRASS_16)), sw -> {
+                    sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.composter_grass_spread"));
+                    return sw;
+                })
+                .supportsRecipeTree(true)
+                .build());
+
+
     }
 
 
@@ -454,6 +511,15 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                             EmiStack.of(new ItemStack(blocks[index], 1, WATER_RUST))
                     ),
                     CisternUtils.INFECTED_WATER_CONVERSION_TIME));
+
+            //Snow Melting
+            BTWPlugin.addRecipeSafe(reg, () -> new EmiCisternBaseRecipe(
+                    new ResourceLocation("denovo", blockName[index] + "/snow"), categories[index],
+                    new ItemStack(blocks[index], 1, SNOW_0),
+                    List.of(
+                            EmiStack.of(new ItemStack(blocks[index], 1, WATER_15))
+                    ),
+                    CisternUtils.SNOW_MELTING_CONVERSION_TIME));
         }
     }
 

@@ -372,6 +372,20 @@ public class CisternUtils {
         } else if (fillType == CisternUtils.CONTENTS_RUST_WATER) {
             return CisternUtils.COLOR_RUST_WATER.getRGB() & 0x00FFFFFF;
         }
+        else if (fillType == CisternUtils.CONTENTS_GRASS) {
+            int var5 = 0;
+            int var6 = 0;
+            int var7 = 0;
+            for (int var8 = -1; var8 <= 1; ++var8) {
+                for (int var9 = -1; var9 <= 1; ++var9) {
+                    int var10 = BiomeGenBase.plains.getBiomeGrassColor();
+                    var5 += (var10 & 0xFF0000) >> 16;
+                    var6 += (var10 & 0xFF00) >> 8;
+                    var7 += var10 & 0xFF;
+                }
+            }
+            return (var5 / 9 & 0xFF) << 16 | (var6 / 9 & 0xFF) << 8 | var7 / 9 & 0xFF;
+        }
 
         return 0xFFFFFF; // default white
     }
@@ -423,6 +437,9 @@ public class CisternUtils {
         if (fillType == CONTENTS_CLAY_WATER) return "Clay Water";
         if (fillType == CONTENTS_INFECTED_WATER) return "Infected Water";
         if (fillType == CONTENTS_RUST_WATER) return "Rust Water";
+        if (fillType == CONTENTS_SAND) return "Sand";
+        if (fillType == CONTENTS_GRASS) return "Compost with Grass";
+        if (fillType == CONTENTS_SNOW) return "Snow";
 
         return null;
     }

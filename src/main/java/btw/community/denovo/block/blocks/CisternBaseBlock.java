@@ -10,6 +10,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.util.List;
@@ -374,6 +375,67 @@ public abstract class CisternBaseBlock extends BlockContainer {
             }
 
 
+
+        }
+    }
+
+    protected void renderBlockContentsAsItem(RenderBlocks renderer, Block block, int damage) {
+        if (damage > 0) {
+
+            Icon icon = this.water;
+
+            int liquidFillLevel = CisternUtils.getLiquidFillLevel(damage);
+            int solidFillLevel = CisternUtils.getSolidFillLevel(damage);
+            int fillType = CisternUtils.getFillType(damage);
+            int progress = CisternUtils.getProgress(damage);
+
+            if (liquidFillLevel > 0) {
+                mudColorPass = true;
+                GL11.glPushMatrix();
+
+                int rgb = CisternUtils.getColorMultiplier(fillType, progress);
+                float r = (rgb >> 16 & 0xFF) / 255.0F;
+                float g = (rgb >> 8 & 0xFF) / 255.0F;
+                float b = (rgb & 0xFF) / 255.0F;
+
+
+                GL11.glColor3f(r, g, b);
+
+                renderer.setRenderBounds(2 / 16D, 9 / 32D, 2 / 16D, 14 / 16D, liquidFillLevel / 16D, 14 / 16D);
+                RenderUtils.renderInvBlockWithTexture(renderer, block, -0.5F, -0.5F, -0.5F, icon);
+
+                GL11.glColor3f(1.0F, 1.0F, 1.0F); // reset
+                GL11.glPopMatrix();
+
+                mudColorPass = false;
+            }
+
+            if (solidFillLevel > 0) {
+                icon = CisternBaseBlock.getContentsIcon(CisternUtils.getFillType(damage), CisternUtils.getProgress(damage));
+                float width = 2 / 16F;
+                if (liquidFillLevel > 0) {
+                    width = 3 / 16F;
+                }
+
+                if (fillType == CisternUtils.CONTENTS_GRASS) {
+                    grassPass = true;
+                    int rgb = CisternUtils.getColorMultiplier(fillType, progress);
+                    float r = (rgb >> 16 & 0xFF) / 255.0F;
+                    float g = (rgb >> 8 & 0xFF) / 255.0F;
+                    float b = (rgb & 0xFF) / 255.0F;
+
+                    GL11.glColor3f(r, g, b);
+                    renderer.setRenderBounds(width, 9 / 32D, width, 1 - width, solidFillLevel / 16D, 1 - width);
+                    RenderUtils.renderInvBlockWithTexture(renderer, block, -0.5F, -0.5F, -0.5F, icon);
+                    GL11.glColor3f(1, 1, 1);
+                    grassPass = false;
+                } else {
+                    renderer.setRenderBounds(width, 9 / 32D, width, 1 - width, solidFillLevel / 16D, 1 - width);
+                    RenderUtils.renderInvBlockWithTexture(renderer, block, -0.5F, -0.5F, -0.5F, icon);
+                }
+
+
+            }
 
         }
     }
