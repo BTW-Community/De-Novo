@@ -1,22 +1,17 @@
 package btw.community.denovo.emi.tag;
 
 import btw.block.BTWBlocks;
-import btw.block.blocks.AestheticOpaqueEarthBlock;
 import btw.community.denovo.item.DNItems;
-import btw.community.denovo.utils.CisternUtils;
 import btw.item.BTWItems;
 import btw.item.tag.BTWTags;
 import btw.item.tag.Tag;
-import btw.item.tag.TagInstance;
-import emi.dev.emi.emi.api.stack.EmiIngredient;
-import emi.dev.emi.emi.api.stack.EmiStack;
-import emi.dev.emi.emi.registry.EmiTags;
 import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ResourceLocation;
 
 public class DeNovoTags {
+
     public static void init() {
         //call class to init tags
     }
@@ -53,7 +48,6 @@ public class DeNovoTags {
             .add(new ItemStack(BTWItems.brownMushroom))
             .add(new ItemStack(Block.cactus))
 
-            .add(BTWTags.logs)
             .addFromAndUntilDamage(0, 3, Block.leaves)
 
             .add(new ItemStack(BTWBlocks.oakSapling, 1, 0))
