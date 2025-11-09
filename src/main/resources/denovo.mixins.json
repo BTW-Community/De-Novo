@@ -20,6 +20,7 @@
     "OreBlockStagedMixin",
     "OreChunkIronBlockMixin",
     "PlanterBlockSoilMixin",
+    "RoughStoneBlockMixin",
     "SaplingBlockMixin",
     "ShaftItemMixin",
     "SlimeEntityMixin",
