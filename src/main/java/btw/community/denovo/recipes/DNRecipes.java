@@ -26,6 +26,9 @@ public class DNRecipes {
     }
 
     public static void addRecipes() {
+        addSickleRecipes();
+        addHammerRecipes();
+
         addCraftingRecipes();
         addSieveRecipes();
         addMaggotsRecipes();
@@ -55,34 +58,29 @@ public class DNRecipes {
                 new ItemStack(DNItems.charcoalDust),
                 new ItemStack(DNItems.charcoalDust)
         });
-        addSickleRecipes();
-//        addHoeRecipes();
-        addHammerRecipes();
     }
 
     private static void addHammerRecipes() {
         RecipeManager.addShapelessRecipe(new ItemStack(DNItems.flintHammer), new Object[]{
-                new ItemStack(Item.silk),
+                BTWTags.strings,
                 new ItemStack(Item.stick),
                 new ItemStack(Item.flint),
                 new ItemStack(Item.flint),
         });
     }
-
-    private static void addHoeRecipes() {
-        RecipeManager.addShapelessRecipe(new ItemStack(Item.hoeStone), new Object[]{
-                new ItemStack(Item.silk),
-                new ItemStack(Item.stick),
-                new ItemStack(BTWItems.sharpStone),
-        });
-    }
-
     private static void addSickleRecipes() {
         RecipeManager.addShapelessRecipe(new ItemStack(DNItems.woodSickle), new Object[]{
-                new ItemStack(Item.silk),
+                BTWTags.strings,
                 new ItemStack(Item.stick),
                 new ItemStack(BTWItems.pointyStick),
                 new ItemStack(BTWItems.pointyStick)
+        });
+
+        RecipeManager.addShapelessRecipe(new ItemStack(DNItems.stoneSickle), new Object[]{
+                BTWTags.strings,
+                new ItemStack(Item.stick),
+                new ItemStack(BTWItems.sharpStone),
+                new ItemStack(BTWItems.sharpStone)
         });
     }
 

@@ -17,6 +17,8 @@ import btw.community.denovo.recipes.SiftingRecipe;
 import btw.community.denovo.utils.CisternUtils;
 import btw.item.BTWItems;
 import btw.item.tag.BTWTags;
+import btw.item.tag.Tag;
+import btw.item.tag.TagOrStack;
 import emi.dev.emi.emi.api.EmiPlugin;
 import emi.dev.emi.emi.api.EmiRegistry;
 import emi.dev.emi.emi.api.plugin.BTWPlugin;
@@ -27,6 +29,7 @@ import emi.dev.emi.emi.api.render.EmiTexture;
 import emi.dev.emi.emi.api.stack.EmiIngredient;
 import emi.dev.emi.emi.api.stack.EmiStack;
 import emi.dev.emi.emi.recipe.btw.EmiProgressiveRecipe;
+import emi.shims.java.com.unascribed.retroemi.RetroEMI;
 import emi.shims.java.net.minecraft.text.Text;
 import emi.shims.java.net.minecraft.util.SyntheticIdentifier;
 import net.minecraft.src.Block;
@@ -85,11 +88,10 @@ public class DeNovoEmiPlugin implements EmiPlugin {
 
 
     private void addInfoRecipes(EmiRegistry reg) {
-        this.info(reg, DNItems.woodSickle, "emi.denovo.sickle.info");
+        this.info(reg, EmiIngredient.of(DeNovoTags.sickle), "emi.denovo.sickle.info");
         this.info(reg, DNItems.flintHammer, "emi.denovo.flint_hammer.info");
         this.info(reg, DNBlocks.composter, WATER_15, "emi.denovo.composter_water.info");
     }
-
 
     private void addCategories(EmiRegistry reg) {
         reg.addCategory(DeNovoEmiRecipeCategories.SIEVE);
@@ -612,6 +614,10 @@ public class DeNovoEmiPlugin implements EmiPlugin {
 
     public static EmiRecipeCategory category(String id, EmiStack icon) {
         return new EmiRecipeCategory(new ResourceLocation("denovo", id), icon, new EmiTexture(new ResourceLocation("denovo", "textures/simple_icons/" + id + ".png"), 0, 0, 16, 16, 16, 16, 16, 16));
+    }
+
+    private void info(EmiRegistry registry, EmiIngredient tag, String info) {
+        registry.addRecipe(new EmiInfoRecipe(List.of(tag), List.of(Text.translatable(info)), null));
     }
 
     private void info(EmiRegistry registry, Item item, String info) {

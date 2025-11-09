@@ -15,6 +15,7 @@ item.denovo.maggots_cooked.name=Grilled Maggots
 item.denovo.maggots_silk_extraction.name=Silk Extraction
 item.denovo.water_bowl.name=Bowl of Water
 item.denovo.wood_sickle.name=Wooden Sickle
+item.denovo.stone_sickle.name=Stone Sickle
 item.denovo.flint_hammer.name=Flint Hammer
 item.denovo.charcoal_dust.name=Pile of Charcoal Dust
 item.denovo.rust_water_bowl.name=Bowl of Rust Water
@@ -34,6 +35,7 @@ tile.deadbush.mature.name=Dead Bush
 ### EMI ###
 tag.denovo.compostables=Compostables
 tag.denovo.validGoldenDungBushBlocks=Valid Dead Bush Blocks
+tag.denovo.sickle=Sickles
 
 emi.denovo.sickle.info=A primitive tool that allows the harvesting of Leaves and Grass
 emi.denovo.flint_hammer.info=A primitive tool that allows breaking of Stone

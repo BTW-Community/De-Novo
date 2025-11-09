@@ -5,14 +5,14 @@ import btw.item.items.ToolItem;
 import net.minecraft.src.*;
 
 public class SickleItem extends ToolItem {
-    public SickleItem(int itemID, EnumToolMaterial material, int maxUses) {
+    public SickleItem(int itemID, String name, EnumToolMaterial material, int maxUses) {
         super(itemID, 0, material);
 
         setMaxStackSize(1);
         setMaxDamage(maxUses);
+        setDamageVsEntity(0); //Sickles should not damage entities
 
-        setUnlocalizedName("denovo.wood_sickle");
-        setTextureName("denovo:wood_sickle");
+        setUnlocalizedName(name);
         setCreativeTab(CreativeTabs.tabTools);
     }
 
