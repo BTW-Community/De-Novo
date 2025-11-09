@@ -147,58 +147,6 @@ public class DNRecipes {
         // Valid Dirts
         CisternUtils.validDirt.add(new ItemStack(BTWItems.dirtPile));
         CisternUtils.validDirt.add(new ItemStack(BTWItems.gravelPile));
-
-        //Compostables
-        //CisternUtils.validCompostables.add(new ItemStack(DNItems.rawMaggots));
-
-        CisternUtils.validCompostables.add(new ItemStack(Item.stick));
-        CisternUtils.validCompostables.add(new ItemStack(BTWItems.sawDust));
-        for (int type = 0; type < 5; type++) {
-            CisternUtils.validCompostables.add(new ItemStack(BTWItems.bark, 1, type));
-        }
-
-        CisternUtils.validCompostables.add(new ItemStack(Item.poisonousPotato));
-        CisternUtils.validCompostables.add(new ItemStack(Item.reed));
-        CisternUtils.validCompostables.add(new ItemStack(BTWItems.sugarCaneRoots));
-        CisternUtils.validCompostables.add(new ItemStack(BTWItems.hemp));
-        CisternUtils.validCompostables.add(new ItemStack(BTWItems.hempFibers));
-
-        CisternUtils.validCompostables.add(new ItemStack(Item.rottenFlesh));
-        CisternUtils.validCompostables.add(new ItemStack(Item.spiderEye));
-        CisternUtils.validCompostables.add(new ItemStack(Item.fermentedSpiderEye));
-        CisternUtils.validCompostables.add(new ItemStack(BTWItems.creeperOysters));
-        CisternUtils.validCompostables.add(new ItemStack(BTWItems.batWing));
-        CisternUtils.validCompostables.add(new ItemStack(BTWItems.mysteriousGland));
-
-        CisternUtils.validCompostables.add(new ItemStack(Block.deadBush));
-        CisternUtils.validCompostables.add(new ItemStack(Block.plantRed));
-        CisternUtils.validCompostables.add(new ItemStack(Block.plantYellow));
-        CisternUtils.validCompostables.add(new ItemStack(Block.cocoaPlant));
-        CisternUtils.validCompostables.add(new ItemStack(Block.vine));
-        CisternUtils.validCompostables.add(new ItemStack(Block.waterlily));
-        CisternUtils.validCompostables.add(new ItemStack(BTWItems.redMushroom));
-        CisternUtils.validCompostables.add(new ItemStack(BTWItems.brownMushroom));
-
-        for (int type = 0; type < 5; type++) {
-            CisternUtils.validCompostables.add(new ItemStack(Block.wood, 1, type));
-        }
-        for (int type = 0; type < 4; type++) {
-            CisternUtils.validCompostables.add(new ItemStack(Block.leaves, 1, type));
-        }
-
-        CisternUtils.validCompostables.add(new ItemStack(BTWBlocks.oakSapling, 1, 0));
-        CisternUtils.validCompostables.add(new ItemStack(BTWBlocks.oakSapling, 1, 7));
-        CisternUtils.validCompostables.add(new ItemStack(BTWBlocks.birchSapling, 1, 0));
-        CisternUtils.validCompostables.add(new ItemStack(BTWBlocks.birchSapling, 1, 7));
-        CisternUtils.validCompostables.add(new ItemStack(BTWBlocks.spruceSapling, 1, 0));
-        CisternUtils.validCompostables.add(new ItemStack(BTWBlocks.spruceSapling, 1, 7));
-        CisternUtils.validCompostables.add(new ItemStack(BTWBlocks.jungleSapling, 1, 0));
-        CisternUtils.validCompostables.add(new ItemStack(BTWBlocks.jungleSapling, 1, 7));
-
-        for (int type = 0; type < 3; type++) {
-            CisternUtils.validCompostables.add(new ItemStack(Block.tallGrass, 1, type));
-        }
-
     }
 
     private static void addCisternRecipes() {
