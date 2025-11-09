@@ -2,6 +2,7 @@ package btw.community.denovo.emi.tag;
 
 import btw.block.BTWBlocks;
 import btw.block.blocks.AestheticOpaqueEarthBlock;
+import btw.community.denovo.item.DNItems;
 import btw.community.denovo.utils.CisternUtils;
 import btw.item.BTWItems;
 import btw.item.tag.BTWTags;
@@ -19,6 +20,11 @@ public class DeNovoTags {
     public static void init() {
         //call class to init tags
     }
+
+    public static final Tag sickle = Tag.of(DeNovoTags.loc("sickle"),
+                    DNItems.woodSickle,
+                    DNItems.stoneSickle);
+
     public static final Tag compostables = Tag.of(DeNovoTags.loc("compostables"))
             .add(new ItemStack(Item.stick))
             .add(new ItemStack(BTWItems.sawDust))

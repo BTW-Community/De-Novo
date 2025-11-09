@@ -19,6 +19,7 @@ public class DNItems {
     public static Item cistern;
     public static Item charcoalDust;
     public static Item woodSickle;
+    public static Item stoneSickle;
     public static Item flintHammer;
     public static Item cactusWaterExtraction;
 
@@ -67,7 +68,13 @@ public class DNItems {
                 .setFilterableProperties(
                 Item.FILTERABLE_SMALL).setCreativeTab(CreativeTabs.tabMaterials);
 
-        woodSickle = new SickleItem(DeNovoAddon.instance.parseID("DNItemWoodSickleID") - 256, EnumToolMaterial.WOOD, 10);
+        woodSickle = new SickleItem(DeNovoAddon.instance.parseID("DNItemWoodSickleID") - 256, "denovo.wood_sickle",
+                EnumToolMaterial.WOOD, 16)
+                .setTextureName("denovo:wood_sickle");
+
+        stoneSickle = new SickleItem(DeNovoAddon.instance.parseID("DNItemStoneSickleID") - 256, "denovo.stone_sickle",
+                EnumToolMaterial.STONE, 32)
+                .setTextureName("denovo:stone_sickle");
 
         flintHammer = new HammerItem(DeNovoAddon.instance.parseID("DNItemFlintHammerID") - 256, EnumToolMaterial.STONE, 25);
 
