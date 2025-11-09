@@ -259,7 +259,7 @@ public abstract class CisternBaseTileEntity extends TileEntity implements TileEn
             setLiquidFillLevel(0);
         }
 
-        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+//        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
     }
 
     public int getSolidFillLevel() {

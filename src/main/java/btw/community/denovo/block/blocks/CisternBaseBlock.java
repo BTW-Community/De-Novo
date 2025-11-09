@@ -200,34 +200,37 @@ public abstract class CisternBaseBlock extends BlockContainer {
     protected Icon bottom;
 
     @Environment(EnvType.CLIENT)
-    protected static Icon water;
+    protected Icon water;
 
     @Environment(EnvType.CLIENT)
-    protected static Icon compost;
+    protected Icon compost;
 
     @Environment(EnvType.CLIENT)
-    protected static Icon sand;
+    protected Icon sand;
 
     @Environment(EnvType.CLIENT)
-    protected static Icon grass;
+    protected Icon grass;
 
     @Environment(EnvType.CLIENT)
-    protected static Icon maggotsDone;
+    protected Icon maggotsDone;
 
     @Environment(EnvType.CLIENT)
-    private static final Icon[] maggotsGrowing = new Icon[8];
+    protected Icon maggotsSide;
 
     @Environment(EnvType.CLIENT)
-    private final Icon[] compostBreaking = new Icon[8];
+    protected final Icon[] maggotsGrowing = new Icon[8];
 
     @Environment(EnvType.CLIENT)
-    private static final Icon[] dirtBreaking = new Icon[8];
+    protected final Icon[] compostBreaking = new Icon[8];
 
     @Environment(EnvType.CLIENT)
-    private final Icon[] gravelBreaking = new Icon[8];
+    protected final Icon[] dirtBreaking = new Icon[8];
 
     @Environment(EnvType.CLIENT)
-    private static final Icon[] snowMelting = new Icon[8];
+    protected final Icon[] gravelBreaking = new Icon[8];
+
+    @Environment(EnvType.CLIENT)
+    protected final Icon[] snowMelting = new Icon[8];
 
 
     @Override
@@ -254,6 +257,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
         }
 
         maggotsDone = register.registerIcon("denovo:composter_maggots");
+
         sand = register.registerIcon("sand");
 
         for (int i = 0; i < snowMelting.length; i++) {
@@ -271,10 +275,10 @@ public abstract class CisternBaseBlock extends BlockContainer {
         return getContentsIcon(fillType, counter);
     }
 
-    public static Icon getContentsIcon(int fillType, int progress) {
+    public Icon getContentsIcon(int fillType, int progress) {
         if (fillType != CisternUtils.CONTENTS_EMPTY) {
             if (fillType == CisternUtils.CONTENTS_COMPOST) {
-                if (progress > 0 && progress < CisternUtils.MAGGOT_CREATION_TIME) {
+                if (progress > 0) {
                     int iconIndex = CisternUtils.getIconIndex(progress, 8, CisternUtils.MAGGOT_CREATION_TIME);
                     return maggotsGrowing[iconIndex];
                 }
@@ -297,10 +301,9 @@ public abstract class CisternBaseBlock extends BlockContainer {
             else if (fillType == CisternUtils.CONTENTS_GRASS) {
                 return grass;
             }
-            else return water;
         }
 
-        return water;
+        return Block.gravel.blockIcon;
     }
 
 
@@ -411,7 +414,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
             }
 
             if (solidFillLevel > 0) {
-                icon = CisternBaseBlock.getContentsIcon(CisternUtils.getFillType(damage), CisternUtils.getProgress(damage));
+                icon = this.getContentsIcon(CisternUtils.getFillType(damage), CisternUtils.getProgress(damage));
                 float width = 2 / 16F;
                 if (liquidFillLevel > 0) {
                     width = 3 / 16F;

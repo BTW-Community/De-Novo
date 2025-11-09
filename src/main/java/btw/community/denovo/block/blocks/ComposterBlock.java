@@ -270,12 +270,21 @@ public class ComposterBlock extends CisternBaseBlock {
 
 
     @Override
+    public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int face) {
+        CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) blockAccess.getBlockTileEntity(x, y, z);
+
+        if (cisternBase != null){
+            if (face == 0) return this.bottom;
+            else if (face == 1) return this.top;
+            else return cisternBase.getFillType() == CisternUtils.CONTENTS_MAGGOTS ? this.maggotsSide : this.side;
+        }
+
+        return super.getBlockTexture(blockAccess,  x, y, z, face);
+    }
+
+    @Override
     @Environment(EnvType.CLIENT)
     public Icon getIcon(int face, int meta) {
-
-        if (meta == -1) {
-            return this.compost;
-        }
 
         if (face == 0) return this.bottom;
         else if (face == 1) return this.top;
@@ -286,9 +295,12 @@ public class ComposterBlock extends CisternBaseBlock {
     @Environment(EnvType.CLIENT)
     public void registerIcons(IconRegister register) {
         super.registerIcons(register);
+
         this.top = register.registerIcon("denovo:composter_top");
         this.blockIcon = this.side = register.registerIcon("denovo:composter");
         this.bottom = register.registerIcon("denovo:composter_bottom");
+
+        this.maggotsSide = register.registerIcon("denovo:composter_side_maggots");
     }
 
     @Override
@@ -314,6 +326,11 @@ public class ComposterBlock extends CisternBaseBlock {
 
         //contents
         renderBlockContentsAsItem(renderer, this, damage);
+
+        if (CisternUtils.getFillType(damage) == CisternUtils.CONTENTS_MAGGOTS){
+            this.side = this.maggotsSide;
+        }
+        else this.side = this.blockIcon;
 
         renderer.setRenderBounds(0D, 0D, 0D, 1D, 1D, 1D);
         model.renderAsItemBlock(renderer, this, damage);
