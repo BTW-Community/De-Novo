@@ -25,6 +25,8 @@ public class DeNovoTags {
             .addFromAndUntilDamage(0, 3, Block.leaves);
 
     public static final Tag compostables = Tag.of(DeNovoTags.loc("compostables"))
+            .add(new ItemStack(DNItems.rawMaggots))
+
             .add(new ItemStack(Item.stick))
             .add(new ItemStack(BTWItems.sawDust))
 
