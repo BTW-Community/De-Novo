@@ -39,7 +39,6 @@ public class DeNovoTags {
             .addFromAndUntilDamage(0, 3, Block.leaves);
 
     public static final Tag compostables = Tag.of(DeNovoTags.loc("compostables"))
-            .add(new ItemStack(DNItems.rawMaggots))
 
             .add(new ItemStack(Item.stick))
             .add(new ItemStack(BTWItems.sawDust))
@@ -56,6 +55,7 @@ public class DeNovoTags {
             .add(new ItemStack(BTWItems.creeperOysters))
             .add(new ItemStack(BTWItems.batWing))
             .add(new ItemStack(BTWItems.mysteriousGland))
+            .add(new ItemStack(DNItems.rawMaggots))
 
             .add(new ItemStack(Block.deadBush))
             .add(new ItemStack(Block.plantRed))

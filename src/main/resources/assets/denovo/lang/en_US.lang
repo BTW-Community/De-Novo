@@ -73,6 +73,8 @@ emi.world_interaction.denovo.composter_grass_spread=§6Can spread grass to other
 
 emi.world_interaction.denovo.hammer_stump=§6Stump Log
 
+emi.world_interaction.denovo.sapling_reduce_chance=§650% Chance of reducing Growth Level
+
 emi.denovo.right_click=RMB
 
 emi.denovo.rain=Rain

@@ -158,6 +158,51 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                 })
                 .build());
 
+        //Dead Bush
+        reg.addRecipe(EmiCustomWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/sticks_from_dead_bush"))
+                .leftInput(new EmiRightClickStack(), sw -> {
+                    sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.right_click"));
+                    return sw;
+                })
+                .rightInput(EmiStack.of(Block.deadBush), false, sw -> {
+                    sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.dead_bush_grown"));
+                    return sw;
+                })
+                .output(List.of(
+                        EmiStack.of(Item.stick),
+                        EmiStack.of(Item.stick).setChance(0.5F)
+                ))
+                .build());
+
+        //Sapling
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/sticks_from_saplings"))
+                .leftInput(new EmiRightClickStack(), sw -> {
+                    sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.right_click"));
+                    return sw;
+                })
+                .rightInput(EmiIngredient.of(List.of(
+                        EmiStack.of(new ItemStack(BTWBlocks.oakSapling, 1, 3)),
+                        EmiStack.of(new ItemStack(BTWBlocks.oakSapling, 1, 5)),
+                        EmiStack.of(new ItemStack(BTWBlocks.oakSapling, 1, 7)),
+
+                        EmiStack.of(new ItemStack(BTWBlocks.birchSapling, 1, 3)),
+                        EmiStack.of(new ItemStack(BTWBlocks.birchSapling, 1, 5)),
+                        EmiStack.of(new ItemStack(BTWBlocks.birchSapling, 1, 7)),
+
+                        EmiStack.of(new ItemStack(BTWBlocks.spruceSapling, 1, 3)),
+                        EmiStack.of(new ItemStack(BTWBlocks.spruceSapling, 1, 4)),
+                        EmiStack.of(new ItemStack(BTWBlocks.spruceSapling, 1, 7)),
+
+                        EmiStack.of(new ItemStack(BTWBlocks.jungleSapling, 1, 3)),
+                        EmiStack.of(new ItemStack(BTWBlocks.jungleSapling, 1, 5)),
+                        EmiStack.of(new ItemStack(BTWBlocks.jungleSapling, 1, 7))
+                )), false, sw -> {
+                    sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.sapling_reduce_chance"));
+                    return sw;
+                })
+                .output(EmiStack.of(Item.stick))
+                .build());
+
         //Placing sticks
         reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/placing_sticks"))
                 .leftInput(EmiStack.of(Item.stick), sw -> {
@@ -354,7 +399,7 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                     .build());
 
             reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/" + blockName[i] + "_infected"))
-                    .leftInput(EmiIngredient.of(DeNovoTags.ironBacteriaStarters), sw -> {
+                    .leftInput(EmiIngredient.of(DeNovoTags.ironBacteriaStarters).setAmount(16), sw -> {
                         sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.composter_filling"));
                         return sw;
                     })
@@ -372,7 +417,7 @@ public class DeNovoEmiPlugin implements EmiPlugin {
 
             //Snow
             reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/" + blockName[i] + "_snow"))
-                    .leftInput(EmiIngredient.of(DeNovoTags.clayWaterStarters).setAmount(16), sw -> {
+                    .leftInput(EmiIngredient.of(DeNovoTags.snowFilling).setAmount(16), sw -> {
                         sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.composter_fill_compost"));
                         return sw;
                     })
