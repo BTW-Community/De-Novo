@@ -309,7 +309,7 @@ public class ComposterBlock extends CisternBaseBlock {
     @Environment(EnvType.CLIENT)
     public boolean renderBlock(RenderBlocks renderer, int x, int y, int z) {
         //floor
-        renderer.setRenderBounds(2 / 16D, 0 / 16D, 2 / 16D, 14 / 16D, 1 / 16D, 14 / 16D);
+        renderer.setRenderBounds(2 / 16D, 0 / 16D, 2 / 16D, 14 / 16D, 0.99 / 16D, 14 / 16D);
         RenderUtils.renderStandardBlockWithTexture(renderer, this, x, y, z, bottom);
 
 
@@ -323,7 +323,7 @@ public class ComposterBlock extends CisternBaseBlock {
     public void renderBlockAsItem(RenderBlocks renderer, int damage, float brightness) {
 
         //floor
-        renderer.setRenderBounds(2 / 16D, 0 / 16D, 2 / 16D, 14 / 16D, 1 / 16D, 14 / 16D);
+        renderer.setRenderBounds(2 / 16D, 0 / 16D, 2 / 16D, 14 / 16D, 0.99 / 16D, 14 / 16D);
         RenderUtils.renderInvBlockWithTexture(renderer, this, -0.5F, -0.5F, -0.5F, bottom);
 
         //contents

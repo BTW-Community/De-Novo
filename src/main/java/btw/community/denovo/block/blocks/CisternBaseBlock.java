@@ -360,7 +360,7 @@ public abstract class CisternBaseBlock extends BlockContainer {
         mudColorPass = true;
         //Liquids
         if (cisternBase.getLiquidFillLevel() > 0) {
-            renderer.setRenderBounds(2 / 16D, 9 / 32D, 2 / 16D, 14 / 16D, cisternBase.getLiquidFillLevel() / 16D, 14 / 16D);
+            renderer.setRenderBounds(2 / 16D, 9 / 32D, 2 / 16D, 14 / 16D, cisternBase.getLiquidFillLevel() / 16D - 0.0001D, 14 / 16D);
             RenderUtils.renderStandardBlockWithTexture(renderer, this, x, y, z, getLiquidContentsIcon(cisternBase));
         }
         mudColorPass = false;
@@ -368,11 +368,13 @@ public abstract class CisternBaseBlock extends BlockContainer {
         if (cisternBase.getSolidFillLevel() > 0) {
 
             if (cisternBase.getFillType() == CisternUtils.CONTENTS_INFECTED_WATER) {
-                renderer.setRenderBounds(3 / 16D, 1 / 16D, 3 / 16D, 13 / 16D, getMaxY(cisternBase) - 0.0001D, 13 / 16D);
+                renderer.setRenderBounds(3 / 16D, 1 / 16D, 3 / 16D, 13 / 16D, getMaxY(cisternBase), 13 / 16D);
                 RenderUtils.renderStandardBlockWithTexture(renderer, this, x, y, z, getSolidContentsIcon(cisternBase));
             } else {
                 if (cisternBase.getFillType() == CisternUtils.CONTENTS_GRASS) grassPass = true;
-                renderer.setRenderBounds(2 / 16D, 1 / 16D, 2 / 16D, 14 / 16D, cisternBase.getSolidFillLevel() / 16D - 0.0001D, 14 / 16D);
+                double maxY = cisternBase.getSolidFillLevel() / 16D;
+                if (cisternBase.getSolidFillLevel() >= 15 / 16D) maxY -= 0.0001D;
+                renderer.setRenderBounds(2 / 16D, 1 / 16D, 2 / 16D, 14 / 16D, maxY, 14 / 16D);
                 RenderUtils.renderStandardBlockWithTexture(renderer, this, x, y, z, getSolidContentsIcon(cisternBase));
                 grassPass = false;
             }
