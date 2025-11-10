@@ -46,7 +46,7 @@ public class DeNovoTags {
             .add(new ItemStack(Block.deadBush))
             .add(new ItemStack(Block.plantRed))
             .add(new ItemStack(Block.plantYellow))
-            .add(new ItemStack(Block.cocoaPlant))
+            .add(new ItemStack(BTWItems.cocoaBeans))
             .add(new ItemStack(Block.vine))
             .add(new ItemStack(Block.waterlily))
             .add(new ItemStack(BTWItems.redMushroom))
