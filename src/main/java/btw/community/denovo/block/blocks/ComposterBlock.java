@@ -76,9 +76,9 @@ public class ComposterBlock extends CisternBaseBlock {
         }
         else if (cisternBase.isFullWithGrass()) {
             if (BlockGrass.canGrassSpreadFromLocation(world, x, y, z)) {
-                System.out.println("spreading?");
+//                System.out.println("spreading?");
                 if (rand.nextFloat() <= 0.8f) {
-                    System.out.println("spreading!");
+//                    System.out.println("spreading!");
                     BlockGrass.checkForGrassSpreadFromLocation(world, x, y, z);
                 }
             }
@@ -130,6 +130,7 @@ public class ComposterBlock extends CisternBaseBlock {
             if (!world.isRemote) {
 
                 returnItemsWhenFullWithMaggots(world, x, y, z, facing);
+                cisternBase.setSolidFillLevel(cisternBase.getSolidFillLevel() - 2);
 
                 CisternUtils.playSound(world, x, y, z, Block.dirt.stepSound.getStepSound(), 1 / 4F, 1F);
                 CisternUtils.playSound(world, x, y, z, Block.blockClay.stepSound.getStepSound(), 1 / 8F, 1F);
