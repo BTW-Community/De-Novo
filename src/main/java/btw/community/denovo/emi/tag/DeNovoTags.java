@@ -80,6 +80,7 @@ public class DeNovoTags {
 
     public static final Tag validGoldenDungBushBlocks = Tag.of(DeNovoTags.loc("validGoldenDungBushBlocks"),
             Block.bedrock,
+            BTWBlocks.looseSparseGrass,
             Block.grass,
             Block.dirt,
             BTWBlocks.looseDirt,
