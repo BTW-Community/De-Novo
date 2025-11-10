@@ -233,6 +233,13 @@ public class CisternUtils {
     public static boolean isValidCompostable(ItemStack heldStack) {
         if (heldStack == null) return false;
 
+        for (ItemStack compostableItem : DeNovoTags.rich_compostables.getItems()){
+
+            if (heldStack.isItemEqual(compostableItem)) {
+                return true;
+            }
+        }
+
         for (ItemStack compostableItem : DeNovoTags.compostables.getItems()){
 
             if (heldStack.isItemEqual(compostableItem)) {

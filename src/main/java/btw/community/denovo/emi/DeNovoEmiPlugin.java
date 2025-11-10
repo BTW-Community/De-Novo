@@ -8,6 +8,7 @@ import btw.community.denovo.emi.custom.EmiRainStack;
 import btw.community.denovo.emi.custom.EmiRightClickStack;
 import btw.community.denovo.emi.recipes.EmiCharcoalRecipe;
 import btw.community.denovo.emi.recipes.EmiCisternBaseRecipe;
+import btw.community.denovo.emi.recipes.EmiCustomWorldInteractionRecipe;
 import btw.community.denovo.emi.recipes.EmiSieveRecipe;
 import btw.community.denovo.emi.tag.DeNovoTags;
 import btw.community.denovo.item.DNItems;
@@ -83,9 +84,8 @@ public class DeNovoEmiPlugin implements EmiPlugin {
         addProgressiveCraftingRecipes(reg);
         addCharcoalProcessingRecipes(reg);
         addLavaWorldInteractionRecipes(reg);
+        addHammerWorldInteractionRecipes(reg);
     }
-
-
 
     private void addInfoRecipes(EmiRegistry reg) {
         this.info(reg, EmiIngredient.of(DeNovoTags.sickle), "emi.denovo.sickle.info");
@@ -394,10 +394,15 @@ public class DeNovoEmiPlugin implements EmiPlugin {
 
         //Adding Compost
         reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/compost_adding"))
-                .leftInput(EmiIngredient.of(DeNovoTags.compostables), sw -> {
-                    sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.composter_filling"));
-                    return sw;
-                })
+                .leftInput(EmiIngredient.of(DeNovoTags.compostables).setAmount(16))
+                .rightInput(EmiStack.of(new ItemStack(DNBlocks.composter, 1, EMPTY)), false)
+                .output(EmiStack.of(new ItemStack(DNBlocks.composter, 1, COMPOST_16)))
+                .supportsRecipeTree(true)
+                .build());
+
+        //Adding Rich Compost
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/compost_adding_rich"))
+                .leftInput(EmiIngredient.of(DeNovoTags.rich_compostables).setAmount(8))
                 .rightInput(EmiStack.of(new ItemStack(DNBlocks.composter, 1, EMPTY)), false)
                 .output(EmiStack.of(new ItemStack(DNBlocks.composter, 1, COMPOST_16)))
                 .supportsRecipeTree(true)
@@ -431,7 +436,7 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                 .build());
 
         //Adding Sand
-        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/compost_adding_dung"))
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/compost_adding_sand"))
                 .leftInput(EmiIngredient.of(List.of(
                                 EmiStack.of(BTWItems.sandPile),
                                 EmiStack.of(new ItemStack(BTWBlocks.sandAndGravelSlab, 1, 1)),
@@ -608,6 +613,40 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                     return sw;
                 })
                 .output(EmiStack.of(Block.lavaStill))
+                .supportsRecipeTree(true)
+                .build());
+    }
+
+    private void addHammerWorldInteractionRecipes(EmiRegistry reg) {
+        //Hammer Logs
+        reg.addRecipe(EmiCustomWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/hammer_logs"))
+                .leftInput(EmiStack.of(DNItems.flintHammer))
+                .rightInput(EmiIngredient.of(BTWTags.logs), false)
+                .output(List.of(
+                        EmiIngredient.of(BTWTags.barks).setAmount(1),
+                        EmiStack.of(BTWItems.sawDust).setAmount(6)
+                ))
+                .supportsRecipeTree(true)
+                .build());
+
+        //Hammer Stumps
+        reg.addRecipe(EmiCustomWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/hammer_stumps"))
+                .leftInput(EmiStack.of(DNItems.flintHammer))
+                .rightInput(EmiIngredient.of(List.of(
+                        EmiStack.of(new ItemStack(Block.wood, 1, 12)),
+                        EmiStack.of(new ItemStack(Block.wood, 1, 13)),
+                        EmiStack.of(new ItemStack(Block.wood, 1, 14)),
+                        EmiStack.of(new ItemStack(Block.wood, 1, 15))
+                )), false)
+                .output(List.of(
+                        EmiIngredient.of(List.of(
+                                EmiStack.of(new ItemStack(BTWItems.bark, 1, 0)),
+                                EmiStack.of(new ItemStack(BTWItems.bark, 1, 1)),
+                                EmiStack.of(new ItemStack(BTWItems.bark, 1, 2)),
+                                EmiStack.of(new ItemStack(BTWItems.bark, 1, 3))
+                        )).setAmount(1),
+                        EmiStack.of(BTWItems.sawDust).setAmount(10)
+                ))
                 .supportsRecipeTree(true)
                 .build());
     }

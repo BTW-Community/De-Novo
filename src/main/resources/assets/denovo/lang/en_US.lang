@@ -34,6 +34,7 @@ tile.deadbush.mature.name=Dead Bush
 
 ### EMI ###
 tag.denovo.compostables=Compostables
+tag.denovo.rich_compostables=Rich Compostables
 tag.denovo.validGoldenDungBushBlocks=Valid Dead Bush Blocks
 tag.denovo.sickle=Sickles
 

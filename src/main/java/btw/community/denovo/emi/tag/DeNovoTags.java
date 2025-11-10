@@ -20,10 +20,13 @@ public class DeNovoTags {
                     DNItems.woodSickle,
                     DNItems.stoneSickle);
 
+    public static final Tag rich_compostables = Tag.of(DeNovoTags.loc("rich_compostables"))
+            .add(BTWTags.barks)
+            .addFromAndUntilDamage(0, 3, Block.leaves);
+
     public static final Tag compostables = Tag.of(DeNovoTags.loc("compostables"))
             .add(new ItemStack(Item.stick))
             .add(new ItemStack(BTWItems.sawDust))
-            .add(BTWTags.barks)
 
             .add(new ItemStack(Item.poisonousPotato))
             .add(new ItemStack(Item.reed))
@@ -48,8 +51,6 @@ public class DeNovoTags {
             .add(new ItemStack(BTWItems.brownMushroom))
             .add(new ItemStack(Block.cactus))
 
-            .addFromAndUntilDamage(0, 3, Block.leaves)
-
             .add(new ItemStack(BTWBlocks.oakSapling, 1, 0))
             .add(new ItemStack(BTWBlocks.oakSapling, 1, 7))
             .add(new ItemStack(BTWBlocks.birchSapling, 1, 0))
@@ -69,7 +70,7 @@ public class DeNovoTags {
             BTWBlocks.planterWithSoil)
             .addFromAndUntilDamage(0, 6, BTWBlocks.aestheticEarth);
 
-    private static ResourceLocation loc(String id) {
+    public static ResourceLocation loc(String id) {
         return new ResourceLocation("denovo", id);
     }
 }
