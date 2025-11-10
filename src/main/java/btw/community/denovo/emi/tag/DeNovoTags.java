@@ -16,6 +16,10 @@ public class DeNovoTags {
         //call class to init tags
     }
 
+    public static Tag sieveFilters = Tag.of(DeNovoTags.loc("sieve_filters"),
+            DNItems.mesh,
+            BTWItems.wickerPane);
+
     public static Tag snowFilling = Tag.of(DeNovoTags.loc("snow_filling"),
             Item.snowball);
 

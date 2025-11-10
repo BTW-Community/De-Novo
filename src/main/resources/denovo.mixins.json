@@ -25,7 +25,8 @@
     "SaplingBlockMixin",
     "ShaftItemMixin",
     "SlimeEntityMixin",
-    "StoneBlockMixin"
+    "StoneBlockMixin",
+    "WickerPieceItemMixin"
   ],
   "client": [
   ],

@@ -24,6 +24,7 @@ public class SieveUtils {
                 || id == BTWBlocks.slatsPane.blockID
                 || id == BTWBlocks.gratePane.blockID
                 || id == BTWBlocks.wickerPane.blockID
+                || id == BTWItems.wickerPane.itemID
                 || id == DNItems.mesh.itemID;
     }
 
