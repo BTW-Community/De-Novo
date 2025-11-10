@@ -38,7 +38,7 @@ public class CactusWaterExtractionItem extends ProgressiveCraftingItem {
     @Override
     public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player) {
         player.playSound("mob.slime.small", 0.5F, world.rand.nextFloat() * 0.01F + 0.09F);
-        ItemUtils.givePlayerStackOrEject(player, new ItemStack(Item.bowlEmpty));
+//        ItemUtils.givePlayerStackOrEject(player, new ItemStack(Item.bowlEmpty));
         return getReturnStack();
     }
 
