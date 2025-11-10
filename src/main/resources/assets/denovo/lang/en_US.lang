@@ -56,7 +56,8 @@ emi.world_interaction.denovo.hold_shift=§6While Holding Shift
 emi.world_interaction.denovo.rummaging_cost=§6Costs 0.16 Hunger
 
 emi.world_interaction.denovo.morning=§6Can fill 33% of water each morning
-emi.world_interaction.denovo.composter_filling=§6Fills Composter by 1/16
+emi.world_interaction.denovo.composter_fill_compost=§6Each Item fills Composter by 1/16
+emi.world_interaction.denovo.composter_fill_rich_compost=§6Each Item fills Composter by 2/16
 
 emi.world_interaction.denovo.composter_mushroom=§6Spawn around Composter over time
 
@@ -65,6 +66,8 @@ emi.world_interaction.denovo.lava_cobble_time=§6Will convert over Time
 
 emi.world_interaction.denovo.composter_sand=§6Allows Cactus to be placed on top
 emi.world_interaction.denovo.composter_grass_spread=§6Can spread grass to other Blocks
+
+emi.world_interaction.denovo.hammer_stump=§6Stump Log
 
 emi.denovo.right_click=RMB
 

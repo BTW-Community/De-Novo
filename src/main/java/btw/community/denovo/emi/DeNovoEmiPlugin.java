@@ -372,7 +372,7 @@ public class DeNovoEmiPlugin implements EmiPlugin {
 
             //Snow
             reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/" + blockName[i] + "_snow"))
-                    .leftInput(EmiStack.of(Item.snowball, 2))
+                    .leftInput(EmiStack.of(Item.snowball, 8))
                     .rightInput(EmiStack.of(new ItemStack(blocks[i], 1, EMPTY)), false)
                     .output(EmiStack.of(new ItemStack(blocks[i], 1, SNOW_0)))
                     .supportsRecipeTree(true)
@@ -394,7 +394,10 @@ public class DeNovoEmiPlugin implements EmiPlugin {
 
         //Adding Compost
         reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/compost_adding"))
-                .leftInput(EmiIngredient.of(DeNovoTags.compostables).setAmount(16))
+                .leftInput(EmiIngredient.of(DeNovoTags.compostables).setAmount(16), sw -> {
+                    sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.composter_fill_compost"));
+                    return sw;
+                })
                 .rightInput(EmiStack.of(new ItemStack(DNBlocks.composter, 1, EMPTY)), false)
                 .output(EmiStack.of(new ItemStack(DNBlocks.composter, 1, COMPOST_16)))
                 .supportsRecipeTree(true)
@@ -402,7 +405,10 @@ public class DeNovoEmiPlugin implements EmiPlugin {
 
         //Adding Rich Compost
         reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/compost_adding_rich"))
-                .leftInput(EmiIngredient.of(DeNovoTags.rich_compostables).setAmount(8))
+                .leftInput(EmiIngredient.of(DeNovoTags.rich_compostables).setAmount(8), sw -> {
+                    sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.composter_fill_rich_compost"));
+                    return sw;
+                })
                 .rightInput(EmiStack.of(new ItemStack(DNBlocks.composter, 1, EMPTY)), false)
                 .output(EmiStack.of(new ItemStack(DNBlocks.composter, 1, COMPOST_16)))
                 .supportsRecipeTree(true)
@@ -438,8 +444,8 @@ public class DeNovoEmiPlugin implements EmiPlugin {
         //Adding Sand
         reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/compost_adding_sand"))
                 .leftInput(EmiIngredient.of(List.of(
-                                EmiStack.of(BTWItems.sandPile),
-                                EmiStack.of(new ItemStack(BTWBlocks.sandAndGravelSlab, 1, 1)),
+                                EmiStack.of(BTWItems.sandPile).setAmount(16),
+                                EmiStack.of(new ItemStack(BTWBlocks.sandAndGravelSlab, 1, 1)).setAmount(2),
                                 EmiStack.of(Block.sand)
                         )))
                 .rightInput(EmiStack.of(new ItemStack(DNBlocks.composter, 1, EMPTY)), false)
@@ -637,7 +643,10 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                         EmiStack.of(new ItemStack(Block.wood, 1, 13)),
                         EmiStack.of(new ItemStack(Block.wood, 1, 14)),
                         EmiStack.of(new ItemStack(Block.wood, 1, 15))
-                )), false)
+                )), false, sw -> {
+                    sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.hammer_stump"));
+                    return sw;
+                })
                 .output(List.of(
                         EmiIngredient.of(List.of(
                                 EmiStack.of(new ItemStack(BTWItems.bark, 1, 0)),
@@ -647,6 +656,14 @@ public class DeNovoEmiPlugin implements EmiPlugin {
                         )).setAmount(1),
                         EmiStack.of(BTWItems.sawDust).setAmount(10)
                 ))
+                .supportsRecipeTree(true)
+                .build());
+
+        //Hammer Stone
+        reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/hammer_stone"))
+                .leftInput(EmiStack.of(DNItems.flintHammer))
+                .rightInput(EmiStack.of(Block.stone), false)
+                .output(EmiStack.of(BTWItems.gravelPile).setAmount(4))
                 .supportsRecipeTree(true)
                 .build());
     }

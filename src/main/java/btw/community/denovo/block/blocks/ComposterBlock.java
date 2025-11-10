@@ -6,6 +6,7 @@ import btw.client.render.util.RenderUtils;
 import btw.community.denovo.block.models.ComposterModel;
 import btw.community.denovo.block.tileentities.CisternBaseTileEntity;
 import btw.community.denovo.block.tileentities.ComposterTileEntity;
+import btw.community.denovo.emi.tag.DeNovoTags;
 import btw.community.denovo.item.DNItems;
 import btw.community.denovo.utils.CisternUtils;
 import btw.item.BTWItems;
@@ -13,9 +14,7 @@ import btw.item.util.ItemUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
-import org.lwjgl.opengl.GL11;
 
-import java.util.List;
 import java.util.Random;
 
 public class ComposterBlock extends CisternBaseBlock {
@@ -199,7 +198,10 @@ public class ComposterBlock extends CisternBaseBlock {
         }
 
         if (cisternBase.isEmptyOrHasCompost() && CisternUtils.isValidCompostable(heldStack)) {
-            cisternBase.addSolid(1);
+            if (CisternUtils.doesTagContainsStack(DeNovoTags.rich_compostables, heldStack)){
+                cisternBase.addSolid(2);
+            }
+            else cisternBase.addSolid(1);
             cisternBase.setFillType(CisternUtils.CONTENTS_COMPOST);
             world.markBlockForRenderUpdate(x, y, z);
 
