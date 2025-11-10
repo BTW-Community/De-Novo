@@ -199,8 +199,13 @@ public class CisternUtils {
             int currentLiquidAmount = cisternBase.getLiquidFillLevel();
             int containerSize = getFillValue(heldStack, cisternBase);
 
-            if (currentLiquidAmount + containerSize <= MAX_LIQUID_FILL_LEVEL) {
+            if (currentLiquidAmount + containerSize < MAX_LIQUID_FILL_LEVEL) {
                 if (!world.isRemote) cisternBase.addLiquid(containerSize);
+                if (!world.isRemote) cisternBase.setFillType(CONTENTS_WATER);
+                return exchangeContainers(world, x, y, z, facing, player, heldStack, getEmptyContainerForFullWaterContainer(heldStack));
+            }
+            else if (currentLiquidAmount + containerSize >= MAX_LIQUID_FILL_LEVEL){
+                if (!world.isRemote) cisternBase.setLiquidFillLevel(MAX_LIQUID_FILL_LEVEL);
                 if (!world.isRemote) cisternBase.setFillType(CONTENTS_WATER);
                 return exchangeContainers(world, x, y, z, facing, player, heldStack, getEmptyContainerForFullWaterContainer(heldStack));
             }
@@ -218,6 +223,7 @@ public class CisternUtils {
 
         if (!world.isRemote && !player.capabilities.isCreativeMode) heldStack.stackSize--;
         ItemUtils.givePlayerStackOrEjectFromTowardsFacing(player, new ItemStack(returnStack.itemID, 1, returnStack.getItemDamage()), x, y, z, facing);
+//        ItemUtils.givePlayerStackOrEjectFavorEmptyHand(player, new ItemStack(returnStack.itemID, 1, returnStack.getItemDamage()), x, y, z);
         if (!world.isRemote) world.markBlockForUpdate(x, y, z);
         return true;
     }
