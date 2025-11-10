@@ -24,8 +24,7 @@ public class DeNovoTags {
             BTWItems.gravelPile);
 
     public static Tag muddyWaterStarters = Tag.of(DeNovoTags.loc("muddy_water_starters"),
-            BTWBlocks.looseDirt,
-            Block.dirt);
+            BTWItems.dirtPile);
 
     public static Tag clayWaterStarters = Tag.of(DeNovoTags.loc("clay_water_starters"),
             Item.clay);
