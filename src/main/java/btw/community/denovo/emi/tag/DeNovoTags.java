@@ -16,6 +16,20 @@ public class DeNovoTags {
         //call class to init tags
     }
 
+    public static Tag snowFilling = Tag.of(DeNovoTags.loc("snow_filling"),
+            Item.snowball);
+
+    public static Tag ironBacteriaStarters = Tag.of(DeNovoTags.loc("iron_bacteria_starters"),
+            BTWItems.dirtPile,
+            BTWItems.gravelPile);
+
+    public static Tag muddyWaterStarters = Tag.of(DeNovoTags.loc("muddy_water_starters"),
+            BTWBlocks.looseDirt,
+            Block.dirt);
+
+    public static Tag clayWaterStarters = Tag.of(DeNovoTags.loc("clay_water_starters"),
+            Item.clay);
+
     public static final Tag sickle = Tag.of(DeNovoTags.loc("sickle"),
                     DNItems.woodSickle,
                     DNItems.stoneSickle);

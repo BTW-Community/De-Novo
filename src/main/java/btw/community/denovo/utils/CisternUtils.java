@@ -246,6 +246,8 @@ public class CisternUtils {
     }
 
     public static boolean doesTagContainsStack(Tag tag, ItemStack heldStack) {
+        if (heldStack == null) return false;
+
         for (ItemStack item : tag.getItems()){
 
             if (heldStack.isItemEqual(item)) {
@@ -263,24 +265,11 @@ public class CisternUtils {
         return 0;
     }
 
-    public static int isSnow(ItemStack heldStack) {
-        if (heldStack.itemID == Item.snowball.itemID) return 2;
-
-        return 0;
-    }
-
     public static boolean isValidDirt(ItemStack heldStack) {
         if (heldStack == null) return false;
 
-        Iterator<ItemStack> validStacks = validDirt.iterator();
+        if (doesTagContainsStack(DeNovoTags.ironBacteriaStarters, heldStack)) return true;
 
-        for (Iterator<ItemStack> it = validStacks; it.hasNext(); ) {
-            ItemStack stack = it.next();
-
-            if (heldStack.isItemEqual(stack)) {
-                return true;
-            }
-        }
         return false;
     }
 

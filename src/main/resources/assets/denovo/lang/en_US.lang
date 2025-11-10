@@ -37,6 +37,10 @@ tag.denovo.compostables=Compostables
 tag.denovo.rich_compostables=Rich Compostables
 tag.denovo.validGoldenDungBushBlocks=Valid Dead Bush Blocks
 tag.denovo.sickle=Sickles
+tag.denovo.muddy_water_starters=Muddy Water Starters
+tag.denovo.clay_water_starters=Clay Water Starters
+tag.denovo.iron_bacteria_starters=Iron Bacteria Starters
+tag.denovo.snow_filling=Snow Filling
 
 emi.denovo.sickle.info=A primitive tool that allows the harvesting of Leaves and Grass
 emi.denovo.flint_hammer.info=A primitive tool that allows breaking of Stone

@@ -2,6 +2,7 @@ package btw.community.denovo.block.blocks;
 
 import btw.client.render.util.RenderUtils;
 import btw.community.denovo.block.tileentities.CisternBaseTileEntity;
+import btw.community.denovo.emi.tag.DeNovoTags;
 import btw.community.denovo.utils.CisternUtils;
 import btw.item.BTWItems;
 import btw.item.util.ItemUtils;
@@ -88,8 +89,8 @@ public abstract class CisternBaseBlock extends BlockContainer {
             return CisternUtils.addWaterAndReturnContainer(world, x, y, z, facing, player, cisternBase);
         }
 
-        if (!world.isRemote && CisternUtils.isSnow(player.getHeldItem()) > 0){
-            int amountFilled = CisternUtils.isSnow(player.getHeldItem());
+        if (!world.isRemote && CisternUtils.doesTagContainsStack(DeNovoTags.snowFilling, player.getHeldItem())){
+            int amountFilled = 1;
             int containsAmount = cisternBase.getSolidFillLevel();
 
             if (containsAmount + amountFilled <= CisternUtils.MAX_SOLID_FILL_LEVEL){
@@ -118,10 +119,10 @@ public abstract class CisternBaseBlock extends BlockContainer {
         }
 
         if (cisternBase.isFull()) {
-            if (heldStack.isItemEqual(new ItemStack(Item.clay))) {
+            if (CisternUtils.doesTagContainsStack(DeNovoTags.clayWaterStarters, heldStack)) {
                 if (!world.isRemote && !player.capabilities.isCreativeMode) player.getHeldItem().stackSize--;
                 return setContentsType(world, x, y, z, player, cisternBase, CisternUtils.CONTENTS_CLAY_WATER);
-            } else if (heldStack.isItemEqual(new ItemStack(BTWItems.dirtPile))) {
+            } else if (CisternUtils.doesTagContainsStack(DeNovoTags.muddyWaterStarters, heldStack)) {
                 if (!world.isRemote && !player.capabilities.isCreativeMode) player.getHeldItem().stackSize--;
                 return setContentsType(world, x, y, z, player, cisternBase, CisternUtils.CONTENTS_MUDDY_WATER);
             }

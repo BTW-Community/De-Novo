@@ -339,7 +339,7 @@ public class DeNovoEmiPlugin implements EmiPlugin {
 
             //Adding Dirt for Clay
             reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/" + blockName[i] + "_dirt_pile"))
-                    .leftInput(EmiStack.of(BTWItems.dirtPile))
+                    .leftInput(EmiIngredient.of(DeNovoTags.muddyWaterStarters))
                     .rightInput(EmiStack.of(new ItemStack(blocks[i], 1, WATER_15)), false)
                     .output(EmiStack.of(new ItemStack(blocks[i], 1, WATER_MUDDY)))
                     .supportsRecipeTree(true)
@@ -347,14 +347,14 @@ public class DeNovoEmiPlugin implements EmiPlugin {
 
             //Adding Clay for Infected
             reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/" + blockName[i] + "_clay"))
-                    .leftInput(EmiStack.of(Item.clay))
+                    .leftInput(EmiIngredient.of(DeNovoTags.clayWaterStarters))
                     .rightInput(EmiStack.of(new ItemStack(blocks[i], 1, WATER_15)), false)
                     .output(EmiStack.of(new ItemStack(blocks[i], 1, WATER_CLAY_0)))
                     .supportsRecipeTree(true)
                     .build());
 
             reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/" + blockName[i] + "_infected"))
-                    .leftInput(EmiStack.of(BTWItems.dirtPile), sw -> {
+                    .leftInput(EmiIngredient.of(DeNovoTags.ironBacteriaStarters), sw -> {
                         sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.composter_filling"));
                         return sw;
                     })
@@ -372,7 +372,10 @@ public class DeNovoEmiPlugin implements EmiPlugin {
 
             //Snow
             reg.addRecipe(EmiWorldInteractionRecipe.builder().id(new ResourceLocation("denovo", "/world/block_interaction/denovo/" + blockName[i] + "_snow"))
-                    .leftInput(EmiStack.of(Item.snowball, 8))
+                    .leftInput(EmiIngredient.of(DeNovoTags.clayWaterStarters).setAmount(16), sw -> {
+                        sw.appendTooltip(Text.translatable("emi.world_interaction.denovo.composter_fill_compost"));
+                        return sw;
+                    })
                     .rightInput(EmiStack.of(new ItemStack(blocks[i], 1, EMPTY)), false)
                     .output(EmiStack.of(new ItemStack(blocks[i], 1, SNOW_0)))
                     .supportsRecipeTree(true)
