@@ -3,7 +3,7 @@ package btw.community.denovo.recipes;
 import btw.block.BTWBlocks;
 import btw.community.denovo.block.DNBlocks;
 import btw.community.denovo.item.DNItems;
-import btw.community.denovo.item.items.ExtractionItem;
+import btw.community.denovo.item.items.CactusWaterExtractionItem;
 import btw.community.denovo.utils.CisternUtils;
 import btw.crafting.recipe.RecipeManager;
 import btw.item.BTWItems;
@@ -41,7 +41,7 @@ public class DNRecipes {
     }
 
     private static void addWaterExtractionRecipes() {
-        RecipeManager.addShapelessRecipe(new ItemStack(DNItems.cactusWaterExtraction, 1, ExtractionItem.TIME_TO_CRAFT_WATER), new Object[]{
+        RecipeManager.addShapelessRecipe(new ItemStack(DNItems.cactusWaterExtraction, 1, CactusWaterExtractionItem.TIME_TO_CRAFT), new Object[]{
                 new ItemStack(Block.cactus),
                 new ItemStack(Item.bowlEmpty)
         });
@@ -118,7 +118,7 @@ public class DNRecipes {
          */
 
         //Maggots progressively to String
-        RecipeManager.addShapelessRecipe(new ItemStack(DNItems.maggotsSilkExtraction, 1, ExtractionItem.TIME_TO_CRAFT_SILK), new Object[]{
+        RecipeManager.addShapelessRecipe(new ItemStack(DNItems.maggotsSilkExtraction, 1, CactusWaterExtractionItem.TIME_TO_CRAFT), new Object[]{
                 new ItemStack(DNItems.rawMaggots),
                 new ItemStack(BTWItems.pointyStick)
         });

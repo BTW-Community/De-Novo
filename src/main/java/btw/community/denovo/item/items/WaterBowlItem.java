@@ -9,6 +9,8 @@ public class WaterBowlItem extends Item {
     public WaterBowlItem(int itemID) {
         super(itemID);
 
+        setMaxStackSize(1);
+
         setUnlocalizedName("denovo.water_bowl");
         setTextureName("denovo:water_bowl");
         setCreativeTab(CreativeTabs.tabMisc);

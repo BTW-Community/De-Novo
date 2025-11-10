@@ -43,11 +43,7 @@ public class DNItems {
                 .setTextureName("denovo:maggots_cooked")
                 .setCreativeTab(CreativeTabs.tabMisc);
 
-        maggotsSilkExtraction = new ExtractionItem(DeNovoAddon.instance.parseID("DNItemMaggotsSilkExtractionID") - 256,
-                "denovo.maggots_silk_extraction",
-                ExtractionItem.TIME_TO_CRAFT_SILK, new ItemStack(Item.silk),
-                "mob.slime.attack", "mob.slime.small", "mob.slime.attack")
-                .setTextureName("denovo:maggots_silk_extraction");
+        maggotsSilkExtraction = new SilkExtractionItem(DeNovoAddon.instance.parseID("DNItemMaggotsSilkExtractionID") - 256, "maggots_silk_extraction");
 
         waterBowl = new WaterBowlItem(DeNovoAddon.instance.parseID("DNItemWaterBowlID") - 256);
         rustWaterBowl = new RustWaterBowlItem(DeNovoAddon.instance.parseID("DNItemRustWaterBowlID") - 256, "rust_water_bowl");
@@ -78,10 +74,7 @@ public class DNItems {
 
         flintHammer = new HammerItem(DeNovoAddon.instance.parseID("DNItemFlintHammerID") - 256, EnumToolMaterial.STONE, 25);
 
-        cactusWaterExtraction = new ExtractionItem(DeNovoAddon.instance.parseID("DNItemCactusWaterExtractionID") - 256,
-                "denovo.cactus_water_extraction",
-                ExtractionItem.TIME_TO_CRAFT_WATER, new ItemStack(DNItems.waterBowl),
-                "mob.slime.attack", "mob.slime.small", "mob.slime.attack")
-                .setTextureName("denovo:cactus_water_extraction");
+        cactusWaterExtraction = new CactusWaterExtractionItem(DeNovoAddon.instance.parseID("DNItemCactusWaterExtractionID") - 256, "cactus_water_extraction");
+
     }
 }
