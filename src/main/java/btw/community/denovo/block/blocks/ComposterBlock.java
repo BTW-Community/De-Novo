@@ -56,16 +56,16 @@ public class ComposterBlock extends CisternBaseBlock {
         CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) tileEntity;
 
         if (cisternBase.isEmptyOrHasCompost() || cisternBase.isEmptyOrHasSand()) {
-            return handleContentsEmptyOrContents(world, x, y, z, facing, player, cisternBase);
+            handleContentsEmptyOrContents(world, x, y, z, facing, player, cisternBase);
         }
         else if (cisternBase.isFullWithCompostOrMaggots() || cisternBase.isFullWithGrass()) {
-            return handleContentsCompostOrMaggots(world, x, y, z, facing, player, cisternBase);
+            handleContentsCompostOrMaggots(world, x, y, z, facing, player, cisternBase);
         }
         else if (cisternBase.isFullWithSand()) {
-            return handleContentsSand(world, x, y, z, facing, player, cisternBase);
+            handleContentsSand(world, x, y, z, facing, player, cisternBase);
         }
 
-        return false;
+        return true;
     }
 
     @Override

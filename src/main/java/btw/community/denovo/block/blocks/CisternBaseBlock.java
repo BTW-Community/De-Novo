@@ -27,6 +27,8 @@ public abstract class CisternBaseBlock extends BlockContainer {
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int facing, float clickX, float clickY, float clickZ) {
 
+        if (player.isSneaking()) return false;
+
         CisternBaseTileEntity cisternBase = (CisternBaseTileEntity) world.getBlockTileEntity(x, y, z);
         int fillType = cisternBase.getFillType();
 
@@ -34,16 +36,16 @@ public abstract class CisternBaseBlock extends BlockContainer {
         if (cisternBase.getProgressCounter() > 0) return false;
 
         if (cisternBase.isEmptyOrHasSnow()) {
-            return handleContentsEmpty(world, x, y, z, facing, player, cisternBase);
+            handleContentsEmpty(world, x, y, z, facing, player, cisternBase);
         } else if (fillType == CisternUtils.CONTENTS_WATER) {
-            return handleContentsWater(world, x, y, z, facing, player, cisternBase);
+            handleContentsWater(world, x, y, z, facing, player, cisternBase);
         } else if (fillType == CisternUtils.CONTENTS_INFECTED_WATER) {
-            return handleContentsInfectedWater(world, x, y, z, facing, player, cisternBase);
+            handleContentsInfectedWater(world, x, y, z, facing, player, cisternBase);
         } else if (fillType == CisternUtils.CONTENTS_RUST_WATER) {
-            return handleContentsRustWater(world, x, y, z, facing, player, cisternBase);
+            handleContentsRustWater(world, x, y, z, facing, player, cisternBase);
         }
 
-        return false;
+        return true;
     }
 
     @Override
